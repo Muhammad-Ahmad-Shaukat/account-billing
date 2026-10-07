@@ -2,7 +2,7 @@
 
 client_id = "fca944bc8886be44f6e1a61cbd25aed6"
 name = "account-billing"
-application_url = "https://example.com"
+application_url = "https://account-billing.onrender.com"
 embedded = true
 
 [access_scopes]
@@ -13,13 +13,15 @@ scopes = "write_products,write_app_proxy"
 api_version = "2026-10"
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [
+  "https://account-billing.onrender.com/api/auth",
+  "https://account-billing.onrender.com/api/auth/callback"
+]
 
 [app_proxy]
-url = "https://example.com/api/proxy"
+url = "https://account-billing.onrender.com/api/proxy"
 subpath = "account-billing"
 prefix = "apps"
 
 [build]
-include_config_on_deploy = true
 automatically_update_urls_on_dev = true
