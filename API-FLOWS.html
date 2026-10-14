@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Account Billing — API Flow Diagrams</title>
+  <style>
+    :root {
+      --brand-orange: #ed8104;
+      --brand-ink: #242426;
+      --ink: #242426;
+      --muted: #5c5c60;
+      --line: #3a3a3e;
+      --ok: #2d7a3e;
+      --warn: #b36b00;
+      --err: #b42318;
+      --auth: #242426;
+      --bg: #fff;
+      --accent: #ed8104;
+      --hook: #ed8104;
+      --surface: #f7f6f4;
+      --surface-orange: #fff6eb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", Calibri, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      margin: 0;
+      padding: 28px 36px 44px;
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+    .brand-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 0 0 18px;
+      padding-bottom: 14px;
+      border-bottom: 3px solid var(--brand-orange);
+      page-break-inside: avoid;
+    }
+    .brand-header .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .brand-header .logo {
+      height: 28px;
+      width: auto;
+      display: block;
+    }
+    .brand-header .logo .st0 { fill: #ed8104; }
+    .brand-header .logo .st1 { fill: #242426; }
+    .brand-header .made-by {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .brand-header .made-by .label {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .brand-header .made-by .studio {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--brand-ink);
+      margin-top: 2px;
+    }
+    .brand-header .made-by .studio span {
+      color: var(--brand-orange);
+    }
+    h1 {
+      font-size: 20px;
+      margin: 0 0 4px;
+      color: var(--brand-ink);
+      font-weight: 700;
+    }
+    .subtitle {
+      color: var(--muted);
+      margin: 0 0 20px;
+      font-size: 12px;
+    }
+    h2 {
+      font-size: 14px;
+      margin: 22px 0 8px;
+      padding-bottom: 4px;
+      border-bottom: 2px solid var(--brand-orange);
+      color: var(--brand-ink);
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 12.5px;
+      margin: 12px 0 6px;
+      color: var(--ink);
+      page-break-after: avoid;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 650;
+      padding: 2px 7px;
+      border-radius: 3px;
+      vertical-align: middle;
+      margin-left: 6px;
+      letter-spacing: 0.02em;
+    }
+    .badge.webhook {
+      background: var(--surface-orange);
+      color: #a85a00;
+      border: 1px solid #f0c48a;
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin-bottom: 14px;
+      font-size: 11.5px;
+    }
+    .meta span { color: var(--muted); }
+    .meta strong { color: var(--ink); font-weight: 600; }
+
+    .flow {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 12px 12px;
+      margin: 0 0 14px;
+      background: #fafafa;
+      page-break-inside: avoid;
+    }
+    .steps {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      gap: 5px;
+      justify-content: flex-start;
+    }
+    .node {
+      border: 1.5px solid var(--line);
+      border-radius: 6px;
+      padding: 7px 9px;
+      min-width: 92px;
+      max-width: 140px;
+      background: #fff;
+      text-align: center;
+      font-size: 11px;
+    }
+    .node .t { font-weight: 650; display: block; margin-bottom: 2px; }
+    .node .s { color: var(--muted); font-size: 10px; display: block; }
+    .node.start { border-color: var(--brand-ink); background: #f0f0f1; }
+    .node.auth { border-color: var(--brand-ink); background: #ececed; }
+    .node.db { border-color: #555; background: #f0f0f0; }
+    .node.ok { border-color: var(--ok); background: #eef8f1; }
+    .node.warn { border-color: var(--warn); background: #fff8e8; }
+    .node.err { border-color: var(--err); background: #fceeee; }
+    .node.hook { border-color: var(--brand-orange); background: var(--surface-orange); }
+    .node.decision {
+      border-radius: 4px;
+      border-style: dashed;
+      background: #fff;
+      max-width: 150px;
+    }
+    .arrow {
+      display: flex;
+      align-items: center;
+      color: var(--muted);
+      font-size: 15px;
+      padding: 0 2px;
+      flex-shrink: 0;
+    }
+    .branch {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-left: 4px;
+    }
+    .branch-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .label {
+      font-size: 9.5px;
+      font-weight: 600;
+      color: var(--muted);
+      min-width: 48px;
+      text-align: right;
+    }
+    .label.ok { color: var(--ok); }
+    .label.warn { color: var(--warn); }
+    .label.err { color: var(--err); }
+
+    table.endpoints {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 6px 0 16px;
+      font-size: 11.5px;
+    }
+    table.endpoints th,
+    table.endpoints td {
+      border: 1px solid #ddd;
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    table.endpoints th {
+      background: var(--surface-orange);
+      color: var(--brand-ink);
+      font-weight: 650;
+      border-bottom-color: var(--brand-orange);
+    }
+    table.endpoints code {
+      font-size: 10.5px;
+      background: #f3f3f3;
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      margin: 0 0 14px;
+      font-size: 11px;
+    }
+    .legend i {
+      display: inline-block;
+      width: 11px;
+      height: 11px;
+      border-radius: 2px;
+      border: 1px solid #999;
+      vertical-align: -2px;
+      margin-right: 4px;
+    }
+    .legend .l-start { background: #f0f0f1; border-color: var(--brand-ink); }
+    .legend .l-ok { background: #eef8f1; border-color: var(--ok); }
+    .legend .l-warn { background: #fff8e8; border-color: var(--warn); }
+    .legend .l-err { background: #fceeee; border-color: var(--err); }
+    .legend .l-db { background: #f0f0f0; border-color: #555; }
+    .legend .l-hook { background: var(--surface-orange); border-color: var(--brand-orange); }
+
+    .arch {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+      gap: 6px;
+      align-items: center;
+      margin: 8px 0 14px;
+      page-break-inside: avoid;
+    }
+    .arch .box {
+      border: 1.5px solid var(--brand-orange);
+      border-radius: 8px;
+      padding: 10px 8px;
+      text-align: center;
+      background: var(--surface-orange);
+    }
+    .arch .box .t { font-weight: 650; font-size: 12px; }
+    .arch .box .s { color: var(--muted); font-size: 10px; margin-top: 2px; }
+    .arch .arr { text-align: center; color: var(--muted); font-size: 16px; }
+
+    .io {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media (max-width: 720px) {
+      .io { grid-template-columns: 1fr; }
+    }
+    .io-block {
+      border: 1px solid #d8d8d8;
+      border-radius: 5px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .io-block .io-h {
+      font-size: 10.5px;
+      font-weight: 650;
+      padding: 5px 8px;
+      background: var(--surface-orange);
+      color: var(--brand-ink);
+      border-bottom: 1px solid #f0c48a;
+    }
+    .io-block .io-h.resp-ok { background: #eef8f1; color: var(--ok); }
+    .io-block .io-h.resp-warn { background: #fff8e8; color: var(--warn); }
+    .io-block .io-h.resp-err { background: #fceeee; color: var(--err); }
+    .io-block pre {
+      margin: 0;
+      padding: 8px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 9.5px;
+      line-height: 1.35;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: none;
+    }
+    .note-line {
+      margin: 8px 0 0;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .note-line strong { color: var(--ink); }
+    .hook-callout {
+      border: 1px solid #f0c48a;
+      background: var(--surface-orange);
+      border-radius: 5px;
+      padding: 8px 10px;
+      margin: 0 0 10px;
+      font-size: 11.5px;
+      color: #6a3d00;
+    }
+    .footer {
+      margin-top: 22px;
+      padding-top: 10px;
+      border-top: 2px solid var(--brand-orange);
+      color: var(--muted);
+      font-size: 10.5px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .footer .by {
+      color: var(--brand-ink);
+      font-weight: 600;
+    }
+    .footer .by span { color: var(--brand-orange); }
+    @media print {
+      body { padding: 12px 16px; }
+      .flow, .arch, table.endpoints, .io { break-inside: avoid; }
+      h2 { break-after: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="brand-header">
+    <div class="logo-wrap">
+      <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 72 348 34" role="img" aria-label="Integriti">
+        <path class="st0" d="M30.8,100.1l-12.1-14.8h10v-6.2H2.4l23.2,27.4c.5.6,1.3.9,2.2.9h16.6v-6.4h-11.4c-.9,0-1.7-.3-2.2-.9h0Z"/>
+        <path class="st0" d="M44.4,101h26.2l-23.2-27.4c-.5-.6-1.3-.9-2.2-.9h-16.6v6.4h11.4c.9,0,1.7.3,2.2.9l12.1,14.8h-10v6.2Z"/>
+        <path class="st1" d="M84.3,98.1v-22.6h3.6v22.6h-3.6ZM110.6,98.1h-3.5v-9.3c0-1.5-.3-2.7-.8-3.4-.5-.7-1.2-1.1-2.2-1.1s-1.4.2-2,.5c-.7.3-1.3.8-1.8,1.4-.5.6-.9,1.2-1.1,2v9.9h-3.5v-16.6h3.2v3.3c.4-.7,1-1.4,1.7-1.9.7-.6,1.5-1,2.4-1.3.9-.3,1.8-.4,2.8-.4s1.8.2,2.5.5c.7.4,1.2.9,1.5,1.5.4.6.6,1.3.8,2.2.1.8.2,1.7.2,2.6v10.2ZM127,97.2c-.3.1-.7.3-1.1.5-.4.2-1,.3-1.5.4-.6.1-1.1.2-1.7.2s-1.4-.1-2-.4c-.6-.3-1.1-.7-1.5-1.2-.4-.6-.5-1.3-.5-2.2v-10.4h-2.2v-2.7h2.2v-5.5h3.5v5.5h3.6v2.7h-3.6v9.3c0,.6.2,1,.5,1.3.3.3.8.4,1.2.4s1,0,1.4-.3c.4-.2.8-.3,1-.4l.7,2.8ZM140,98.4c-1.3,0-2.5-.2-3.5-.7-1-.5-1.9-1.1-2.7-1.9-.8-.8-1.4-1.7-1.8-2.7-.4-1-.6-2.1-.6-3.3s.4-3,1.1-4.3c.7-1.3,1.7-2.4,3-3.2,1.3-.8,2.8-1.2,4.6-1.2s3.2.4,4.5,1.2c1.3.8,2.3,1.8,3,3.1.7,1.3,1.1,2.7,1.1,4.2s0,.5,0,.7c0,.2,0,.4,0,.5h-13.3c0,1,.3,1.8.8,2.6.5.7,1.1,1.3,1.8,1.7.7.4,1.5.6,2.4.6s1.8-.2,2.6-.7c.8-.5,1.4-1.1,1.7-1.8l3,.9c-.4.8-.9,1.5-1.7,2.2-.7.6-1.6,1.1-2.6,1.5-1,.4-2.1.5-3.2.5ZM135,88.6h10.1c0-1-.3-1.8-.8-2.5-.5-.7-1.1-1.3-1.8-1.7-.7-.4-1.5-.6-2.4-.6s-1.7.2-2.4.6c-.7.4-1.3,1-1.8,1.7-.5.7-.7,1.6-.8,2.5ZM161.1,98.2c-1.1,0-2.2-.2-3.1-.7-.9-.5-1.7-1.1-2.4-1.9-.7-.8-1.2-1.7-1.6-2.7-.4-1-.5-2.1-.5-3.2s.2-2.3.6-3.3c.4-1,.9-2,1.6-2.7.7-.8,1.5-1.4,2.5-1.9.9-.4,2-.7,3.1-.7s2.5.3,3.5,1c1,.6,1.9,1.5,2.5,2.5v-3.2h3.1v16.2c0,1.6-.4,3-1.2,4.1-.8,1.1-1.8,2-3.2,2.6-1.3.6-2.8.9-4.5.9s-3.4-.3-4.6-1c-1.2-.6-2.2-1.5-3.1-2.6l2-1.8c.6.9,1.5,1.6,2.4,2,1,.5,2.1.7,3.2.7s1.8-.2,2.6-.5c.8-.3,1.5-.9,2-1.6.5-.7.7-1.6.7-2.7v-2.5c-.6,1-1.4,1.8-2.4,2.4-1,.6-2.1.8-3.3.8ZM162.3,95.4c.5,0,1,0,1.5-.3.5-.2.9-.4,1.3-.7.4-.3.8-.7,1.1-1.1.3-.4.5-.8.6-1.3v-4.4c-.3-.7-.7-1.3-1.2-1.9-.5-.6-1.1-1-1.7-1.3-.6-.3-1.3-.4-1.9-.4s-1.5.2-2.1.5c-.6.3-1.1.8-1.5,1.3-.4.5-.8,1.1-1,1.8-.2.7-.4,1.4-.4,2.1s.1,1.5.4,2.1c.3.7.6,1.3,1.1,1.8.5.5,1,.9,1.7,1.2.6.3,1.3.4,2,.4ZM187.1,84.4c-1.4,0-2.6.3-3.6.9-1,.6-1.8,1.4-2.2,2.5v10.2h-3.5v-16.6h3.2v3.7c.6-1.1,1.3-2.1,2.3-2.7.9-.7,1.9-1.1,3-1.1h.5c.1,0,.3,0,.4,0v3.2ZM192.8,98.1v-16.6h3.5v16.6h-3.5ZM192.8,78.7v-3.9h3.5v3.9h-3.5ZM213,97.2c-.3.1-.7.3-1.1.5-.4.2-1,.3-1.5.4-.6.1-1.1.2-1.7.2s-1.4-.1-2-.4c-.6-.3-1.1-.7-1.5-1.2-.4-.6-.5-1.3-.5-2.2v-10.4h-2.2v-2.7h2.2v-5.5h3.5v5.5h3.6v2.7h-3.6v9.3c0,.6.2,1,.5,1.3.3.3.8.4,1.2.4s1,0,1.4-.3c.4-.2.8-.3,1-.4l.7,2.8ZM218.6,98.1v-16.6h3.5v16.6h-3.5ZM218.6,78.7v-3.9h3.5v3.9h-3.5ZM251.3,80.8c-.2-.2-.5-.5-.9-.7-.4-.3-.9-.5-1.4-.8-.6-.2-1.1-.4-1.8-.6-.6-.1-1.3-.2-2-.2-1.5,0-2.6.3-3.3.8-.7.6-1.1,1.3-1.1,2.3s.2,1.3.6,1.7c.4.4,1,.7,1.8,1,.8.3,1.9.6,3.1.9,1.5.4,2.9.8,4,1.3,1.1.5,2,1.1,2.6,2,.6.8.9,1.9.9,3.3s-.2,2.1-.6,3c-.4.8-1,1.5-1.8,2-.8.5-1.6.9-2.6,1.1-1,.2-2.1.4-3.2.4s-2.2-.1-3.4-.4c-1.1-.2-2.2-.6-3.2-1-1-.5-1.9-1-2.8-1.7l1.6-3.1c.3.3.7.6,1.2.9.5.3,1.1.6,1.8.9.7.3,1.5.6,2.3.8.8.2,1.7.3,2.5.3,1.4,0,2.5-.2,3.2-.7.8-.5,1.1-1.2,1.1-2.2s-.2-1.4-.7-1.8c-.5-.5-1.2-.9-2.1-1.2-.9-.3-2-.6-3.3-1-1.5-.4-2.7-.8-3.7-1.3-1-.5-1.7-1.1-2.3-1.8-.5-.8-.7-1.7-.7-2.9s.4-2.7,1.1-3.8c.7-1,1.7-1.8,2.9-2.3,1.3-.5,2.7-.8,4.2-.8s2,.1,2.9.4c.9.2,1.8.5,2.5.9.8.4,1.5.8,2.2,1.3l-1.6,2.9ZM269,97.2c-.3.1-.7.3-1.1.5-.4.2-1,.3-1.5.4-.6.1-1.1.2-1.7.2s-1.4-.1-2-.4c-.6-.3-1.1-.7-1.5-1.2-.4-.6-.5-1.3-.5-2.2v-10.4h-2.2v-2.7h2.2v-5.5h3.5v5.5h3.6v2.7h-3.6v9.3c0,.6.2,1,.5,1.3.3.3.8.4,1.2.4s1,0,1.4-.3c.4-.2.8-.3,1-.4l.7,2.8ZM274.5,91.6v-10.2h3.5v9.5c0,1.5.3,2.6.8,3.4.6.7,1.3,1.1,2.4,1.1s1.3-.1,1.9-.4c.6-.3,1.2-.7,1.7-1.2.5-.6,1-1.2,1.3-2v-10.4h3.5v12.7c0,.4,0,.7.2.9.1.2.4.3.7.3v2.8c-.4,0-.7.1-.9.1-.2,0-.5,0-.7,0-.6,0-1.2-.2-1.6-.5-.4-.4-.7-.8-.7-1.4v-1.7c-.8,1.2-1.8,2.1-3,2.8-1.2.6-2.5.9-3.9.9s-3.1-.6-3.9-1.7c-.9-1.1-1.3-2.8-1.3-5.1ZM296.1,89.8c0-1.6.3-3,1-4.3.7-1.3,1.5-2.4,2.7-3.1,1.1-.8,2.4-1.2,3.9-1.2s2.4.3,3.4,1c1,.7,1.8,1.5,2.4,2.5v-9.7h3.5v19.3c0,.4,0,.7.2.9.1.2.4.3.7.3v2.8c-.7.1-1.2.2-1.5.2-.7,0-1.2-.2-1.7-.6-.4-.4-.7-.8-.7-1.4v-1.2c-.7,1.1-1.5,1.9-2.6,2.5-1.1.6-2.2.9-3.4.9s-2.2-.2-3.2-.7c-1-.4-1.8-1.1-2.5-1.9-.7-.8-1.3-1.7-1.7-2.8-.4-1-.6-2.1-.6-3.3ZM309.5,92.1v-4.4c-.2-.7-.6-1.3-1.1-1.8-.5-.6-1.1-1-1.8-1.3-.6-.3-1.3-.5-1.9-.5s-1.4.2-2,.5c-.6.3-1.1.7-1.6,1.3-.4.5-.8,1.1-1,1.8s-.3,1.4-.3,2.1.1,1.5.4,2.2c.3.7.6,1.3,1.1,1.8.5.5,1,.9,1.7,1.2.6.3,1.3.4,2.1.4s.9,0,1.4-.3c.5-.2.9-.4,1.4-.7.4-.3.8-.6,1.1-1.1.3-.4.5-.8.7-1.3ZM320.6,98.1v-16.6h3.5v16.6h-3.5ZM320.6,78.7v-3.9h3.5v3.9h-3.5ZM339,98.4c-1.3,0-2.5-.2-3.5-.7-1-.5-1.9-1.1-2.7-1.9-.7-.8-1.3-1.7-1.7-2.7-.4-1-.6-2.1-.6-3.3s.2-2.3.6-3.3c.4-1,1-2,1.7-2.7.8-.8,1.7-1.4,2.7-1.9,1.1-.5,2.2-.7,3.5-.7s2.5.2,3.5.7c1.1.4,2,1.1,2.7,1.9.8.8,1.3,1.7,1.7,2.7.4,1,.6,2.1.6,3.3s-.2,2.3-.6,3.3c-.4,1-1,1.9-1.7,2.7-.7.8-1.6,1.4-2.7,1.9-1,.4-2.2.7-3.5.7ZM334,89.8c0,1.1.2,2,.7,2.9.4.8,1,1.5,1.8,2,.7.5,1.6.7,2.5.7s1.7-.2,2.5-.7c.8-.5,1.4-1.2,1.8-2,.4-.9.7-1.8.7-2.9s-.2-2-.7-2.9c-.4-.8-1.1-1.5-1.8-2-.7-.5-1.6-.8-2.5-.8s-1.8.3-2.5.8c-.7.5-1.3,1.2-1.8,2-.4.8-.7,1.8-.7,2.9Z"/>
+      </svg>
+    </div>
+    <div class="made-by">
+      <span class="label">Made by</span>
+      <span class="studio">Integriti <span>Studio</span></span>
+    </div>
+  </header>
+
+  <h1>Account Billing — API Flow Diagrams</h1>
+  <p class="subtitle">
+    Base URL: https://account-billing.onrender.com &nbsp;·&nbsp;
+    Auth headers: <code>X-Invoice-Secret</code> + <code>X-Shopify-Shop-Domain</code>
+  </p>
+
+  <div class="meta">
+    <span>Shop: <strong>account-billing.myshopify.com</strong></span>
+    <span>Customer storefront: <strong>/pages/my-account</strong></span>
+    <span>Document date: <strong>2026-10-14</strong></span>
+  </div>
+
+  <div class="legend">
+    <span><i class="l-start"></i>Start / Auth</span>
+    <span><i class="l-hook"></i>Webhook (ERP push)</span>
+    <span><i class="l-db"></i>Database</span>
+    <span><i class="l-ok"></i>Success (2xx)</span>
+    <span><i class="l-warn"></i>Partial (202)</span>
+    <span><i class="l-err"></i>Error (4xx)</span>
+  </div>
+
+  <h2>0. System overview</h2>
+  <div class="arch">
+    <div class="box">
+      <div class="t">ERP / Back-office</div>
+      <div class="s">Webhooks push invoices &amp; balances</div>
+    </div>
+    <div class="arr">→</div>
+    <div class="box">
+      <div class="t">Account Billing API</div>
+      <div class="s">Render · Express app</div>
+    </div>
+    <div class="arr">→</div>
+    <div class="box">
+      <div class="t">PostgreSQL</div>
+      <div class="s">Invoices · revisions · outstanding</div>
+    </div>
+    <div class="arr">→</div>
+    <div class="box">
+      <div class="t">Shopify Customer</div>
+      <div class="s">My Account · View / PDF</div>
+    </div>
+  </div>
+
+  <table class="endpoints">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Method</th>
+        <th>Endpoint</th>
+        <th>Type</th>
+        <th>Auth</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>GET</td>
+        <td><code>/api/health</code></td>
+        <td>Health</td>
+        <td>None</td>
+        <td>App up check</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>GET</td>
+        <td><code>/api/health/db</code></td>
+        <td>Health</td>
+        <td>None</td>
+        <td>Database up check</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>POST</td>
+        <td><code>/api/invoices/ingest</code></td>
+        <td><strong>Webhook</strong></td>
+        <td>Required</td>
+        <td>Create invoice revision</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>GET</td>
+        <td><code>/api/invoices/exists</code></td>
+        <td>Query</td>
+        <td>Required</td>
+        <td>Check invoice exists</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>POST</td>
+        <td><code>/api/outstanding/ingest</code></td>
+        <td><strong>Webhook</strong></td>
+        <td>Required</td>
+        <td>Set customer outstanding balance</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>GET</td>
+        <td><code>/api/outstanding</code></td>
+        <td>Query</td>
+        <td>Required</td>
+        <td>Read customer outstanding balance</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 1 HEALTH -->
+  <h2>1. Health check — GET /api/health</h2>
+  <div class="flow">
+    <div class="steps">
+      <div class="node start"><span class="t">Caller</span><span class="s">Any client</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><span class="t">GET /api/health</span><span class="s">No auth</span></div>
+      <div class="arrow">→</div>
+      <div class="node ok"><span class="t">200 OK</span><span class="s">status: ok</span></div>
+    </div>
+    <div class="io">
+      <div class="io-block">
+        <div class="io-h">Payload</div>
+        <pre>None (GET — no body)</pre>
+      </div>
+      <div class="io-block">
+        <div class="io-h resp-ok">Response — 200</div>
+        <pre>{
+  "success": true,
+  "status": "ok",
+  "service": "account-billing",
+  "time": "2026-10-14T12:00:00.000Z"
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 DB HEALTH -->
+  <h2>2. Database health — GET /api/health/db</h2>
+  <div class="flow">
+    <div class="steps">
+      <div class="node start"><span class="t">Caller</span><span class="s">Any client</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><span class="t">GET /api/health/db</span><span class="s">No auth</span></div>
+      <div class="arrow">→</div>
+      <div class="node db"><span class="t">Postgres</span><span class="s">SELECT now()</span></div>
+      <div class="arrow">→</div>
+      <div class="branch">
+        <div class="branch-row">
+          <span class="label ok">OK</span>
+          <div class="node ok"><span class="t">200</span><span class="s">database + latency</span></div>
+        </div>
+        <div class="branch-row">
+          <span class="label err">Down</span>
+          <div class="node err"><span class="t">503</span><span class="s">unavailable</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="io">
+      <div class="io-block">
+        <div class="io-h">Payload</div>
+        <pre>None (GET — no body)</pre>
+      </div>
+      <div class="io-block">
+        <div class="io-h resp-ok">Response — 200</div>
+        <pre>{
+  "success": true,
+  "status": "ok",
+  "database": "invoice_qhxr",
+  "db_time": "2026-10-14T12:00:00.000Z",
+  "latency_ms": 12
+}</pre>
+      </div>
+    </div>
+    <div class="io">
+      <div class="io-block">
+        <div class="io-h">Payload</div>
+        <pre>None</pre>
+      </div>
+      <div class="io-block">
+        <div class="io-h resp-err">Response — 503</div>
+        <pre>{
+  "success": false,
+  "status": "error",
+  "error": "Database unavailable",
+  "latency_ms": 45
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 INVOICE WEBHOOK -->
+  <h2>3. Invoice ingest webhook — POST /api/invoices/ingest <span class="badge webhook">WEBHOOK</span></h2>
+  <div class="flow">
+    <div class="hook-callout">
+      <strong>Webhook:</strong> ERP / back-office pushes one invoice (one revision) to this URL whenever an invoice is created or revised.
+      Auth headers required on every call.
+    </div>
+    <div class="steps">
+      <div class="node start"><span class="t">ERP</span><span class="s">Webhook push</span></div>
+      <div class="arrow">→</div>
+      <div class="node hook"><span class="t">POST ingest</span><span class="s">Webhook</span></div>
+      <div class="arrow">→</div>
+      <div class="node auth"><span class="t">Auth</span><span class="s">Secret + Shop</span></div>
+      <div class="arrow">→</div>
+      <div class="branch">
+        <div class="branch-row">
+          <span class="label err">Fail</span>
+          <div class="node err"><span class="t">401 / 403</span><span class="s">Unauthorized</span></div>
+        </div>
+        <div class="branch-row">
+          <span class="label ok">Pass</span>
+          <div class="node decision"><span class="t">Validate</span><span class="s">IDs · revision · dupe</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="steps" style="margin-top:10px">
+      <div class="node decision"><span class="t">Outcome</span><span class="s">After store attempt</span></div>
+      <div class="arrow">→</div>
+      <div class="branch">
+        <div class="branch-row">
+          <span class="label ok">Full totals</span>
+          <div class="node ok"><span class="t">200</span><span class="s">downloadable: true</span></div>
+        </div>
+        <div class="branch-row">
+          <span class="label warn">Missing totals</span>
+          <div class="node warn"><span class="t">202</span><span class="s">downloadable: false</span></div>
+        </div>
+        <div class="branch-row">
+          <span class="label err">Duplicate</span>
+          <div class="node err"><span class="t">409</span><span class="s">exists: true</span></div>
+        </div>
+        <div class="branch-row">
+          <span class="label err">Bad fields</span>
+          <div class="node err"><span class="t">400</span><span class="s">Not stored</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Webhook payload (request body)</h3>
+    <div class="io-block" style="margin-bottom:10px">
+      <div class="io-h">POST body — example</div>
+      <pre>{
+  "shopify_customer_id": "31249944510693",
+  "shopify_order_id": "5600000000999",
+  "invoice_number": "IQ-LIVE-2001",
+  "invoice_date": "2026-10-14",
+  "order_no": "SO-46001",
+  "order_date": "2026-10-13",
+  "customer_no": "IQ-DEMO-01",
+  "po_number": "PO-80001",
+  "salesperson": "JD",
+  "terms": "N30",
+  "ship_via": "CANPAR",
+  "currency": "CAD",
+  "sold_to": {
+    "name": "Customer Name",
+    "address1": "100 Demo Street NW",
+    "city": "Edmonton",
+    "province": "AB",
+    "postal": "T5L 4S9",
+    "country": "CA"
+  },
+  "ship_to": {
+    "name": "Ship To Name",
+    "address1": "200 Ship Lane",
+    "city": "Calgary",
+    "province": "AB",
+    "postal": "T2P 1J9",
+    "country": "CA"
+  },
+  "lines": [
+    {
+      "item_number": "ITEM-001",
+      "description": "Product description",
+      "qty_ordered": 3,
+      "qty_shipped": 3,
+      "qty_backorder": 0,
+      "unit_price": "12.50",
+      "uom": "EACH",
+      "extended_price": "37.50"
+    },
+    {
+      "item_number": "FREIGHT",
+      "description": "FREIGHT - CANPAR TRACK123",
+      "qty_ordered": null,
+      "qty_shipped": null,
+      "qty_backorder": null,
+      "unit_price": null,
+      "uom": null,
+      "extended_price": "18.50"
+    }
+  ],
+  "tax_lines": [
+    { "code": "GST", "amount": "2.80" },
+    { "code": "PSTSK", "amount": "0.00" }
+  ],
+  "tax_exempt_code": "",
+  "tax_registration_no": "123456789RT0001",
+  "subtotal": "56.00",
+  "total_tax": "2.80",
+  "total_amount": "58.80",
+  "less_payment": "0.00",
+  "amount_due": "58.80",
+  "revision": 1
+}</pre>
+    </div>
+
+    <div class="io">
+      <div class="io-block">
+        <div class="io-h resp-ok">Response — 200 (created, PDF OK)</div>
+        <pre>{
+  "success": true,
+  "exists": false,
+  "data": {
+    "id": "...",
+    "invoice_number": "IQ-LIVE-2001",
+    "revision": 1,
+    "downloadable": true,
+    "missing_required_totals": []
+  }
+}</pre>
+      </div>
+      <div class="io-block">
+        <div class="io-h resp-warn">Response — 202 (stored, PDF off)</div>
+        <pre>{
+  "success": true,
+  "exists": false,
+  "data": {
+    "downloadable": false,
+    "missing_required_totals": ["total_amount", "amount_due"]
+  },
+  "warning": "Stored but not downloadable; missing required totals: ..."
+}</pre>
+      </div>
+    </div>
+    <div class="io">
+      <div class="io-block">
+        <div class="io-h resp-err">Response — 409 (duplicate revision)</div>
+        <pre>{
+  "success": false,
+  "exists": true,
+  "error": "Invoice already exists for this invoice_number and revision",
+  "data": {
+    "exists": true,
+    "invoice_number": "IQ-LIVE-2001",
+    "revision": 1,
+    "shopify_customer_id": "31249944510693"
+  }
+}</pre>
+      </div>
+      <div class="io-block">
+        <div class="io-h resp-err">Response — 400 (required field empty)</div>
+        <pre>{
+  "success": false,
+  "error": "invoice_number is required"
+}
+
+// also for empty shopify_customer_id
+// or missing / invalid revision</pre>
+      </div>
+    </div>
+    <p class="note-line">Headers: <strong>Content-Type: application/json</strong>, <strong>X-Invoice-Secret</strong>, <strong>X-Shopify-Shop-Domain</strong></p>
+  </div>
+
+  <!-- 4 EXISTS -->
+  <h2>4. Invoice exists — GET /api/invoices/exists</h2>
+  <div class="flow">
+    <div class="steps">
+      <div class="node start"><span class="t">ERP</span><span class="s">Query</span></div>
+      <div class="arrow">→</div>
+      <div class="node auth"><span class="t">Auth</span><span class="s">Secret + Shop</span></div>
+      <div class="arrow">→</div>
+      <div class="node db"><span class="t">Lookup</span><span class="s">Any revision</span></div>
+      <div class="arrow">→</div>
+      <div class="node ok"><span class="t">200</span><span class="s">exists true/false</span></div>
+    </div>
+    <div class="io">
+      <div class="io-block">
+        <div class="io-h">Payload (query or JSON body)</div>
+        <pre>{
+  "shopify_customer_id": "31249944510693",
+  "invoice_number": "IQ-LIVE-2001"
+}</pre>
+      </div>
+      <div class="io-block">
+        <div class="io-h resp-ok">Response — 200 (exists)</div>
+        <pre>{
+  "success": true,
+  "data": {
+    "exists": true,
+    "shopify_customer_id": "31249944510693",
+    "invoice_number": "IQ-LIVE-2001",
+    "revision": 2,
+    "invoice_date": "2026-10-14",
+    "downloadable": true,
+    "id": "..."
+  }
+}</pre>
+      </div>
+    </div>
+    <div class="io">
+      <div class="io-block">
+        <div class="io-h">Same payload</div>
+        <pre>{
+  "shopify_customer_id": "31249944510693",
+  "invoice_number": "DOES-NOT-EXIST"
+}</pre>
+      </div>
+      <div class="io-block">
+        <div class="io-h resp-ok">Response — 200 (not found)</div>
+        <pre>{
+  "success": true,
+  "data": {
+    "exists": false,
+    "shopify_customer_id": "31249944510693",
+    "invoice_number": "DOES-NOT-EXIST"
+  }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 OUTSTANDING WEBHOOK -->
+  <h2>5. Outstanding balance webhook — POST /api/outstanding/ingest <span class="badge webhook">WEBHOOK</span></h2>
+  <div class="flow">
+    <div class="hook-callout">
+      <strong>Webhook:</strong> ERP / back-office pushes the customer’s current outstanding balance to this URL.
+      One balance per customer (overwrites previous value). Auth headers required.
+    </div>
+    <div class="steps">
+      <div class="node start"><span class="t">ERP</span><span class="s">Webhook push</span></div>
+      <div class="arrow">→</div>
+      <div class="node hook"><span class="t">POST outstanding</span><span class="s">Webhook</span></div>
+      <div class="arrow">→</div>
+      <div class="node auth"><span class="t">Auth</span><span class="s">Secret + Shop</span></div>
+      <div class="arrow">→</div>
+      <div class="node db"><span class="t">Upsert</span><span class="s">1 / customer</span></div>
+      <div class="arrow">→</div>
+      <div class="branch">
+        <div class="branch-row">
+          <span class="label ok">OK</span>
+          <div class="node ok"><span class="t">200</span><span class="s">Saved</span></div>
+        </div>
+        <div class="branch-row">
+          <span class="label err">Bad</span>
+          <div class="node err"><span class="t">400</span><span class="s">Missing fields</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="io">
+      <div class="io-block">
+        <div class="io-h">Webhook payload (request body)</div>
+        <pre>{
+  "shopify_customer_id": "31249944510693",
+  "outstanding_balance": 2600
+}
+
+// optional:
+// "currency": "CAD"</pre>
+      </div>
+      <div class="io-block">
+        <div class="io-h resp-ok">Response — 200</div>
+        <pre>{
+  "success": true,
+  "data": {
+    "id": "...",
+    "scope": "customer",
+    "shopify_customer_id": "31249944510693",
+    "amount": "2600",
+    "currency": "CAD"
+  }
+}</pre>
+      </div>
+    </div>
+    <div class="io">
+      <div class="io-block">
+        <div class="io-h">Invalid payload example</div>
+        <pre>{
+  "shopify_customer_id": "",
+  "outstanding_balance": null
+}</pre>
+      </div>
+      <div class="io-block">
+        <div class="io-h resp-err">Response — 400</div>
+        <pre>{
+  "error": "shopify_customer_id is required"
+}
+
+// or outstanding_balance missing</pre>
+      </div>
+    </div>
+    <p class="note-line">Headers: <strong>Content-Type: application/json</strong>, <strong>X-Invoice-Secret</strong>, <strong>X-Shopify-Shop-Domain</strong></p>
+  </div>
+
+  <!-- 6 GET OUTSTANDING -->
+  <h2>6. Get outstanding — GET /api/outstanding</h2>
+  <div class="flow">
+    <div class="steps">
+      <div class="node start"><span class="t">ERP</span><span class="s">Query</span></div>
+      <div class="arrow">→</div>
+      <div class="node auth"><span class="t">Auth</span><span class="s">Secret + Shop</span></div>
+      <div class="arrow">→</div>
+      <div class="node db"><span class="t">Read</span><span class="s">Customer balance</span></div>
+      <div class="arrow">→</div>
+      <div class="node ok"><span class="t">200</span><span class="s">exists true/false</span></div>
+    </div>
+    <div class="io">
+      <div class="io-block">
+        <div class="io-h">Payload (query or JSON body)</div>
+        <pre>{
+  "shopify_customer_id": "31249944510693"
+}</pre>
+      </div>
+      <div class="io-block">
+        <div class="io-h resp-ok">Response — 200 (found)</div>
+        <pre>{
+  "success": true,
+  "data": {
+    "shopify_customer_id": "31249944510693",
+    "exists": true,
+    "outstanding_balance": "2600",
+    "currency": "CAD"
+  }
+}</pre>
+      </div>
+    </div>
+    <div class="io">
+      <div class="io-block">
+        <div class="io-h">Same shape — unknown customer</div>
+        <pre>{
+  "shopify_customer_id": "99999999999999"
+}</pre>
+      </div>
+      <div class="io-block">
+        <div class="io-h resp-ok">Response — 200 (none on file)</div>
+        <pre>{
+  "success": true,
+  "data": {
+    "shopify_customer_id": "99999999999999",
+    "exists": false,
+    "outstanding_balance": null,
+    "currency": "CAD"
+  }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7 CUSTOMER -->
+  <h2>7. Customer storefront (reference — not ERP)</h2>
+  <div class="flow">
+    <div class="steps">
+      <div class="node start"><span class="t">Customer</span><span class="s">Shopify login</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><span class="t">/pages/my-account</span><span class="s">Invoices tab</span></div>
+      <div class="arrow">→</div>
+      <div class="node auth"><span class="t">App Proxy</span><span class="s">Shopify signed</span></div>
+      <div class="arrow">→</div>
+      <div class="branch">
+        <div class="branch-row">
+          <span class="label ok">downloadable</span>
+          <div class="node ok"><span class="t">View / PDF</span><span class="s">Print layout</span></div>
+        </div>
+        <div class="branch-row">
+          <span class="label warn">not downloadable</span>
+          <div class="node warn"><span class="t">View only</span><span class="s">PDF disabled</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="note-line">ERP does not call these endpoints. Auth is the logged-in Shopify customer via app proxy.</p>
+  </div>
+
+  <!-- 8 EMPTY -->
+  <h2>8. Empty field policy (invoice webhook payload)</h2>
+  <table class="endpoints">
+    <thead>
+      <tr>
+        <th>Field group</th>
+        <th>If empty / null / missing</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>shopify_customer_id</code>, <code>invoice_number</code>, <code>revision</code></td>
+        <td>Rejected</td>
+        <td><strong>400</strong> — not stored</td>
+      </tr>
+      <tr>
+        <td><code>subtotal</code>, <code>total_tax</code>, <code>total_amount</code>, <code>less_payment</code>, <code>amount_due</code></td>
+        <td>Still stored</td>
+        <td><strong>202</strong> — downloadable: false</td>
+      </tr>
+      <tr>
+        <td>PO, salesperson, addresses, order id, freight qty/price, etc.</td>
+        <td>Allowed</td>
+        <td><strong>200</strong> — stored normally</td>
+      </tr>
+      <tr>
+        <td>Same <code>invoice_number</code> + same <code>revision</code> again</td>
+        <td>Rejected</td>
+        <td><strong>409</strong> — exists: true</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <div>
+      Account Billing Invoice Module · API flow reference · Companion to API-DOCUMENTATION.txt<br />
+      Webhooks: POST /api/invoices/ingest · POST /api/outstanding/ingest
+    </div>
+    <div class="by">Made by Integriti <span>Studio</span></div>
+  </div>
+</body>
+</html>

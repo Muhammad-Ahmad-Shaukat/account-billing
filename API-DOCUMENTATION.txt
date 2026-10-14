@@ -1,0 +1,426 @@
+================================================================================
+ACCOUNT BILLING — INVOICE API DOCUMENTATION
+Base URL: https://account-billing.onrender.com
+================================================================================
+
+Authentication (for protected endpoints)
+---------------------------------------
+Send these headers on every protected request:
+
+  Content-Type: application/json
+  X-Invoice-Secret: <shared secret provided separately>
+  X-Shopify-Shop-Domain: account-billing.myshopify.com
+
+
+================================================================================
+1) HEALTH CHECK
+================================================================================
+Method:  GET
+URL:     /api/health
+Auth:    None
+
+Purpose:
+  Confirm the application is running.
+
+Example:
+  GET https://account-billing.onrender.com/api/health
+
+Success response (200):
+  {
+    "success": true,
+    "status": "ok",
+    "service": "account-billing",
+    "time": "2026-10-14T12:00:00.000Z"
+  }
+
+
+================================================================================
+2) DATABASE HEALTH CHECK
+================================================================================
+Method:  GET
+URL:     /api/health/db
+Auth:    None
+
+Purpose:
+  Confirm the database connection is working.
+
+Example:
+  GET https://account-billing.onrender.com/api/health/db
+
+Success response (200):
+  {
+    "success": true,
+    "status": "ok",
+    "database": "invoice",
+    "db_time": "2026-10-14T12:00:00.000Z",
+    "latency_ms": 12
+  }
+
+Failure response (503):
+  {
+    "success": false,
+    "status": "error",
+    "error": "Database unavailable",
+    "latency_ms": 45
+  }
+
+
+================================================================================
+3) CREATE / INGEST INVOICE  (WEBHOOK)
+================================================================================
+Method:  POST
+URL:     /api/invoices/ingest
+Type:    Webhook — ERP / back-office pushes invoices to this URL
+Auth:    Required (secret + shop headers)
+
+Purpose:
+  Push one invoice from the ERP/back-office into Shopify storage.
+  One webhook call = one invoice revision.
+
+Important rules:
+  - Money values must be sent as already-calculated strings (do not expect
+    the app to recalculate totals).
+  - A new revision for the same invoice_number is allowed (revision 2, 3, …).
+  - The same invoice_number + same revision cannot be sent twice.
+
+Empty / missing fields — what happens:
+  REQUIRED (reject with HTTP 400 if empty, null, or missing):
+    - shopify_customer_id
+    - invoice_number
+    - revision  (must be a positive integer: 1, 2, 3, …)
+
+  REQUIRED FOR PDF DOWNLOAD (invoice is still STORED):
+    If any of these are missing, null, or "" (empty string):
+      subtotal, total_tax, total_amount, less_payment, amount_due
+    → HTTP 202, downloadable=false, PDF disabled for customer
+    → Send a new revision with complete totals to make it downloadable
+
+  OPTIONAL (empty string, null, or omit — still HTTP 200):
+    - shopify_order_id, po_number, salesperson, terms, ship_via
+    - tax_exempt_code, tax_registration_no, order_no, order_date
+    - sold_to / ship_to nested fields
+    - line qty/unit_price/uom (e.g. freight lines can be null)
+    - Empty lines[] or tax_lines[] arrays are allowed
+
+Request body (example):
+  {
+    "shopify_customer_id": "31249944510693",
+    "shopify_order_id": "5600000000999",
+    "invoice_number": "IQ-LIVE-2001",
+    "invoice_date": "2026-10-14",
+    "order_no": "SO-46001",
+    "order_date": "2026-10-13",
+    "customer_no": "IQ-DEMO-01",
+    "po_number": "PO-80001",
+    "salesperson": "JD",
+    "terms": "N30",
+    "ship_via": "CANPAR",
+    "currency": "CAD",
+    "sold_to": {
+      "name": "Customer Name",
+      "address1": "100 Demo Street NW",
+      "city": "Edmonton",
+      "province": "AB",
+      "postal": "T5L 4S9",
+      "country": "CA"
+    },
+    "ship_to": {
+      "name": "Ship To Name",
+      "address1": "200 Ship Lane",
+      "city": "Calgary",
+      "province": "AB",
+      "postal": "T2P 1J9",
+      "country": "CA"
+    },
+    "lines": [
+      {
+        "item_number": "ITEM-001",
+        "description": "Product description",
+        "qty_ordered": 3,
+        "qty_shipped": 3,
+        "qty_backorder": 0,
+        "unit_price": "12.50",
+        "uom": "EACH",
+        "extended_price": "37.50"
+      },
+      {
+        "item_number": "FREIGHT",
+        "description": "FREIGHT - CANPAR TRACK123",
+        "qty_ordered": null,
+        "qty_shipped": null,
+        "qty_backorder": null,
+        "unit_price": null,
+        "uom": null,
+        "extended_price": "18.50"
+      }
+    ],
+    "tax_lines": [
+      { "code": "GST", "amount": "2.80" },
+      { "code": "PSTSK", "amount": "0.00" }
+    ],
+    "tax_exempt_code": "",
+    "tax_registration_no": "123456789RT0001",
+    "subtotal": "56.00",
+    "total_tax": "2.80",
+    "total_amount": "58.80",
+    "less_payment": "0.00",
+    "amount_due": "58.80",
+    "revision": 1
+  }
+
+SCENARIOS
+---------
+
+A) New invoice created successfully
+   HTTP 200
+   {
+     "success": true,
+     "exists": false,
+     "data": {
+       "id": "...",
+       "invoice_number": "IQ-LIVE-2001",
+       "revision": 1,
+       "downloadable": true,
+       "missing_required_totals": []
+     }
+   }
+
+B) Invoice created but missing required totals
+   (subtotal / total_tax / total_amount / less_payment / amount_due)
+   Stored, but customer cannot download PDF.
+   HTTP 202
+   {
+     "success": true,
+     "exists": false,
+     "data": {
+       "downloadable": false,
+       "missing_required_totals": ["total_amount", "amount_due"]
+     },
+     "warning": "Stored but not downloadable; missing required totals: ..."
+   }
+
+C) Duplicate invoice_number + same revision
+   Not stored again. Returns false / exists true.
+   HTTP 409
+   {
+     "success": false,
+     "exists": true,
+     "error": "Invoice already exists for this invoice_number and revision",
+     "data": {
+       "success": false,
+       "exists": true,
+       "invoice_number": "IQ-LIVE-2001",
+       "revision": 1,
+       "id": "...",
+       "shopify_customer_id": "31249944510693",
+       "message": "Invoice already exists for this invoice_number and revision"
+     }
+   }
+
+D) Same invoice_number with a HIGHER revision (e.g. revision 2)
+   Allowed. Creates a new revision. Customer sees the highest revision.
+
+E) Unauthorized / wrong secret or shop
+   HTTP 401 or 403
+   { "error": "Unauthorized" }
+   or
+   { "error": "Invalid shop domain" }
+
+F) Missing required fields (customer id / invoice number / revision)
+   HTTP 400
+   { "success": false, "error": "..." }
+
+
+================================================================================
+4) CHECK IF INVOICE EXISTS
+================================================================================
+Method:  GET
+URL:     /api/invoices/exists
+Auth:    Required
+
+Purpose:
+  Check whether an invoice already exists for a customer (any revision).
+
+Request body (JSON) OR query params:
+  {
+    "shopify_customer_id": "31249944510693",
+    "invoice_number": "IQ-LIVE-2001"
+  }
+
+SCENARIOS
+---------
+
+A) Invoice exists
+   HTTP 200
+   {
+     "success": true,
+     "data": {
+       "exists": true,
+       "shopify_customer_id": "31249944510693",
+       "invoice_number": "IQ-LIVE-2001",
+       "revision": 2,
+       "invoice_date": "2026-10-14",
+       "downloadable": true,
+       "id": "..."
+     }
+   }
+
+B) Invoice does not exist
+   HTTP 200
+   {
+     "success": true,
+     "data": {
+       "exists": false,
+       "shopify_customer_id": "31249944510693",
+       "invoice_number": "IQ-LIVE-2001"
+     }
+   }
+
+
+================================================================================
+5) SET / UPDATE OUTSTANDING BALANCE (PER CUSTOMER)  (WEBHOOK)
+================================================================================
+Method:  POST
+URL:     /api/outstanding/ingest
+Type:    Webhook — ERP / back-office pushes the customer balance to this URL
+Auth:    Required
+
+Purpose:
+  Store one outstanding balance per customer (overwrites previous value).
+
+Request body:
+  {
+    "shopify_customer_id": "31249944510693",
+    "outstanding_balance": 2600
+  }
+
+Optional:
+  "currency": "CAD"
+
+SCENARIOS
+---------
+
+A) Balance saved / updated
+   HTTP 200
+   {
+     "success": true,
+     "data": {
+       "id": "...",
+       "scope": "customer",
+       "shopify_customer_id": "31249944510693",
+       "amount": "2600",
+       "currency": "CAD"
+     }
+   }
+
+B) Missing shopify_customer_id or outstanding_balance
+   HTTP 400
+   { "error": "..." }
+
+
+================================================================================
+6) GET OUTSTANDING BALANCE (PER CUSTOMER)
+================================================================================
+Method:  GET
+URL:     /api/outstanding
+Auth:    Required
+
+Purpose:
+  Read the current outstanding balance for one customer.
+
+Request body (JSON) OR query param:
+  {
+    "shopify_customer_id": "31249944510693"
+  }
+
+SCENARIOS
+---------
+
+A) Balance found
+   HTTP 200
+   {
+     "success": true,
+     "data": {
+       "shopify_customer_id": "31249944510693",
+       "exists": true,
+       "outstanding_balance": "2600",
+       "currency": "CAD"
+     }
+   }
+
+B) No balance on file for that customer
+   HTTP 200
+   {
+     "success": true,
+     "data": {
+       "shopify_customer_id": "31249944510693",
+       "exists": false,
+       "outstanding_balance": null,
+       "currency": "CAD"
+     }
+   }
+
+
+================================================================================
+CUSTOMER STOREFRONT (FOR REFERENCE — NOT ERP CALLS)
+================================================================================
+Customers view invoices after signing in on the Shopify store:
+
+  Page:   /pages/my-account  →  Invoices section
+  Proxy:  /apps/account-billing/customer/invoices
+
+These storefront calls are authenticated by Shopify (logged-in customer).
+ERP systems do not call these endpoints.
+
+
+================================================================================
+QUICK CURL EXAMPLES
+================================================================================
+
+Health:
+  curl https://account-billing.onrender.com/api/health
+  curl https://account-billing.onrender.com/api/health/db
+
+Ingest invoice:
+  curl -X POST https://account-billing.onrender.com/api/invoices/ingest \
+    -H "Content-Type: application/json" \
+    -H "X-Invoice-Secret: YOUR_SECRET" \
+    -H "X-Shopify-Shop-Domain: account-billing.myshopify.com" \
+    -d @invoice.json
+
+Check invoice exists:
+  curl -X GET https://account-billing.onrender.com/api/invoices/exists \
+    -H "Content-Type: application/json" \
+    -H "X-Invoice-Secret: YOUR_SECRET" \
+    -H "X-Shopify-Shop-Domain: account-billing.myshopify.com" \
+    -d "{\"shopify_customer_id\":\"31249944510693\",\"invoice_number\":\"IQ-LIVE-2001\"}"
+
+Set outstanding:
+  curl -X POST https://account-billing.onrender.com/api/outstanding/ingest \
+    -H "Content-Type: application/json" \
+    -H "X-Invoice-Secret: YOUR_SECRET" \
+    -H "X-Shopify-Shop-Domain: account-billing.myshopify.com" \
+    -d "{\"shopify_customer_id\":\"31249944510693\",\"outstanding_balance\":2600}"
+
+Get outstanding:
+  curl -X GET https://account-billing.onrender.com/api/outstanding \
+    -H "Content-Type: application/json" \
+    -H "X-Invoice-Secret: YOUR_SECRET" \
+    -H "X-Shopify-Shop-Domain: account-billing.myshopify.com" \
+    -d "{\"shopify_customer_id\":\"31249944510693\"}"
+
+
+================================================================================
+NOTES FOR INTEGRATION
+================================================================================
+1. shopify_customer_id is required and must match the Shopify customer ID.
+2. shopify_order_id is optional (phone/offline orders may omit it).
+3. Freight lines use null for qty / unit_price / uom.
+4. Back-ordered lines with qty_shipped = 0 are still stored and printed.
+5. Printed money values are never recalculated by the app.
+6. Shared secret and shop domain must match the values configured on the server.
+7. Contact the development team for the live X-Invoice-Secret value.
+
+================================================================================
+END OF DOCUMENT
+================================================================================
