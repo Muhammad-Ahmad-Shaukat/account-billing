@@ -340,7 +340,7 @@
 
   function renderEmpty(){
     tbody.innerHTML =
-      '<tr><td colspan="6"><div class="rd-invoice-empty">' +
+      '<tr><td colspan="5"><div class="rd-invoice-empty">' +
         '<h3>No invoices</h3>' +
         '<p>There are no invoices for your account right now.</p>' +
         '<button type="button" class="rd-invoice-refresh" id="rdInvoiceRefresh">Refresh</button>' +
@@ -402,7 +402,6 @@
         '<td>' + formatDate(inv.invoice_date) + '</td>' +
         '<td><div class="rd-invoice-order">' + escapeHtml(inv.order_no) + '</div></td>' +
         '<td class="rd-invoice-total">' + money(inv.total_amount, inv.currency) + '</td>' +
-        '<td class="rd-invoice-total">' + money(inv.amount_due, inv.currency) + '</td>' +
         '<td><div class="rd-invoice-actions">' +
           '<button type="button" class="rd-invoice-action" title="View Invoice" data-invoice-id="' + escapeHtml(inv.id) + '">View</button>' +
           pdfBtnHtml +
@@ -440,7 +439,7 @@
       statsEl.hidden = false;
       statsEl.removeAttribute('hidden');
     }
-    tbody.innerHTML = '<tr><td colspan="6"><div class="rd-invoice-loading">Loading invoices...</div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5"><div class="rd-invoice-loading">Loading invoices...</div></td></tr>';
     try {
       const result = await fetchJson(buildListUrl(page));
       const rows = Array.isArray(result.data) ? result.data : [];
@@ -476,12 +475,12 @@
       '@page{size:letter portrait;margin:0.3in;}',
       'html,body{margin:0;padding:0;background:#fff;color:#111;font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:1.3;}',
       '.rd-erp-doc-wrap{width:100%;}',
-      // Fill printable letter height so the bordered page (and table) reach the bottom
-      '.rd-erp-page{border:1px solid #222;padding:8px;background:#fff;box-sizing:border-box;height:10.4in;max-height:10.4in;display:flex;flex-direction:column;overflow:hidden;}',
+      // Short invoices: natural height (no stretched rows).
+      // Continuation pages only: fill letter height and pin "continued" to bottom.
+      '.rd-erp-page{border:1px solid #222;padding:8px;background:#fff;box-sizing:border-box;height:auto;display:block;}',
+      '.rd-erp-page:not(.rd-erp-page-last){min-height:10.4in;height:10.4in;display:flex;flex-direction:column;overflow:hidden;}',
       '.rd-erp-page + .rd-erp-page{page-break-before:always;break-before:page;margin-top:0;}',
-      // Push continuation / footer to bottom of the page box without fake table rows
       '.rd-erp-continued{margin-top:auto;padding-top:8px;font-style:italic;font-size:10px;flex:0 0 auto;}',
-      '.rd-erp-footer{margin-top:auto !important;}',
       '.rd-erp-header{display:grid;grid-template-columns:96px 1fr 170px;gap:8px;align-items:start;margin-bottom:6px;page-break-inside:avoid;break-inside:avoid;flex:0 0 auto;}',
       '.rd-erp-logo{width:88px;height:auto;max-height:90px;object-fit:contain;display:block;}',
       '.rd-erp-logo-fallback{width:88px;min-height:60px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;letter-spacing:.04em;color:#5b2d91;border:1px solid #ddd;}',
@@ -502,8 +501,11 @@
       '.rd-erp-strip{width:100%;border-collapse:collapse;margin-bottom:0;table-layout:fixed;page-break-inside:avoid;break-inside:avoid;flex:0 0 auto;}',
       '.rd-erp-strip th,.rd-erp-strip td{border:1px solid #222;padding:2px 3px;font-size:8px;text-align:left;vertical-align:top;word-break:break-word;}',
       '.rd-erp-strip th{background:#f0f0f0;font-weight:700;}',
-      '.rd-erp-items{width:100%;border-collapse:collapse;margin-top:0;table-layout:fixed;flex:1 1 auto;}',
+      // Never flex-grow the items table — that stretches row height when few lines
+      '.rd-erp-items{width:100%;border-collapse:collapse;margin-top:0;table-layout:fixed;flex:0 0 auto;height:auto !important;}',
       '.rd-erp-items thead{display:table-header-group;}',
+      '.rd-erp-items tbody tr{height:auto !important;}',
+      '.rd-erp-items tbody td{height:auto !important;}',
       '.rd-erp-items tr{page-break-inside:avoid;break-inside:avoid;}',
       '.rd-erp-items th,.rd-erp-items td{border:1px solid #222;padding:3px 4px;font-size:9px;vertical-align:top;}',
       '.rd-erp-items th{background:#f0f0f0;font-weight:700;text-align:center;line-height:1.15;}',
@@ -516,7 +518,7 @@
       '.rd-erp-items col.c-price{width:11%;}',
       '.rd-erp-items col.c-uom{width:7%;}',
       '.rd-erp-items col.c-ext{width:12%;}',
-      '.rd-erp-footer{width:100%;border-collapse:collapse;margin-top:8px;table-layout:fixed;page-break-inside:avoid;break-inside:avoid;flex:0 0 auto;}',
+      '.rd-erp-footer{width:100%;border-collapse:collapse;margin-top:10px;table-layout:fixed;page-break-inside:avoid;break-inside:avoid;flex:0 0 auto;}',
       '.rd-erp-footer>tbody>tr>td{vertical-align:top;padding:0 6px 0 0;}',
       '.rd-erp-footer>tbody>tr>td:last-child{padding-right:0;padding-left:6px;}',
       '.rd-erp-footer td.col-legal{width:38%;}',

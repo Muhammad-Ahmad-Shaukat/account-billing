@@ -1,37 +1,66 @@
 import { Router } from "express";
 import { ingestAuth } from "../middleware/ingest-auth.js";
-import { upsertOutstandingBatch } from "../services/outstanding.js";
+import {
+  getOutstandingByCustomerId,
+  upsertCustomerOutstanding,
+} from "../services/outstanding.js";
 
 const router = Router();
 
-function normalizeItems(body) {
-  if (!body || typeof body !== "object") return [];
-  if (Array.isArray(body.balances)) return body.balances;
-  if (Array.isArray(body)) return body;
-  return [body];
-}
-
+/**
+ * POST /api/outstanding/ingest
+ * Body:
+ *   { "shopify_customer_id": "...", "outstanding_balance": 2600 }
+ */
 router.post("/ingest", ingestAuth, async (req, res) => {
   try {
-    const items = normalizeItems(req.body);
-    if (!items.length) {
+    const body = req.body;
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
       return res.status(400).json({
         error:
-          "Body must be a balance object, an array, or { balances: [...] }",
+          'JSON body required: { "shopify_customer_id": "...", "outstanding_balance": 2600 }',
       });
     }
 
-    const results = await upsertOutstandingBatch(req.ingestShop, items);
+    const result = await upsertCustomerOutstanding(req.ingestShop, body);
     return res.status(200).json({
       success: true,
-      data: results,
-      meta: { count: results.length },
+      data: result,
     });
   } catch (err) {
     const status = err.status || 500;
     console.error("[outstanding-ingest]", err);
     return res.status(status).json({
       error: err.message || "Failed to ingest outstanding balance",
+    });
+  }
+});
+
+/**
+ * GET /api/outstanding
+ * Same auth headers as ingest.
+ * Body or query: { "shopify_customer_id": "..." }
+ */
+router.get("/", ingestAuth, async (req, res) => {
+  try {
+    const body = req.body && typeof req.body === "object" ? req.body : {};
+    const shopify_customer_id =
+      body.shopify_customer_id || req.query.shopify_customer_id;
+
+    const result = await getOutstandingByCustomerId(
+      req.ingestShop,
+      shopify_customer_id
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (err) {
+    const status = err.status || 500;
+    console.error("[outstanding-get]", err);
+    return res.status(status).json({
+      error: err.message || "Failed to get outstanding balance",
     });
   }
 });

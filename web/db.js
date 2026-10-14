@@ -57,3 +57,10 @@ export async function migrate() {
 export async function query(text, params) {
   return pool.query(text, params);
 }
+
+export async function checkDb() {
+  const result = await pool.query(
+    "SELECT 1 AS ok, NOW() AS db_time, current_database() AS database"
+  );
+  return result.rows[0];
+}

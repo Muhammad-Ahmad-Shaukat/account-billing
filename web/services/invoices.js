@@ -60,7 +60,30 @@ export async function upsertInvoiceRevision(shop, payload) {
   try {
     await client.query("BEGIN");
 
-    const upsert = await client.query(
+    // Same invoice_number + revision already stored → reject (do not overwrite)
+    const existing = await client.query(
+      `
+      SELECT id, invoice_number, revision, shopify_customer_id
+      FROM invoices
+      WHERE shop = $1 AND invoice_number = $2 AND revision = $3
+      LIMIT 1
+      `,
+      [shop, invoiceNumber, revision]
+    );
+    if (existing.rowCount) {
+      await client.query("ROLLBACK");
+      return {
+        success: false,
+        exists: true,
+        invoice_number: invoiceNumber,
+        revision,
+        id: existing.rows[0].id,
+        shopify_customer_id: existing.rows[0].shopify_customer_id,
+        message: "Invoice already exists for this invoice_number and revision",
+      };
+    }
+
+    const inserted = await client.query(
       `
       INSERT INTO invoices (
         shop, shopify_customer_id, shopify_order_id,
@@ -73,30 +96,6 @@ export async function upsertInvoiceRevision(shop, payload) {
         $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,
         $15::jsonb,$16::jsonb,$17,$18,$19,$20,$21,$22,$23,$24,$25::jsonb, NOW()
       )
-      ON CONFLICT (shop, invoice_number, revision) DO UPDATE SET
-        shopify_customer_id = EXCLUDED.shopify_customer_id,
-        shopify_order_id = EXCLUDED.shopify_order_id,
-        invoice_date = EXCLUDED.invoice_date,
-        order_no = EXCLUDED.order_no,
-        order_date = EXCLUDED.order_date,
-        customer_no = EXCLUDED.customer_no,
-        po_number = EXCLUDED.po_number,
-        salesperson = EXCLUDED.salesperson,
-        terms = EXCLUDED.terms,
-        ship_via = EXCLUDED.ship_via,
-        currency = EXCLUDED.currency,
-        sold_to = EXCLUDED.sold_to,
-        ship_to = EXCLUDED.ship_to,
-        tax_exempt_code = EXCLUDED.tax_exempt_code,
-        tax_registration_no = EXCLUDED.tax_registration_no,
-        subtotal = EXCLUDED.subtotal,
-        total_tax = EXCLUDED.total_tax,
-        total_amount = EXCLUDED.total_amount,
-        less_payment = EXCLUDED.less_payment,
-        amount_due = EXCLUDED.amount_due,
-        downloadable = EXCLUDED.downloadable,
-        raw_json = EXCLUDED.raw_json,
-        updated_at = NOW()
       RETURNING id
       `,
       [
@@ -128,7 +127,7 @@ export async function upsertInvoiceRevision(shop, payload) {
       ]
     );
 
-    const invoiceId = upsert.rows[0].id;
+    const invoiceId = inserted.rows[0].id;
 
     await client.query("DELETE FROM invoice_lines WHERE invoice_id = $1", [
       invoiceId,
@@ -188,6 +187,8 @@ export async function upsertInvoiceRevision(shop, payload) {
 
     await client.query("COMMIT");
     return {
+      success: true,
+      exists: false,
       id: invoiceId,
       invoice_number: invoiceNumber,
       revision,
@@ -379,4 +380,45 @@ export async function getInvoiceForCustomer(shop, customerId, invoiceId) {
   const row = result.rows[0];
   const { lines, tax_lines } = await loadLines(row.id);
   return mapInvoiceRow(row, { lines, tax_lines });
+}
+
+/**
+ * Check whether any revision of an invoice exists for a customer.
+ */
+export async function invoiceExists(shop, customerId, invoiceNumber) {
+  const cid = normalizeShopifyId(customerId);
+  const invNo = String(invoiceNumber || "").trim();
+  if (!cid || !invNo) {
+    const err = new Error("shopify_customer_id and invoice_number are required");
+    err.status = 400;
+    throw err;
+  }
+
+  const result = await query(
+    `
+    SELECT id, invoice_number, revision, invoice_date, downloadable
+    FROM invoices
+    WHERE shop = $1
+      AND shopify_customer_id = $2
+      AND invoice_number = $3
+    ORDER BY revision DESC
+    LIMIT 1
+    `,
+    [shop, cid, invNo]
+  );
+
+  if (!result.rowCount) {
+    return { exists: false, shopify_customer_id: cid, invoice_number: invNo };
+  }
+
+  const row = result.rows[0];
+  return {
+    exists: true,
+    shopify_customer_id: cid,
+    invoice_number: row.invoice_number,
+    revision: row.revision,
+    invoice_date: row.invoice_date,
+    downloadable: row.downloadable,
+    id: row.id,
+  };
 }

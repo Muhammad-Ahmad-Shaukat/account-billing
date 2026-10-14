@@ -30,7 +30,7 @@ router.get("/customer/invoices", async (req, res) => {
     });
 
     const outstanding = await resolveOutstandingForCustomer(shop, customerId);
-    const data = attachOutstandingToInvoices(list.data, outstanding);
+    const data = attachOutstandingToInvoices(list.data);
 
     return res
       .status(200)

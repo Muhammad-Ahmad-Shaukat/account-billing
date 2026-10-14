@@ -80,7 +80,49 @@ export default function HomePage() {
               Same auth headers as invoice ingest
             </Text>
             <Text as="p" variant="bodySm" color="subdued">
-              Supports per-invoice or per-customer amounts
+              Body: shopify_customer_id + outstanding_balance (one per customer)
+            </Text>
+          </Card>
+        </Layout.Section>
+
+        <Layout.Section>
+          <Card title="Invoice exists check" sectioned>
+            <Text as="p" variant="bodyMd">
+              <strong>GET</strong> /api/invoices/exists
+            </Text>
+            <br />
+            <Text as="p" variant="bodySm" color="subdued">
+              Same auth headers. Body: shopify_customer_id + invoice_number
+            </Text>
+            <Text as="p" variant="bodySm" color="subdued">
+              Returns exists: true/false
+            </Text>
+          </Card>
+        </Layout.Section>
+
+        <Layout.Section oneHalf>
+          <Card title="Get outstanding" sectioned>
+            <Text as="p" variant="bodyMd">
+              <strong>GET</strong> /api/outstanding
+            </Text>
+            <br />
+            <Text as="p" variant="bodySm" color="subdued">
+              Body/query: shopify_customer_id
+            </Text>
+          </Card>
+        </Layout.Section>
+
+        <Layout.Section oneHalf>
+          <Card title="Health" sectioned>
+            <Text as="p" variant="bodyMd">
+              <strong>GET</strong> /api/health
+            </Text>
+            <Text as="p" variant="bodyMd">
+              <strong>GET</strong> /api/health/db
+            </Text>
+            <br />
+            <Text as="p" variant="bodySm" color="subdued">
+              No auth required
             </Text>
           </Card>
         </Layout.Section>

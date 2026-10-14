@@ -12,6 +12,7 @@ import { migrate } from "./db.js";
 import invoicesIngestRouter from "./routes/invoices-ingest.js";
 import outstandingIngestRouter from "./routes/outstanding-ingest.js";
 import customerInvoicesProxyRouter from "./routes/customer-invoices-proxy.js";
+import healthRouter from "./routes/health.js";
 
 const PORT = parseInt(
   process.env.BACKEND_PORT || process.env.PORT || "3000",
@@ -39,6 +40,9 @@ app.post(
   shopify.config.webhooks.path,
   shopify.processWebhooks({ webhookHandlers: PrivacyWebhookHandlers })
 );
+
+// Public health probes (before session auth)
+app.use("/api", healthRouter);
 
 // ERP ingest — must NOT require Shopify admin session
 app.use("/api/invoices", invoicesIngestRouter);
