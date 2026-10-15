@@ -241,11 +241,12 @@ Auth:    Required
 Purpose:
   Check whether an invoice already exists for a customer (any revision).
 
-Request body (JSON) OR query params:
-  {
-    "shopify_customer_id": "31249944510693",
-    "invoice_number": "IQ-LIVE-2001"
-  }
+Query parameters (required):
+  shopify_customer_id=31249944510693
+  invoice_number=IQ-LIVE-2001
+
+Example URL:
+  GET /api/invoices/exists?shopify_customer_id=31249944510693&invoice_number=IQ-LIVE-2001
 
 SCENARIOS
 ---------
@@ -328,10 +329,11 @@ Auth:    Required
 Purpose:
   Read the current outstanding balance for one customer.
 
-Request body (JSON) OR query param:
-  {
-    "shopify_customer_id": "31249944510693"
-  }
+Query parameters (required):
+  shopify_customer_id=31249944510693
+
+Example URL:
+  GET /api/outstanding?shopify_customer_id=31249944510693
 
 SCENARIOS
 ---------
@@ -389,11 +391,11 @@ Ingest invoice:
     -d @invoice.json
 
 Check invoice exists:
-  curl -X GET https://account-billing.onrender.com/api/invoices/exists \
-    -H "Content-Type: application/json" \
+  curl -G "https://account-billing.onrender.com/api/invoices/exists" \
     -H "X-Invoice-Secret: YOUR_SECRET" \
     -H "X-Shopify-Shop-Domain: account-billing.myshopify.com" \
-    -d "{\"shopify_customer_id\":\"31249944510693\",\"invoice_number\":\"IQ-LIVE-2001\"}"
+    --data-urlencode "shopify_customer_id=31249944510693" \
+    --data-urlencode "invoice_number=IQ-LIVE-2001"
 
 Set outstanding:
   curl -X POST https://account-billing.onrender.com/api/outstanding/ingest \
@@ -403,11 +405,10 @@ Set outstanding:
     -d "{\"shopify_customer_id\":\"31249944510693\",\"outstanding_balance\":2600}"
 
 Get outstanding:
-  curl -X GET https://account-billing.onrender.com/api/outstanding \
-    -H "Content-Type: application/json" \
+  curl -G "https://account-billing.onrender.com/api/outstanding" \
     -H "X-Invoice-Secret: YOUR_SECRET" \
     -H "X-Shopify-Shop-Domain: account-billing.myshopify.com" \
-    -d "{\"shopify_customer_id\":\"31249944510693\"}"
+    --data-urlencode "shopify_customer_id=31249944510693"
 
 
 ================================================================================

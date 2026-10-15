@@ -728,11 +728,11 @@
     </div>
     <div class="io">
       <div class="io-block">
-        <div class="io-h">Payload (query or JSON body)</div>
-        <pre>{
-  "shopify_customer_id": "31249944510693",
-  "invoice_number": "IQ-LIVE-2001"
-}</pre>
+        <div class="io-h">Query parameters</div>
+        <pre>?shopify_customer_id=31249944510693
+&amp;invoice_number=IQ-LIVE-2001
+
+GET /api/invoices/exists?shopify_customer_id=31249944510693&amp;invoice_number=IQ-LIVE-2001</pre>
       </div>
       <div class="io-block">
         <div class="io-h resp-ok">Response — 200 (exists)</div>
@@ -752,11 +752,9 @@
     </div>
     <div class="io">
       <div class="io-block">
-        <div class="io-h">Same payload</div>
-        <pre>{
-  "shopify_customer_id": "31249944510693",
-  "invoice_number": "DOES-NOT-EXIST"
-}</pre>
+        <div class="io-h">Query parameters</div>
+        <pre>?shopify_customer_id=31249944510693
+&amp;invoice_number=DOES-NOT-EXIST</pre>
       </div>
       <div class="io-block">
         <div class="io-h resp-ok">Response — 200 (not found)</div>
@@ -859,10 +857,10 @@
     </div>
     <div class="io">
       <div class="io-block">
-        <div class="io-h">Payload (query or JSON body)</div>
-        <pre>{
-  "shopify_customer_id": "31249944510693"
-}</pre>
+        <div class="io-h">Query parameters</div>
+        <pre>?shopify_customer_id=31249944510693
+
+GET /api/outstanding?shopify_customer_id=31249944510693</pre>
       </div>
       <div class="io-block">
         <div class="io-h resp-ok">Response — 200 (found)</div>
@@ -879,10 +877,8 @@
     </div>
     <div class="io">
       <div class="io-block">
-        <div class="io-h">Same shape — unknown customer</div>
-        <pre>{
-  "shopify_customer_id": "99999999999999"
-}</pre>
+        <div class="io-h">Query parameters</div>
+        <pre>?shopify_customer_id=99999999999999</pre>
       </div>
       <div class="io-block">
         <div class="io-h resp-ok">Response — 200 (none on file)</div>

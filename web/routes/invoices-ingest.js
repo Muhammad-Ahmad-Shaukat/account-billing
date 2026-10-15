@@ -50,16 +50,13 @@ router.post("/ingest", ingestAuth, async (req, res) => {
 /**
  * GET /api/invoices/exists
  * Same auth headers as ingest.
- * Body (JSON):
- *   { "shopify_customer_id": "...", "invoice_number": "..." }
- * Also accepts the same fields as query params.
+ * Query params:
+ *   ?shopify_customer_id=...&invoice_number=...
  */
 router.get("/exists", ingestAuth, async (req, res) => {
   try {
-    const body = req.body && typeof req.body === "object" ? req.body : {};
-    const shopify_customer_id =
-      body.shopify_customer_id || req.query.shopify_customer_id;
-    const invoice_number = body.invoice_number || req.query.invoice_number;
+    const shopify_customer_id = req.query.shopify_customer_id;
+    const invoice_number = req.query.invoice_number;
 
     const result = await invoiceExists(
       req.ingestShop,

@@ -39,13 +39,12 @@ router.post("/ingest", ingestAuth, async (req, res) => {
 /**
  * GET /api/outstanding
  * Same auth headers as ingest.
- * Body or query: { "shopify_customer_id": "..." }
+ * Query params:
+ *   ?shopify_customer_id=...
  */
 router.get("/", ingestAuth, async (req, res) => {
   try {
-    const body = req.body && typeof req.body === "object" ? req.body : {};
-    const shopify_customer_id =
-      body.shopify_customer_id || req.query.shopify_customer_id;
+    const shopify_customer_id = req.query.shopify_customer_id;
 
     const result = await getOutstandingByCustomerId(
       req.ingestShop,
