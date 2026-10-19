@@ -1328,343 +1328,131 @@ display:block!important;
 
 
   /* =====================================================
-     ACTUAL INVOICE (ERP sample layout)
+     ACTUAL INVOICE (Design 2 — modern corporate)
   ===================================================== */
 
   .rd-print-invoice{
     padding:18px;
-    color:#111;
+    color:#1c2b33;
     background:#fff;
     font-family: Arial, Helvetica, sans-serif;
-    font-size:11px;
-    line-height:1.35;
     overflow-x:auto;
   }
 
-  .rd-erp-doc-wrap{
-    width:100%;
+  .iq-invoice{
+    font-family: Arial, Helvetica, sans-serif;
+    color:#1c2b33;
+    max-width:8.5in;
+    margin:0 auto;
   }
-
-  .rd-erp-page{
-    border:1px solid #222;
-    padding:10px;
+  .iq-invoice *{ box-sizing:border-box; }
+  .iq-page{
+    width:100%;
     min-width:720px;
+    padding:18px 22px;
+    position:relative;
     background:#fff;
+    border:1px solid #d9e0de;
+    border-radius:8px;
   }
-
-  .rd-erp-page + .rd-erp-page{
-    margin-top:18px;
+  .iq-page + .iq-page{ margin-top:18px; }
+  .iq-accent{ display:flex; height:4px; margin-bottom:14px; }
+  .iq-accent .t{ flex:0 0 80%; background:#074a53; }
+  .iq-accent .g{ flex:1; background:#bad246; }
+  .iq-hdr{ display:flex; justify-content:space-between; align-items:flex-start; }
+  .iq-logo{ width:72px; height:auto; max-height:56px; object-fit:contain; display:block; margin-bottom:6px; }
+  .iq-brand{ font-size:21px; font-weight:700; letter-spacing:6px; color:#074a53; }
+  .iq-brand small{ display:block; font-size:10px; font-weight:400; letter-spacing:1px; color:#5b6b72; margin-top:3px; }
+  .iq-co{ font-size:11px; line-height:1.55; margin-top:8px; }
+  .iq-invtitle{ text-align:right; }
+  .iq-invtitle .t{ font-size:10px; font-weight:600; letter-spacing:3px; color:#074a53; }
+  .iq-invtitle h1{ font-size:27px; font-weight:700; margin:2px 0 8px; }
+  .iq-dpt{ display:flex; gap:18px; justify-content:flex-end; }
+  .iq-dpt div{ text-align:right; }
+  .iq-dpt span{ display:block; font-size:9px; font-weight:600; letter-spacing:1px; color:#5b6b72; }
+  .iq-dpt b{ font-size:12px; font-weight:600; }
+  .iq-contfrom{ font-size:11px; color:#5b6b72; text-align:right; margin-bottom:4px; }
+  .iq-addr{ display:flex; gap:24px; margin-top:16px; }
+  .iq-addr > div{
+    flex:1;
+    border:1px solid #d9e0de;
+    border-top:4px solid #074a53;
+    border-radius:0 0 8px 8px;
+    padding:10px 14px;
   }
-
-  .rd-erp-continued{
-    margin-top:8px;
-    font-style:italic;
-    font-size:10px;
-    color:#333;
-  }
-
-  .rd-erp-header{
+  .iq-lbl{ font-size:10px; font-weight:600; letter-spacing:1.5px; color:#074a53; margin-bottom:5px; }
+  .iq-addr p{ font-size:12.5px; line-height:1.55; margin:0; }
+  .iq-meta{
     display:grid;
-    grid-template-columns:110px 1fr 190px;
-    gap:12px;
-    align-items:start;
-    margin-bottom:10px;
+    grid-template-columns:repeat(4, 1fr);
+    margin-top:14px;
+    border:1px solid #d9e0de;
+    border-radius:8px;
+    overflow:hidden;
   }
-
-  .rd-erp-logo{
-    width:96px;
-    height:auto;
-    max-height:110px;
-    object-fit:contain;
-    display:block;
-  }
-
-  .rd-erp-logo-fallback{
-    width:96px;
-    min-height:70px;
+  .iq-meta div{ padding:8px 14px; font-size:12px; border-left:1px solid #d9e0de; }
+  .iq-meta div:nth-child(4n+1){ border-left:none; }
+  .iq-meta div:nth-child(n+5){ border-top:1px solid #d9e0de; }
+  .iq-meta span{ display:block; font-size:9px; font-weight:600; letter-spacing:1px; color:#5b6b72; }
+  .iq-meta1{
     display:flex;
+    margin-top:14px;
+    border:1px solid #d9e0de;
+    border-radius:8px;
+    padding:10px 14px;
+    font-size:11.5px;
+  }
+  .iq-meta1 div{ flex:1; white-space:nowrap; }
+  .iq-meta1 div:first-child{ flex:1.9; }
+  .iq-meta1 b{ font-weight:600; }
+  .iq-itemsbar{ display:flex; justify-content:space-between; align-items:center; margin:14px 0 8px; }
+  .iq-itemsbar h3{ font-size:14px; font-weight:600; margin:0; }
+  .iq-items{ width:100%; border-collapse:collapse; font-size:12px; }
+  .iq-items th{
+    background:#074a53;
+    color:#fff;
+    font-size:10px;
+    font-weight:600;
+    letter-spacing:.8px;
+    padding:8px 6px;
+    text-align:left;
+  }
+  .iq-items td{ padding:9px 6px; border-bottom:1px solid #e6ebea; vertical-align:top; font-size:11.5px; }
+  .iq-items .c{ text-align:center; }
+  .iq-items .r{ text-align:right; }
+  .iq-cont{ text-align:center; font-size:12px; font-weight:600; color:#074a53; padding-top:10px; }
+  .iq-bottom{ display:flex; gap:22px; margin-top:16px; }
+  .iq-left{ flex:1.25; font-size:11.5px; }
+  .iq-gst{ font-size:12px; font-weight:600; color:#074a53; margin-bottom:8px; }
+  .iq-left p{ margin:0 0 5px; line-height:1.5; }
+  .iq-pm{ border-top:1px solid #d9e0de; margin-top:14px; padding-top:12px; }
+  .iq-pm h3{ font-size:12.5px; font-weight:700; color:#074a53; letter-spacing:1px; margin:0 0 8px; }
+  .iq-pm h4{ font-size:11.5px; font-weight:600; color:#074a53; margin:8px 0 4px; }
+  .iq-pm-sub{ border-top:1px dashed #d9e0de; margin-top:8px; padding-top:8px; }
+  .iq-right{ flex:1; }
+  .iq-taxbox{ background:#f2f5f4; border-radius:8px; padding:10px 14px; margin-bottom:12px; }
+  .iq-taxbox h3{ font-size:10.5px; font-weight:700; letter-spacing:1.5px; color:#074a53; margin:0 0 6px; }
+  .iq-trow{ display:flex; justify-content:space-between; font-size:12.5px; padding:4px 0; }
+  .iq-due{
+    background:#2ea05f;
+    color:#fff;
+    border-radius:8px;
+    display:flex;
+    justify-content:space-between;
     align-items:center;
-    justify-content:center;
-    font-weight:800;
-    font-size:18px;
-    letter-spacing:.04em;
-    color:#5b2d91;
-    border:1px solid #ddd;
-  }
-
-  .rd-erp-company{
-    text-align:center;
-    padding-top:4px;
-  }
-
-  .rd-erp-company-name{
-    font-size:18px;
-    font-weight:700;
-    letter-spacing:.18em;
-    margin:0 0 6px;
-  }
-
-  .rd-erp-company-addr{
-    display:inline-block;
-    border:1px solid #bbb;
-    background:#f3f3f3;
-    padding:6px 10px;
-    font-size:10px;
-    line-height:1.45;
-    min-width:220px;
-    text-align:center;
-  }
-
-  .rd-erp-doc{
-    text-align:right;
-  }
-
-  .rd-erp-doc-title{
-    margin:0 0 6px;
-    font-size:28px;
-    font-weight:700;
-    letter-spacing:-.02em;
-  }
-
-  .rd-erp-meta-box{
-    border:1px solid #222;
-    border-collapse:collapse;
-    width:100%;
-    font-size:10px;
-  }
-
-  .rd-erp-meta-box th,
-  .rd-erp-meta-box td{
-    border:1px solid #222;
-    padding:3px 6px;
-    text-align:left;
-    vertical-align:top;
-  }
-
-  .rd-erp-meta-box th{
-    background:#f0f0f0;
-    font-weight:700;
-    white-space:nowrap;
-    width:42%;
-  }
-
-  .rd-erp-parties{
-    width:100%;
-    border-collapse:collapse;
-    margin-bottom:8px;
-    table-layout:fixed;
-  }
-
-  .rd-erp-parties > tbody > tr > td{
-    width:50%;
-    vertical-align:top;
-    padding:0;
-  }
-
-  .rd-erp-parties > tbody > tr > td:first-child{
-    padding-right:5px;
-  }
-
-  .rd-erp-parties > tbody > tr > td:last-child{
-    padding-left:5px;
-  }
-
-  .rd-erp-party-label{
-    font-size:11px;
-    font-weight:700;
-    margin-bottom:2px;
-  }
-
-  .rd-erp-party-box{
-    border:1px solid #999;
-    background:#e8e8e8;
-    min-height:72px;
-    padding:8px 10px;
-    font-size:11px;
-    line-height:1.45;
-  }
-
-  .rd-erp-strip{
-    width:100%;
-    border-collapse:collapse;
-    margin-bottom:0;
-    table-layout:fixed;
-  }
-
-  .rd-erp-strip th,
-  .rd-erp-strip td{
-    border:1px solid #222;
-    padding:3px 4px;
-    font-size:9px;
-    text-align:left;
-    vertical-align:top;
-    word-break:break-word;
-  }
-
-  .rd-erp-strip th{
-    background:#f0f0f0;
+    padding:10px 14px;
+    margin-top:8px;
+    font-size:14.5px;
     font-weight:700;
   }
-
-  .rd-erp-items{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:0;
-    table-layout:fixed;
-  }
-
-  .rd-erp-items th,
-  .rd-erp-items td{
-    border:1px solid #222;
-    padding:4px 5px;
-    font-size:10px;
-    vertical-align:top;
-  }
-
-  .rd-erp-items th{
-    background:#f0f0f0;
-    font-weight:700;
-    text-align:center;
-    line-height:1.2;
-  }
-
-  .rd-erp-items td.num{
-    text-align:center;
-    white-space:nowrap;
-  }
-
-  .rd-erp-items td.money{
-    text-align:right;
-    white-space:nowrap;
-  }
-
-  .rd-erp-items td.item{
-    text-align:left;
-    word-break:break-word;
-  }
-
-  .rd-erp-items col.c-qty{ width:6%; }
-  .rd-erp-items col.c-item{ width:12%; }
-  .rd-erp-items col.c-desc{ width:38%; }
-  .rd-erp-items col.c-price{ width:11%; }
-  .rd-erp-items col.c-uom{ width:7%; }
-  .rd-erp-items col.c-ext{ width:12%; }
-
-  .rd-erp-footer{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:10px;
-    table-layout:fixed;
-  }
-
-  .rd-erp-footer > tbody > tr > td{
-    vertical-align:top;
-    padding:0 6px 0 0;
-  }
-
-  .rd-erp-footer > tbody > tr > td:last-child{
-    padding-right:0;
-    padding-left:6px;
-  }
-
-  .rd-erp-footer td.col-legal{ width:38%; }
-  .rd-erp-footer td.col-tax{ width:32%; }
-  .rd-erp-footer td.col-totals{ width:30%; }
-
-  .rd-erp-legal{
-    font-size:10px;
-    line-height:1.45;
-  }
-
-  .rd-erp-legal .gst-row{
-    margin-bottom:8px;
-  }
-
-  .rd-erp-legal .gst-row span{
-    display:inline-block;
-    border:1px solid #bbb;
-    background:#f3f3f3;
-    padding:2px 6px;
-    min-width:90px;
-  }
-
-  .rd-erp-legal ul{
-    margin:0;
-    padding-left:16px;
-  }
-
-  .rd-erp-legal li{
-    margin-bottom:4px;
-  }
-
-  .rd-erp-tax{
-    font-size:10px;
-  }
-
-  .rd-erp-tax-title{
-    font-weight:700;
-    margin-bottom:4px;
-  }
-
-  .rd-erp-tax-table{
-    width:100%;
-    border-collapse:collapse;
-  }
-
-  .rd-erp-tax-table td{
-    border:1px solid #bbb;
-    padding:3px 6px;
-  }
-
-  .rd-erp-tax-table td:last-child{
-    text-align:right;
-    background:#f7f7f7;
-    width:45%;
-  }
-
-  .rd-erp-totals{
-    border-collapse:collapse;
-    width:100%;
-    font-size:10px;
-  }
-
-  .rd-erp-totals th,
-  .rd-erp-totals td{
-    border:1px solid #222;
-    padding:4px 6px;
-  }
-
-  .rd-erp-totals th{
-    text-align:left;
-    font-weight:700;
-    background:#fff;
-  }
-
-  .rd-erp-totals td{
-    text-align:right;
-    background:#f7f7f7;
-    white-space:nowrap;
-  }
-
-  .rd-erp-totals tr.grand th,
-  .rd-erp-totals tr.grand td{
-    font-weight:800;
-    background:#eee;
-  }
-
-  .rd-erp-parties,
-  .rd-erp-footer{
-    page-break-inside:avoid;
-    break-inside:avoid;
-  }
-
-  .rd-erp-items thead{
-    display:table-header-group;
-  }
-
-  .rd-erp-items tr{
-    page-break-inside:avoid;
-    break-inside:avoid;
+  .iq-foot{
+    display:flex;
+    justify-content:space-between;
+    font-size:10.5px;
+    color:#5b6b72;
+    border-top:1px solid #d9e0de;
+    padding-top:8px;
+    margin-top:24px;
   }
 
 
@@ -2408,13 +2196,15 @@ data-search="
                 <th>Invoice</th>
                 <th>Invoice Date</th>
                 <th>Order</th>
+                <th>PO Number</th>
                 <th>Total</th>
+                <th>Payment Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody id="rdInvoiceTableBody">
               <tr>
-                <td colspan="5">
+                <td colspan="7">
                   <div class="rd-invoice-loading">Loading invoices…</div>
                 </td>
               </tr>
@@ -3220,7 +3010,7 @@ document.body.style.overflow="";
 
 })();
 </script>
-<script src="{{ 'rd-invoices.js' | asset_url }}&v=20261014b" defer></script>
+<script src="{{ 'rd-invoices.js' | asset_url }}&v=20261019a" defer></script>
 
 <!-- =========================================================
      INK QUEST RESELLER PORTAL - EN / FR UI TRANSLATION
@@ -3309,8 +3099,11 @@ document.body.style.overflow="";
     '● Pending': '● En attente',
     '● Refunded': '● Remboursée',
     'Payment': 'Paiement',
+    'Payment Status': 'Statut de paiement',
+    'Due': 'À payer',
     'Amount': 'Montant',
     'Actions': 'Actions',
+    'Invoice Date': 'Date de facture',
     'View Order': 'Voir la commande',
     'View Invoice': 'Voir la facture',
     'Send to ERP': 'Envoyer à l’ERP',

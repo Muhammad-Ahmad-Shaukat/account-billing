@@ -65,7 +65,7 @@
     street_address2: 'Edmonton, AB T5L 4S9',
     telephone: '(780) 454-4321',
     fax: '(780) 452-5405',
-    tax_registration_no: '',
+    tax_registration_no: '139587877',
     returns_clause: 'No returns without our written permission (RMA).',
     overdue_clause: '2% per month (24% annual) will be charged on overdue accounts.',
     claims_clause: 'All claims must be made within 5 days after receipt of goods.',
@@ -180,86 +180,137 @@
   function renderLineRows(pageLines, currency){
     return pageLines.map(function(line){
       return '<tr>' +
-        '<td class="num">' + qty(line.qty_ordered) + '</td>' +
-        '<td class="num">' + qty(line.qty_shipped) + '</td>' +
-        '<td class="num">' + qty(line.qty_backorder) + '</td>' +
-        '<td class="item">' + escapeHtml(line.item_number || '') + '</td>' +
-        '<td class="item">' + escapeHtml(line.description || '').replace(/\n/g, '<br>') + '</td>' +
-        '<td class="money">' + (line.unit_price == null || line.unit_price === '' ? '' : money(line.unit_price, currency)) + '</td>' +
-        '<td class="num">' + escapeHtml(line.uom || '') + '</td>' +
-        '<td class="money">' + money(line.extended_price, currency) + '</td>' +
+        '<td class="c">' + qty(line.qty_ordered) + '</td>' +
+        '<td class="c">' + qty(line.qty_shipped) + '</td>' +
+        '<td class="c">' + qty(line.qty_backorder) + '</td>' +
+        '<td>' + escapeHtml(line.item_number || '') + '</td>' +
+        '<td>' + escapeHtml(line.description || '').replace(/\n/g, '<br>') + '</td>' +
+        '<td class="r">' + (line.unit_price == null || line.unit_price === '' ? '' : money(line.unit_price, currency)) + '</td>' +
+        '<td class="c">' + escapeHtml(line.uom || '') + '</td>' +
+        '<td class="r">' + money(line.extended_price, currency) + '</td>' +
       '</tr>';
     }).join('');
   }
 
-  function buildPageHeader(invoice, company, logo, pageNo, pageCount){
-    return '<div class="rd-erp-header">' +
-        '<div>' + logo + '</div>' +
-        '<div class="rd-erp-company">' +
-          '<p class="rd-erp-company-name">' + escapeHtml(company.company_name) + '</p>' +
-          '<div class="rd-erp-company-addr">' + companyAddressHtml(company) + '</div>' +
+  function buildPageHeader(invoice, company, logo, pageNo, pageCount, options){
+    options = options || {};
+    const compact = !!options.compact;
+    const pageLabel = pageNo + (pageCount > 1 ? (' of ' + pageCount) : '');
+    const gstNo = company.tax_registration_no || '';
+
+    const brandBlock =
+      '<div class="iq-accent"><div class="t"></div><div class="g"></div></div>' +
+      '<div class="iq-hdr">' +
+        '<div>' +
+          (logo || '') +
+          '<div class="iq-brand">' + escapeHtml(company.company_name || 'INK QUEST') +
+            '<small>(DIV. OF 605494 ALBERTA LTD)</small></div>' +
+          '<div class="iq-co">' +
+            escapeHtml(company.street_address1 || '') +
+            (company.street_address2 ? (', ' + escapeHtml(company.street_address2)) : '') + '<br>' +
+            'Phone: ' + escapeHtml(company.telephone || '') +
+            ' &nbsp;&nbsp; Fax: ' + escapeHtml(company.fax || '') +
+            (gstNo && !compact ? ('<br>GST/HST No.: ' + escapeHtml(gstNo)) : '') +
+          '</div>' +
         '</div>' +
-        '<div class="rd-erp-doc">' +
-          '<h1 class="rd-erp-doc-title">Invoice</h1>' +
-          '<table class="rd-erp-meta-box">' +
-            '<tr><th>Date</th><td>' + formatDate(invoice.invoice_date) + '</td></tr>' +
-            '<tr><th>Page</th><td>' + pageNo + (pageCount > 1 ? (' of ' + pageCount) : '') + '</td></tr>' +
-            '<tr><th>Invoice Number</th><td>' + escapeHtml(invoice.invoice_number || '') + '</td></tr>' +
-          '</table>' +
+        '<div class="iq-invtitle">' +
+          (compact && pageNo > 1 ? '<div class="iq-contfrom">Continued from page ' + (pageNo - 1) + '</div>' : '') +
+          '<div class="t">INVOICE</div>' +
+          '<h1>' + escapeHtml(invoice.invoice_number || '') + '</h1>' +
+          (compact ? '' :
+            '<div class="iq-dpt">' +
+              '<div><span>DATE</span><b>' + formatDate(invoice.invoice_date) + '</b></div>' +
+              '<div><span>PAGE</span><b>' + escapeHtml(pageLabel) + '</b></div>' +
+              '<div><span>TERMS</span><b>' + escapeHtml(invoice.terms || '') + '</b></div>' +
+            '</div>') +
         '</div>' +
+      '</div>';
+
+    if (compact) {
+      return brandBlock +
+        '<div class="iq-meta1">' +
+          '<div><b>CUSTOMER:</b> ' + escapeHtml((invoice.sold_to && invoice.sold_to.name) || '') + '</div>' +
+          '<div><b>ORDER NO.:</b> ' + escapeHtml(invoice.order_no || '') + '</div>' +
+          '<div><b>DATE:</b> ' + formatDate(invoice.invoice_date) + '</div>' +
+          '<div><b>PAGE:</b> ' + escapeHtml(pageLabel) + '</div>' +
+        '</div>';
+    }
+
+    return brandBlock +
+      '<div class="iq-addr">' +
+        '<div><div class="iq-lbl">SOLD TO</div><p>' + addressLines(invoice.sold_to) + '</p></div>' +
+        '<div><div class="iq-lbl">SHIP TO</div><p>' + addressLines(invoice.ship_to) + '</p></div>' +
       '</div>' +
-      '<table class="rd-erp-parties"><tbody><tr>' +
-        '<td><div class="rd-erp-party-label">Sold To:</div><div class="rd-erp-party-box">' + addressLines(invoice.sold_to) + '</div></td>' +
-        '<td><div class="rd-erp-party-label">Ship To:</div><div class="rd-erp-party-box">' + addressLines(invoice.ship_to) + '</div></td>' +
-      '</tr></tbody></table>' +
-      '<table class="rd-erp-strip"><thead><tr>' +
-        '<th>Customer No.</th><th>Order Date</th><th>Order No.</th><th>Salesperson</th><th>PO Number</th><th>Ship Via</th><th>Terms</th>' +
-      '</tr></thead><tbody><tr>' +
-        '<td>' + escapeHtml(invoice.customer_no || '') + '</td>' +
-        '<td>' + formatDate(invoice.order_date) + '</td>' +
-        '<td>' + escapeHtml(invoice.order_no || '') + '</td>' +
-        '<td>' + escapeHtml(invoice.salesperson || '') + '</td>' +
-        '<td>' + escapeHtml(invoice.po_number || '') + '</td>' +
-        '<td>' + escapeHtml(invoice.ship_via || '') + '</td>' +
-        '<td>' + escapeHtml(invoice.terms || '') + '</td>' +
-      '</tr></tbody></table>';
+      '<div class="iq-meta">' +
+        '<div><span>CUSTOMER NO.</span>' + escapeHtml(invoice.customer_no || '') + '</div>' +
+        '<div><span>ORDER DATE</span>' + formatDate(invoice.order_date) + '</div>' +
+        '<div><span>ORDER NO.</span>' + escapeHtml(invoice.order_no || '') + '</div>' +
+        '<div><span>SALESPERSON</span>' + escapeHtml(invoice.salesperson || '') + '</div>' +
+        '<div><span>PO NUMBER</span>' + escapeHtml(invoice.po_number || '') + '</div>' +
+        '<div><span>SHIP VIA</span>' + escapeHtml(invoice.ship_via || '') + '</div>' +
+        '<div><span>TERMS</span>' + escapeHtml(invoice.terms || '') + '</div>' +
+        '<div><span>GST/HST NO.</span>' + escapeHtml(gstNo) + '</div>' +
+      '</div>';
   }
 
   /** GST / legal / tax / totals — last page only (and single-page View). */
   function buildTotalsFooter(company, invoice, taxRows, currency){
-    return '<table class="rd-erp-footer"><tbody><tr>' +
-        '<td class="col-legal"><div class="rd-erp-legal">' +
-          '<div class="gst-row"><strong>GST/HST No.:</strong> <span>' + escapeHtml(company.tax_registration_no || '') + '</span></div>' +
-          '<ul>' +
-            '<li>' + escapeHtml(company.returns_clause) + '</li>' +
-            '<li>' + escapeHtml(company.overdue_clause) + '</li>' +
-            '<li>' + escapeHtml(company.claims_clause) + '</li>' +
-            '<li>' + escapeHtml(company.surcharge_clause) + '</li>' +
-          '</ul>' +
-        '</div></td>' +
-        '<td class="col-tax"><div class="rd-erp-tax">' +
-          '<div class="rd-erp-tax-title">Tax summary:</div>' +
-          '<table class="rd-erp-tax-table"><tbody>' + taxRows + '</tbody></table>' +
-        '</div></td>' +
-        '<td class="col-totals"><table class="rd-erp-totals"><tbody>' +
-          '<tr><th>Subtotal</th><td>' + money(invoice.subtotal, currency) + '</td></tr>' +
-          '<tr><th>Total sales tax</th><td>' + money(invoice.total_tax, currency) + '</td></tr>' +
-          '<tr><th>Total amount</th><td>' + money(invoice.total_amount, currency) + '</td></tr>' +
-          '<tr><th>Less payment</th><td>' + money(invoice.less_payment, currency) + '</td></tr>' +
-          '<tr class="grand"><th>Amount due</th><td>' + money(invoice.amount_due, currency) + '</td></tr>' +
-        '</tbody></table></td>' +
-      '</tr></tbody></table>';
+    return '<div class="iq-bottom">' +
+      '<div class="iq-left">' +
+        '<div class="iq-gst">GST/HST No.: ' + escapeHtml(company.tax_registration_no || '') + '</div>' +
+        '<p>' + escapeHtml(company.returns_clause) + '</p>' +
+        '<p>' + escapeHtml(company.overdue_clause) + '</p>' +
+        '<p>' + escapeHtml(company.claims_clause) + '</p>' +
+        '<p>' + escapeHtml(company.surcharge_clause) + '</p>' +
+        '<div class="iq-pm">' +
+          '<h3>PAYMENT METHODS</h3>' +
+          '<h4>Wire/EFT</h4>' +
+          '<p>Institution Number: 003</p>' +
+          '<p>Transit: 07378</p>' +
+          '<p>Account number: 1027812</p>' +
+          '<div class="iq-pm-sub">' +
+            '<h4>Bill Payment</h4>' +
+            '<p>Ink Quest</p>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="iq-right">' +
+        '<div class="iq-taxbox">' +
+          '<h3>TAX SUMMARY</h3>' +
+          taxRows +
+        '</div>' +
+        '<div class="iq-trow"><span>Subtotal</span><span>' + money(invoice.subtotal, currency) + '</span></div>' +
+        '<div class="iq-trow"><span>Total sales tax</span><span>' + money(invoice.total_tax, currency) + '</span></div>' +
+        '<div class="iq-trow"><span>Total amount</span><span>' + money(invoice.total_amount, currency) + '</span></div>' +
+        '<div class="iq-trow"><span>Less payment</span><span>' + money(invoice.less_payment, currency) + '</span></div>' +
+        '<div class="iq-due"><span>Amount due</span><span>' + money(invoice.amount_due, currency) + '</span></div>' +
+      '</div>' +
+    '</div>';
   }
 
-  function buildItemsTable(pageLines, currency){
-    return '<table class="rd-erp-items">' +
-      '<colgroup>' +
-        '<col class="c-qty"><col class="c-qty"><col class="c-qty"><col class="c-item"><col class="c-desc"><col class="c-price"><col class="c-uom"><col class="c-ext">' +
-      '</colgroup>' +
+  function buildItemsTable(pageLines, currency, rangeLabel){
+    return '<div class="iq-itemsbar">' +
+        '<h3>LINE ITEMS' + (rangeLabel ? (': ' + escapeHtml(rangeLabel)) : '') + '</h3>' +
+      '</div>' +
+      '<table class="iq-items">' +
       '<thead><tr>' +
-        '<th>Qty.<br>Ord.</th><th>Qty.<br>Shp.</th><th>Qty.<br>B/O</th><th>Item Number</th><th>Description</th><th>Unit Price</th><th>UOM</th><th>Extended Price</th>' +
+        '<th class="c">Qty Ord.</th><th class="c">Qty Shp.</th><th class="c">B/O</th>' +
+        '<th>Item Number</th><th>Description</th>' +
+        '<th class="r">Unit Price</th><th class="c">UOM</th><th class="r">Extended Price</th>' +
       '</tr></thead><tbody>' + renderLineRows(pageLines, currency) + '</tbody>' +
     '</table>';
+  }
+
+  function buildPageFoot(invoice, company, pageNo, pageCount){
+    const pageLabel = pageNo + (pageCount > 1 ? (' of ' + pageCount) : '');
+    return '<div class="iq-foot">' +
+      '<span>' + escapeHtml(company.company_name || 'INK QUEST') +
+        ' &nbsp;&bull;&nbsp; ' + escapeHtml(company.street_address1 || '') +
+        (company.street_address2 ? (', ' + escapeHtml(company.street_address2)) : '') +
+      '</span>' +
+      '<span>Invoice ' + escapeHtml(invoice.invoice_number || '') +
+        ' &nbsp;&bull;&nbsp; Page ' + escapeHtml(pageLabel) + '</span>' +
+    '</div>';
   }
 
   /**
@@ -276,40 +327,45 @@
     const currency = invoice.currency || 'CAD';
     const company = resolveCompany(invoice);
     const logo = company.logo_url
-      ? '<img class="rd-erp-logo" src="' + escapeHtml(company.logo_url) + '" alt="' + escapeHtml(company.company_name) + '">'
-      : '<div class="rd-erp-logo-fallback">' + escapeHtml(company.company_name) + '</div>';
+      ? '<img class="iq-logo" src="' + escapeHtml(company.logo_url) + '" alt="' + escapeHtml(company.company_name) + '">'
+      : '';
 
     const taxRows = taxLines.map(function(tax){
-      return '<tr><td>' + escapeHtml(tax.code || '') + '</td><td>' + money(tax.amount, currency) + '</td></tr>';
+      return '<div class="iq-trow"><span>' + escapeHtml(tax.code || '') + '</span><span>' + money(tax.amount, currency) + '</span></div>';
     }).join('') +
-      '<tr><td>Tax Exempt Code</td><td>' + escapeHtml(invoice.tax_exempt_code || '') + '</td></tr>';
+      '<div class="iq-trow"><span>Tax Exempt Code</span><span>' + escapeHtml(invoice.tax_exempt_code || '') + '</span></div>';
 
     // On-screen View: single document, no repeated headers
     if (!forPdf) {
-      return '<div class="rd-erp-doc-wrap">' +
-        '<div class="rd-erp-page rd-erp-page-last">' +
+      return '<div class="iq-invoice">' +
+        '<section class="iq-page iq-page-last">' +
           buildPageHeader(invoice, company, logo, 1, 1) +
-          buildItemsTable(lines, currency) +
+          buildItemsTable(lines, currency, lines.length ? ('1 – ' + lines.length) : '') +
           buildTotalsFooter(company, invoice, taxRows, currency) +
-        '</div>' +
+          buildPageFoot(invoice, company, 1, 1) +
+        '</section>' +
       '</div>';
     }
 
     // PDF download: paginate with repeated headers; footer only on last page.
-    // Real line rows only — no empty filler cells.
     const chunks = chunkLinesForPdf(lines);
     const pageCount = chunks.length;
+    let lineStart = 1;
 
-    return '<div class="rd-erp-doc-wrap">' + chunks.map(function(pageLines, idx){
+    return '<div class="iq-invoice">' + chunks.map(function(pageLines, idx){
       const pageNo = idx + 1;
       const isLast = pageNo === pageCount;
-      return '<div class="rd-erp-page' + (isLast ? ' rd-erp-page-last' : '') + '">' +
-        buildPageHeader(invoice, company, logo, pageNo, pageCount) +
-        buildItemsTable(pageLines, currency) +
+      const lineEnd = lineStart + pageLines.length - 1;
+      const rangeLabel = pageLines.length ? (lineStart + ' – ' + lineEnd) : '';
+      lineStart = lineEnd + 1;
+      return '<section class="iq-page' + (isLast ? ' iq-page-last' : '') + '">' +
+        buildPageHeader(invoice, company, logo, pageNo, pageCount, { compact: pageNo > 1 }) +
+        buildItemsTable(pageLines, currency, rangeLabel) +
         (isLast
           ? buildTotalsFooter(company, invoice, taxRows, currency)
-          : '<div class="rd-erp-continued">Invoice continued on next page …</div>') +
-      '</div>';
+          : '<div class="iq-cont">Continued on next page…</div>') +
+        buildPageFoot(invoice, company, pageNo, pageCount) +
+      '</section>';
     }).join('') + '</div>';
   }
 
@@ -338,9 +394,24 @@
     return body;
   }
 
+  function paymentStatus(inv){
+    const raw = inv && inv.amount_due;
+    if (raw == null || String(raw).trim() === '') {
+      return { label: 'Unknown', cls: 'processing' };
+    }
+    const n = Number(String(raw).replace(/,/g, ''));
+    if (!Number.isFinite(n)) {
+      return { label: 'Unknown', cls: 'processing' };
+    }
+    if (n <= 0) {
+      return { label: 'Paid', cls: 'paid' };
+    }
+    return { label: 'Due', cls: 'pending' };
+  }
+
   function renderEmpty(){
     tbody.innerHTML =
-      '<tr><td colspan="5"><div class="rd-invoice-empty">' +
+      '<tr><td colspan="7"><div class="rd-invoice-empty">' +
         '<h3>No invoices</h3>' +
         '<p>There are no invoices for your account right now.</p>' +
         '<button type="button" class="rd-invoice-refresh" id="rdInvoiceRefresh">Refresh</button>' +
@@ -397,11 +468,14 @@
         ? '<button type="button" class="rd-invoice-action send" title="Download PDF" data-invoice-pdf="' + escapeHtml(inv.id) + '">PDF</button>'
         : '<button type="button" class="rd-invoice-action send" title="Not downloadable" disabled style="opacity:.45;cursor:not-allowed;">PDF</button>';
 
+      const pay = paymentStatus(inv);
       return '<tr>' +
         '<td><div class="rd-invoice-number">' + escapeHtml(inv.invoice_number) + '</div></td>' +
         '<td>' + formatDate(inv.invoice_date) + '</td>' +
-        '<td><div class="rd-invoice-order">' + escapeHtml(inv.order_no) + '</div></td>' +
+        '<td><div class="rd-invoice-order">' + escapeHtml(inv.order_no || '') + '</div></td>' +
+        '<td>' + escapeHtml(inv.po_number || '') + '</td>' +
         '<td class="rd-invoice-total">' + money(inv.total_amount, inv.currency) + '</td>' +
+        '<td><span class="rd-invoice-badge ' + pay.cls + '">' + escapeHtml(pay.label) + '</span></td>' +
         '<td><div class="rd-invoice-actions">' +
           '<button type="button" class="rd-invoice-action" title="View Invoice" data-invoice-id="' + escapeHtml(inv.id) + '">View</button>' +
           pdfBtnHtml +
@@ -439,7 +513,7 @@
       statsEl.hidden = false;
       statsEl.removeAttribute('hidden');
     }
-    tbody.innerHTML = '<tr><td colspan="5"><div class="rd-invoice-loading">Loading invoices...</div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7"><div class="rd-invoice-loading">Loading invoices...</div></td></tr>';
     try {
       const result = await fetchJson(buildListUrl(page));
       const rows = Array.isArray(result.data) ? result.data : [];
@@ -472,73 +546,65 @@
 
   function getInvoicePrintCss(){
     return [
-      '@page{size:letter portrait;margin:0.3in;}',
-      'html,body{margin:0;padding:0;background:#fff;color:#111;font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:1.3;}',
-      '.rd-erp-doc-wrap{width:100%;}',
-      // Short invoices: natural height (no stretched rows).
-      // Continuation pages only: fill letter height and pin "continued" to bottom.
-      '.rd-erp-page{border:1px solid #222;padding:8px;background:#fff;box-sizing:border-box;height:auto;display:block;}',
-      '.rd-erp-page:not(.rd-erp-page-last){min-height:10.4in;height:10.4in;display:flex;flex-direction:column;overflow:hidden;}',
-      '.rd-erp-page + .rd-erp-page{page-break-before:always;break-before:page;margin-top:0;}',
-      '.rd-erp-continued{margin-top:auto;padding-top:8px;font-style:italic;font-size:10px;flex:0 0 auto;}',
-      '.rd-erp-header{display:grid;grid-template-columns:96px 1fr 170px;gap:8px;align-items:start;margin-bottom:6px;page-break-inside:avoid;break-inside:avoid;flex:0 0 auto;}',
-      '.rd-erp-logo{width:88px;height:auto;max-height:90px;object-fit:contain;display:block;}',
-      '.rd-erp-logo-fallback{width:88px;min-height:60px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;letter-spacing:.04em;color:#5b2d91;border:1px solid #ddd;}',
-      '.rd-erp-company{text-align:center;padding-top:2px;}',
-      '.rd-erp-company-name{font-size:16px;font-weight:700;letter-spacing:.18em;margin:0 0 4px;}',
-      '.rd-erp-company-addr{display:inline-block;border:1px solid #bbb;background:#f3f3f3;padding:4px 8px;font-size:9px;line-height:1.35;min-width:200px;text-align:center;}',
-      '.rd-erp-doc{text-align:right;}',
-      '.rd-erp-doc-title{margin:0 0 4px;font-size:24px;font-weight:700;letter-spacing:-.02em;}',
-      '.rd-erp-meta-box{border:1px solid #222;border-collapse:collapse;width:100%;font-size:9px;}',
-      '.rd-erp-meta-box th,.rd-erp-meta-box td{border:1px solid #222;padding:2px 5px;text-align:left;vertical-align:top;}',
-      '.rd-erp-meta-box th{background:#f0f0f0;font-weight:700;white-space:nowrap;width:42%;}',
-      '.rd-erp-parties{width:100%;border-collapse:collapse;margin-bottom:6px;table-layout:fixed;page-break-inside:avoid;break-inside:avoid;flex:0 0 auto;}',
-      '.rd-erp-parties>tbody>tr>td{width:50%;vertical-align:top;padding:0;}',
-      '.rd-erp-parties>tbody>tr>td:first-child{padding-right:4px;}',
-      '.rd-erp-parties>tbody>tr>td:last-child{padding-left:4px;}',
-      '.rd-erp-party-label{font-size:10px;font-weight:700;margin-bottom:2px;}',
-      '.rd-erp-party-box{border:1px solid #999;background:#e8e8e8;min-height:56px;padding:6px 8px;font-size:10px;line-height:1.35;}',
-      '.rd-erp-strip{width:100%;border-collapse:collapse;margin-bottom:0;table-layout:fixed;page-break-inside:avoid;break-inside:avoid;flex:0 0 auto;}',
-      '.rd-erp-strip th,.rd-erp-strip td{border:1px solid #222;padding:2px 3px;font-size:8px;text-align:left;vertical-align:top;word-break:break-word;}',
-      '.rd-erp-strip th{background:#f0f0f0;font-weight:700;}',
-      // Never flex-grow the items table — that stretches row height when few lines
-      '.rd-erp-items{width:100%;border-collapse:collapse;margin-top:0;table-layout:fixed;flex:0 0 auto;height:auto !important;}',
-      '.rd-erp-items thead{display:table-header-group;}',
-      '.rd-erp-items tbody tr{height:auto !important;}',
-      '.rd-erp-items tbody td{height:auto !important;}',
-      '.rd-erp-items tr{page-break-inside:avoid;break-inside:avoid;}',
-      '.rd-erp-items th,.rd-erp-items td{border:1px solid #222;padding:3px 4px;font-size:9px;vertical-align:top;}',
-      '.rd-erp-items th{background:#f0f0f0;font-weight:700;text-align:center;line-height:1.15;}',
-      '.rd-erp-items td.num{text-align:center;white-space:nowrap;}',
-      '.rd-erp-items td.money{text-align:right;white-space:nowrap;}',
-      '.rd-erp-items td.item{text-align:left;word-break:break-word;}',
-      '.rd-erp-items col.c-qty{width:6%;}',
-      '.rd-erp-items col.c-item{width:12%;}',
-      '.rd-erp-items col.c-desc{width:38%;}',
-      '.rd-erp-items col.c-price{width:11%;}',
-      '.rd-erp-items col.c-uom{width:7%;}',
-      '.rd-erp-items col.c-ext{width:12%;}',
-      '.rd-erp-footer{width:100%;border-collapse:collapse;margin-top:10px;table-layout:fixed;page-break-inside:avoid;break-inside:avoid;flex:0 0 auto;}',
-      '.rd-erp-footer>tbody>tr>td{vertical-align:top;padding:0 6px 0 0;}',
-      '.rd-erp-footer>tbody>tr>td:last-child{padding-right:0;padding-left:6px;}',
-      '.rd-erp-footer td.col-legal{width:38%;}',
-      '.rd-erp-footer td.col-tax{width:32%;}',
-      '.rd-erp-footer td.col-totals{width:30%;}',
-      '.rd-erp-legal{font-size:10px;line-height:1.45;}',
-      '.rd-erp-legal .gst-row{margin-bottom:8px;}',
-      '.rd-erp-legal .gst-row span{display:inline-block;border:1px solid #bbb;background:#f3f3f3;padding:2px 6px;min-width:90px;}',
-      '.rd-erp-legal ul{margin:0;padding-left:16px;}',
-      '.rd-erp-legal li{margin-bottom:4px;}',
-      '.rd-erp-tax{font-size:10px;}',
-      '.rd-erp-tax-title{font-weight:700;margin-bottom:4px;}',
-      '.rd-erp-tax-table{width:100%;border-collapse:collapse;}',
-      '.rd-erp-tax-table td{border:1px solid #bbb;padding:3px 6px;}',
-      '.rd-erp-tax-table td:last-child{text-align:right;background:#f7f7f7;width:45%;}',
-      '.rd-erp-totals{border-collapse:collapse;width:100%;font-size:10px;}',
-      '.rd-erp-totals th,.rd-erp-totals td{border:1px solid #222;padding:4px 6px;}',
-      '.rd-erp-totals th{text-align:left;font-weight:700;background:#fff;}',
-      '.rd-erp-totals td{text-align:right;background:#f7f7f7;white-space:nowrap;}',
-      '.rd-erp-totals tr.grand th,.rd-erp-totals tr.grand td{font-weight:800;background:#eee;}'
+      '@page{size:letter;margin:0;}',
+      'html,body{margin:0;padding:0;background:#fff;color:#1c2b33;font-family:Arial,Helvetica,sans-serif;}',
+      '.iq-invoice{font-family:Arial,Helvetica,sans-serif;color:#1c2b33;max-width:8.5in;margin:0 auto;}',
+      '.iq-invoice *{box-sizing:border-box;}',
+      '.iq-page{width:8.5in;min-height:11in;padding:0.4in 0.55in;position:relative;background:#fff;box-sizing:border-box;height:auto;display:block;}',
+      '.iq-page:not(.iq-page-last){display:flex;flex-direction:column;}',
+      '.iq-page + .iq-page{page-break-before:always;break-before:page;}',
+      '.iq-accent{display:flex;height:4px;margin-bottom:14px;}',
+      '.iq-accent .t{flex:0 0 80%;background:#074a53;}',
+      '.iq-accent .g{flex:1;background:#bad246;}',
+      '.iq-hdr{display:flex;justify-content:space-between;align-items:flex-start;}',
+      '.iq-logo{width:72px;height:auto;max-height:56px;object-fit:contain;display:block;margin-bottom:6px;}',
+      '.iq-brand{font-size:21px;font-weight:700;letter-spacing:6px;color:#074a53;}',
+      '.iq-brand small{display:block;font-size:10px;font-weight:400;letter-spacing:1px;color:#5b6b72;margin-top:3px;}',
+      '.iq-co{font-size:11px;line-height:1.55;margin-top:8px;}',
+      '.iq-invtitle{text-align:right;}',
+      '.iq-invtitle .t{font-size:10px;font-weight:600;letter-spacing:3px;color:#074a53;}',
+      '.iq-invtitle h1{font-size:27px;font-weight:700;margin:2px 0 8px;}',
+      '.iq-dpt{display:flex;gap:18px;justify-content:flex-end;}',
+      '.iq-dpt div{text-align:right;}',
+      '.iq-dpt span{display:block;font-size:9px;font-weight:600;letter-spacing:1px;color:#5b6b72;}',
+      '.iq-dpt b{font-size:12px;font-weight:600;}',
+      '.iq-contfrom{font-size:11px;color:#5b6b72;text-align:right;margin-bottom:4px;}',
+      '.iq-addr{display:flex;gap:24px;margin-top:16px;}',
+      '.iq-addr>div{flex:1;border:1px solid #d9e0de;border-top:4px solid #074a53;border-radius:0 0 8px 8px;padding:10px 14px;}',
+      '.iq-lbl{font-size:10px;font-weight:600;letter-spacing:1.5px;color:#074a53;margin-bottom:5px;}',
+      '.iq-addr p{font-size:12.5px;line-height:1.55;margin:0;}',
+      '.iq-meta{display:grid;grid-template-columns:repeat(4,1fr);margin-top:14px;border:1px solid #d9e0de;border-radius:8px;overflow:hidden;}',
+      '.iq-meta div{padding:8px 14px;font-size:12px;border-left:1px solid #d9e0de;}',
+      '.iq-meta div:nth-child(4n+1){border-left:none;}',
+      '.iq-meta div:nth-child(n+5){border-top:1px solid #d9e0de;}',
+      '.iq-meta span{display:block;font-size:9px;font-weight:600;letter-spacing:1px;color:#5b6b72;}',
+      '.iq-meta1{display:flex;margin-top:14px;border:1px solid #d9e0de;border-radius:8px;padding:10px 14px;font-size:11.5px;}',
+      '.iq-meta1 div{flex:1;white-space:nowrap;}',
+      '.iq-meta1 div:first-child{flex:1.9;}',
+      '.iq-meta1 b{font-weight:600;}',
+      '.iq-itemsbar{display:flex;justify-content:space-between;align-items:center;margin:14px 0 8px;}',
+      '.iq-itemsbar h3{font-size:14px;font-weight:600;margin:0;}',
+      '.iq-items{width:100%;border-collapse:collapse;font-size:12px;flex:0 0 auto;height:auto!important;}',
+      '.iq-items th{background:#074a53;color:#fff;font-size:10px;font-weight:600;letter-spacing:.8px;padding:8px 6px;text-align:left;}',
+      '.iq-items td{padding:9px 6px;border-bottom:1px solid #e6ebea;vertical-align:top;font-size:11.5px;height:auto!important;}',
+      '.iq-items .c{text-align:center;}',
+      '.iq-items .r{text-align:right;}',
+      '.iq-items tr{page-break-inside:avoid;break-inside:avoid;}',
+      '.iq-cont{text-align:center;font-size:12px;font-weight:600;color:#074a53;padding-top:10px;margin-top:auto;}',
+      '.iq-bottom{display:flex;gap:22px;margin-top:16px;page-break-inside:avoid;break-inside:avoid;}',
+      '.iq-left{flex:1.25;font-size:11.5px;}',
+      '.iq-gst{font-size:12px;font-weight:600;color:#074a53;margin-bottom:8px;}',
+      '.iq-left p{margin:0 0 5px;line-height:1.5;}',
+      '.iq-pm{border-top:1px solid #d9e0de;margin-top:14px;padding-top:12px;}',
+      '.iq-pm h3{font-size:12.5px;font-weight:700;color:#074a53;letter-spacing:1px;margin:0 0 8px;}',
+      '.iq-pm h4{font-size:11.5px;font-weight:600;color:#074a53;margin:8px 0 4px;}',
+      '.iq-pm-sub{border-top:1px dashed #d9e0de;margin-top:8px;padding-top:8px;}',
+      '.iq-right{flex:1;}',
+      '.iq-taxbox{background:#f2f5f4;border-radius:8px;padding:10px 14px;margin-bottom:12px;}',
+      '.iq-taxbox h3{font-size:10.5px;font-weight:700;letter-spacing:1.5px;color:#074a53;margin:0 0 6px;}',
+      '.iq-trow{display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0;}',
+      '.iq-due{background:#2ea05f;color:#fff;border-radius:8px;display:flex;justify-content:space-between;align-items:center;padding:10px 14px;margin-top:8px;font-size:14.5px;font-weight:700;}',
+      '.iq-foot{display:flex;justify-content:space-between;font-size:10.5px;color:#5b6b72;border-top:1px solid #d9e0de;padding-top:8px;margin-top:24px;}'
     ].join('');
   }
 
