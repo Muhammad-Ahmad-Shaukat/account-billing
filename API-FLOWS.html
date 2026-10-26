@@ -578,8 +578,12 @@
           <div class="node warn"><span class="t">202</span><span class="s">downloadable: false</span></div>
         </div>
         <div class="branch-row">
-          <span class="label err">Duplicate</span>
-          <div class="node err"><span class="t">409</span><span class="s">exists: true</span></div>
+          <span class="label ok">Same + changed</span>
+          <div class="node ok"><span class="t">200</span><span class="s">updated: true</span></div>
+        </div>
+        <div class="branch-row">
+          <span class="label">Same + no change</span>
+          <div class="node ok"><span class="t">200</span><span class="s">unchanged: true</span></div>
         </div>
         <div class="branch-row">
           <span class="label err">Bad fields</span>
@@ -687,17 +691,21 @@
     </div>
     <div class="io">
       <div class="io-block">
-        <div class="io-h resp-err">Response — 409 (duplicate revision)</div>
-        <pre>{
-  "success": false,
+        <div class="io-h resp-ok">Response — 200 (same revision, updated / unchanged)</div>
+        <pre>// values changed:
+{
+  "success": true,
   "exists": true,
-  "error": "Invoice already exists for this invoice_number and revision",
-  "data": {
-    "exists": true,
-    "invoice_number": "IQ-LIVE-2001",
-    "revision": 1,
-    "shopify_customer_id": "31249944510693"
-  }
+  "updated": true,
+  "unchanged": false
+}
+
+// no changes:
+{
+  "success": true,
+  "exists": true,
+  "updated": false,
+  "unchanged": true
 }</pre>
       </div>
       <div class="io-block">
@@ -947,8 +955,8 @@ GET /api/outstanding?shopify_customer_id=31249944510693</pre>
       </tr>
       <tr>
         <td>Same <code>invoice_number</code> + same <code>revision</code> again</td>
-        <td>Rejected</td>
-        <td><strong>409</strong> — exists: true</td>
+        <td>Compare values</td>
+        <td><strong>200</strong> — update if changed, else keep as-is</td>
       </tr>
     </tbody>
   </table>

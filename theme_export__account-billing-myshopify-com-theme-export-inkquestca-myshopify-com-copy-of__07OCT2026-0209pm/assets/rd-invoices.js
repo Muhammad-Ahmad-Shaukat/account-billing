@@ -411,7 +411,7 @@
 
   function renderEmpty(){
     tbody.innerHTML =
-      '<tr><td colspan="7"><div class="rd-invoice-empty">' +
+      '<tr><td colspan="8"><div class="rd-invoice-empty">' +
         '<h3>No invoices</h3>' +
         '<p>There are no invoices for your account right now.</p>' +
         '<button type="button" class="rd-invoice-refresh" id="rdInvoiceRefresh">Refresh</button>' +
@@ -475,6 +475,7 @@
         '<td><div class="rd-invoice-order">' + escapeHtml(inv.order_no || '') + '</div></td>' +
         '<td>' + escapeHtml(inv.po_number || '') + '</td>' +
         '<td class="rd-invoice-total">' + money(inv.total_amount, inv.currency) + '</td>' +
+        '<td class="rd-invoice-total">' + money(inv.amount_due, inv.currency) + '</td>' +
         '<td><span class="rd-invoice-badge ' + pay.cls + '">' + escapeHtml(pay.label) + '</span></td>' +
         '<td><div class="rd-invoice-actions">' +
           '<button type="button" class="rd-invoice-action" title="View Invoice" data-invoice-id="' + escapeHtml(inv.id) + '">View</button>' +
@@ -513,7 +514,7 @@
       statsEl.hidden = false;
       statsEl.removeAttribute('hidden');
     }
-    tbody.innerHTML = '<tr><td colspan="7"><div class="rd-invoice-loading">Loading invoices...</div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8"><div class="rd-invoice-loading">Loading invoices...</div></td></tr>';
     try {
       const result = await fetchJson(buildListUrl(page));
       const rows = Array.isArray(result.data) ? result.data : [];

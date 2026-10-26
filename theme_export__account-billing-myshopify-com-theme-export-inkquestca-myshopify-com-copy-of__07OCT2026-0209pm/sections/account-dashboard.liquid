@@ -2198,13 +2198,14 @@ data-search="
                 <th>Order</th>
                 <th>PO Number</th>
                 <th>Total</th>
+                <th>Amount Due</th>
                 <th>Payment Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody id="rdInvoiceTableBody">
               <tr>
-                <td colspan="7">
+                <td colspan="8">
                   <div class="rd-invoice-loading">Loading invoices…</div>
                 </td>
               </tr>
@@ -3010,7 +3011,7 @@ document.body.style.overflow="";
 
 })();
 </script>
-<script src="{{ 'rd-invoices.js' | asset_url }}&v=20261019a" defer></script>
+<script src="{{ 'rd-invoices.js' | asset_url }}&v=20261026a" defer></script>
 
 <!-- =========================================================
      INK QUEST RESELLER PORTAL - EN / FR UI TRANSLATION
@@ -3102,6 +3103,7 @@ document.body.style.overflow="";
     'Payment Status': 'Statut de paiement',
     'Due': 'À payer',
     'Amount': 'Montant',
+    'Amount Due': 'Montant dû',
     'Actions': 'Actions',
     'Invoice Date': 'Date de facture',
     'View Order': 'Voir la commande',

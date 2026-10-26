@@ -81,7 +81,9 @@ Important rules:
   - Money values must be sent as already-calculated strings (do not expect
     the app to recalculate totals).
   - A new revision for the same invoice_number is allowed (revision 2, 3, …).
-  - The same invoice_number + same revision cannot be sent twice.
+  - Same invoice_number + same revision sent again:
+      • If values changed → existing record is UPDATED
+      • If nothing changed → existing record is kept as-is (no rewrite)
 
 Empty / missing fields — what happens:
   REQUIRED (reject with HTTP 400 if empty, null, or missing):
@@ -199,34 +201,52 @@ B) Invoice created but missing required totals
      "warning": "Stored but not downloadable; missing required totals: ..."
    }
 
-C) Duplicate invoice_number + same revision
-   Not stored again. Returns false / exists true.
-   HTTP 409
+C) Same invoice_number + same revision, NO changes
+   Existing record kept as-is.
+   HTTP 200
    {
-     "success": false,
+     "success": true,
      "exists": true,
-     "error": "Invoice already exists for this invoice_number and revision",
+     "updated": false,
+     "unchanged": true,
      "data": {
-       "success": false,
-       "exists": true,
+       "id": "...",
        "invoice_number": "IQ-LIVE-2001",
        "revision": 1,
-       "id": "...",
-       "shopify_customer_id": "31249944510693",
-       "message": "Invoice already exists for this invoice_number and revision"
+       "updated": false,
+       "unchanged": true,
+       "message": "Invoice unchanged; existing record kept as-is"
      }
    }
 
-D) Same invoice_number with a HIGHER revision (e.g. revision 2)
+D) Same invoice_number + same revision, WITH changes
+   Existing record is updated with the new values.
+   HTTP 200 (or 202 if totals incomplete)
+   {
+     "success": true,
+     "exists": true,
+     "updated": true,
+     "unchanged": false,
+     "data": {
+       "id": "...",
+       "invoice_number": "IQ-LIVE-2001",
+       "revision": 1,
+       "updated": true,
+       "downloadable": true,
+       "message": "Invoice updated with changed values"
+     }
+   }
+
+E) Same invoice_number with a HIGHER revision (e.g. revision 2)
    Allowed. Creates a new revision. Customer sees the highest revision.
 
-E) Unauthorized / wrong secret or shop
+F) Unauthorized / wrong secret or shop
    HTTP 401 or 403
    { "error": "Unauthorized" }
    or
    { "error": "Invalid shop domain" }
 
-F) Missing required fields (customer id / invoice number / revision)
+G) Missing required fields (customer id / invoice number / revision)
    HTTP 400
    { "success": false, "error": "..." }
 
@@ -421,6 +441,8 @@ NOTES FOR INTEGRATION
 5. Printed money values are never recalculated by the app.
 6. Shared secret and shop domain must match the values configured on the server.
 7. Contact the development team for the live X-Invoice-Secret value.
+8. Re-sending the same invoice_number + revision updates the record only when
+   values changed; otherwise the existing record is left unchanged.
 
 ================================================================================
 END OF DOCUMENT

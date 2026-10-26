@@ -16,20 +16,23 @@ router.post("/ingest", ingestAuth, async (req, res) => {
 
     const result = await upsertInvoiceRevision(req.ingestShop, payload);
 
-    // Duplicate invoice_number + revision
-    if (result.exists === true) {
-      return res.status(409).json({
-        success: false,
+    // Unchanged existing revision → 200, keep record as-is
+    if (result.unchanged === true) {
+      return res.status(200).json({
+        success: true,
         exists: true,
+        updated: false,
+        unchanged: true,
         data: result,
-        error: result.message,
       });
     }
 
     const status = result.downloadable ? 200 : 202;
     return res.status(status).json({
       success: true,
-      exists: false,
+      exists: result.exists === true,
+      updated: result.updated === true,
+      unchanged: false,
       data: result,
       warning: result.downloadable
         ? undefined

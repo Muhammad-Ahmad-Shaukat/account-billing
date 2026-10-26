@@ -159,13 +159,38 @@ let createdId = null;
   createdId = r.json?.data?.id;
 }
 
-// 5 Duplicate same revision
+// 5 Same revision, no changes → unchanged
 {
   const payload = baseInvoice({ invoice_number: invoiceNumber, revision: 1 });
   const r = await req("POST", "/api/invoices/ingest", payload);
   assert(
-    "POST ingest duplicate invoice+revision → 409 exists",
-    r.status === 409 && r.json?.success === false && r.json?.exists === true,
+    "POST ingest same invoice unchanged → 200 unchanged",
+    r.status === 200 &&
+      r.json?.success === true &&
+      r.json?.exists === true &&
+      r.json?.updated === false &&
+      r.json?.unchanged === true,
+    JSON.stringify(r)
+  );
+}
+
+// 5b Same revision, with changes → updated
+{
+  const payload = baseInvoice({
+    invoice_number: invoiceNumber,
+    revision: 1,
+    amount_due: "9.50",
+    less_payment: "1.00",
+    po_number: "PO-CHANGED",
+  });
+  const r = await req("POST", "/api/invoices/ingest", payload);
+  assert(
+    "POST ingest same invoice with changes → 200 updated",
+    r.status === 200 &&
+      r.json?.success === true &&
+      r.json?.exists === true &&
+      r.json?.updated === true &&
+      r.json?.unchanged === false,
     JSON.stringify(r)
   );
 }

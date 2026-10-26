@@ -30,6 +30,122 @@ export function validateDownloadable(payload) {
   return { downloadable: missing.length === 0, missing };
 }
 
+/** Stable JSON for change detection (order-independent object keys). */
+function stableStringify(value) {
+  if (value === null || value === undefined) return "null";
+  if (typeof value !== "object") return JSON.stringify(value);
+  if (Array.isArray(value)) {
+    return `[${value.map((item) => stableStringify(item)).join(",")}]`;
+  }
+  const keys = Object.keys(value).sort();
+  return `{${keys
+    .map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`)
+    .join(",")}}`;
+}
+
+function normalizeQty(value) {
+  if (value === null || value === undefined || value === "") return null;
+  return String(value);
+}
+
+/** Canonical snapshot used to decide if an existing revision changed. */
+function buildComparableSnapshot(payload) {
+  const lines = Array.isArray(payload.lines) ? payload.lines : [];
+  const taxLines = Array.isArray(payload.tax_lines) ? payload.tax_lines : [];
+  return {
+    shopify_customer_id: normalizeShopifyId(payload.shopify_customer_id),
+    shopify_order_id: normalizeShopifyId(payload.shopify_order_id),
+    invoice_date: nullableText(payload.invoice_date),
+    order_no: nullableText(payload.order_no),
+    order_date: nullableText(payload.order_date),
+    customer_no: nullableText(payload.customer_no),
+    po_number: nullableText(payload.po_number),
+    salesperson: nullableText(payload.salesperson),
+    terms: nullableText(payload.terms),
+    ship_via: nullableText(payload.ship_via),
+    currency: nullableText(payload.currency) || "CAD",
+    sold_to: payload.sold_to || null,
+    ship_to: payload.ship_to || null,
+    tax_exempt_code: nullableText(payload.tax_exempt_code),
+    tax_registration_no: nullableText(payload.tax_registration_no),
+    subtotal: nullableText(payload.subtotal),
+    total_tax: nullableText(payload.total_tax),
+    total_amount: nullableText(payload.total_amount),
+    less_payment: nullableText(payload.less_payment),
+    amount_due: nullableText(payload.amount_due),
+    lines: lines.map((line) => ({
+      item_number: nullableText(line?.item_number),
+      description: nullableText(line?.description),
+      qty_ordered: normalizeQty(line?.qty_ordered),
+      qty_shipped: normalizeQty(line?.qty_shipped),
+      qty_backorder: normalizeQty(line?.qty_backorder),
+      unit_price:
+        line?.unit_price === null || line?.unit_price === undefined
+          ? null
+          : String(line.unit_price),
+      uom: nullableText(line?.uom),
+      extended_price: nullableText(line?.extended_price),
+    })),
+    tax_lines: taxLines.map((tax) => ({
+      code: nullableText(tax?.code),
+      amount: nullableText(tax?.amount),
+    })),
+  };
+}
+
+async function replaceInvoiceChildren(client, invoiceId, lines, taxLines) {
+  await client.query("DELETE FROM invoice_lines WHERE invoice_id = $1", [
+    invoiceId,
+  ]);
+  await client.query("DELETE FROM invoice_tax_lines WHERE invoice_id = $1", [
+    invoiceId,
+  ]);
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i] || {};
+    await client.query(
+      `
+      INSERT INTO invoice_lines (
+        invoice_id, line_index, item_number, description,
+        qty_ordered, qty_shipped, qty_backorder,
+        unit_price, uom, extended_price
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+      `,
+      [
+        invoiceId,
+        i,
+        nullableText(line.item_number),
+        nullableText(line.description),
+        line.qty_ordered === null || line.qty_ordered === undefined
+          ? null
+          : String(line.qty_ordered),
+        line.qty_shipped === null || line.qty_shipped === undefined
+          ? null
+          : String(line.qty_shipped),
+        line.qty_backorder === null || line.qty_backorder === undefined
+          ? null
+          : String(line.qty_backorder),
+        line.unit_price === null || line.unit_price === undefined
+          ? null
+          : String(line.unit_price),
+        nullableText(line.uom),
+        nullableText(line.extended_price),
+      ]
+    );
+  }
+
+  for (let i = 0; i < taxLines.length; i++) {
+    const tax = taxLines[i] || {};
+    await client.query(
+      `
+      INSERT INTO invoice_tax_lines (invoice_id, line_index, code, amount)
+      VALUES ($1,$2,$3,$4)
+      `,
+      [invoiceId, i, nullableText(tax.code), nullableText(tax.amount)]
+    );
+  }
+}
+
 export async function upsertInvoiceRevision(shop, payload) {
   const customerId = normalizeShopifyId(payload.shopify_customer_id);
   const orderId = normalizeShopifyId(payload.shopify_order_id);
@@ -55,31 +171,153 @@ export async function upsertInvoiceRevision(shop, payload) {
   const { downloadable, missing } = validateDownloadable(payload);
   const lines = Array.isArray(payload.lines) ? payload.lines : [];
   const taxLines = Array.isArray(payload.tax_lines) ? payload.tax_lines : [];
+  const incomingSnapshot = buildComparableSnapshot(payload);
 
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
 
-    // Same invoice_number + revision already stored → reject (do not overwrite)
     const existing = await client.query(
       `
-      SELECT id, invoice_number, revision, shopify_customer_id
+      SELECT *
       FROM invoices
       WHERE shop = $1 AND invoice_number = $2 AND revision = $3
       LIMIT 1
       `,
       [shop, invoiceNumber, revision]
     );
+
     if (existing.rowCount) {
-      await client.query("ROLLBACK");
+      const row = existing.rows[0];
+      const invoiceId = row.id;
+      const existingLines = await client.query(
+        `
+        SELECT item_number, description, qty_ordered, qty_shipped,
+               qty_backorder, unit_price, uom, extended_price
+        FROM invoice_lines
+        WHERE invoice_id = $1
+        ORDER BY line_index ASC
+        `,
+        [invoiceId]
+      );
+      const existingTaxes = await client.query(
+        `
+        SELECT code, amount
+        FROM invoice_tax_lines
+        WHERE invoice_id = $1
+        ORDER BY line_index ASC
+        `,
+        [invoiceId]
+      );
+      const existingSnapshot = buildComparableSnapshot({
+        shopify_customer_id: row.shopify_customer_id,
+        shopify_order_id: row.shopify_order_id,
+        invoice_date: row.invoice_date,
+        order_no: row.order_no,
+        order_date: row.order_date,
+        customer_no: row.customer_no,
+        po_number: row.po_number,
+        salesperson: row.salesperson,
+        terms: row.terms,
+        ship_via: row.ship_via,
+        currency: row.currency,
+        sold_to: row.sold_to,
+        ship_to: row.ship_to,
+        tax_exempt_code: row.tax_exempt_code,
+        tax_registration_no: row.tax_registration_no,
+        subtotal: row.subtotal,
+        total_tax: row.total_tax,
+        total_amount: row.total_amount,
+        less_payment: row.less_payment,
+        amount_due: row.amount_due,
+        lines: existingLines.rows,
+        tax_lines: existingTaxes.rows,
+      });
+
+      if (stableStringify(incomingSnapshot) === stableStringify(existingSnapshot)) {
+        await client.query("COMMIT");
+        return {
+          success: true,
+          exists: true,
+          updated: false,
+          unchanged: true,
+          id: invoiceId,
+          invoice_number: invoiceNumber,
+          revision,
+          downloadable: row.downloadable,
+          missing_required_totals: missing,
+          message: "Invoice unchanged; existing record kept as-is",
+        };
+      }
+
+      await client.query(
+        `
+        UPDATE invoices SET
+          shopify_customer_id = $2,
+          shopify_order_id = $3,
+          invoice_date = $4,
+          order_no = $5,
+          order_date = $6,
+          customer_no = $7,
+          po_number = $8,
+          salesperson = $9,
+          terms = $10,
+          ship_via = $11,
+          currency = $12,
+          sold_to = $13::jsonb,
+          ship_to = $14::jsonb,
+          tax_exempt_code = $15,
+          tax_registration_no = $16,
+          subtotal = $17,
+          total_tax = $18,
+          total_amount = $19,
+          less_payment = $20,
+          amount_due = $21,
+          downloadable = $22,
+          raw_json = $23::jsonb,
+          updated_at = NOW()
+        WHERE id = $1
+        `,
+        [
+          invoiceId,
+          customerId,
+          orderId,
+          nullableText(payload.invoice_date),
+          nullableText(payload.order_no),
+          nullableText(payload.order_date),
+          nullableText(payload.customer_no),
+          nullableText(payload.po_number),
+          nullableText(payload.salesperson),
+          nullableText(payload.terms),
+          nullableText(payload.ship_via),
+          nullableText(payload.currency) || "CAD",
+          JSON.stringify(payload.sold_to || null),
+          JSON.stringify(payload.ship_to || null),
+          nullableText(payload.tax_exempt_code),
+          nullableText(payload.tax_registration_no),
+          nullableText(payload.subtotal),
+          nullableText(payload.total_tax),
+          nullableText(payload.total_amount),
+          nullableText(payload.less_payment),
+          nullableText(payload.amount_due),
+          downloadable,
+          JSON.stringify(payload),
+        ]
+      );
+
+      await replaceInvoiceChildren(client, invoiceId, lines, taxLines);
+      await client.query("COMMIT");
       return {
-        success: false,
+        success: true,
         exists: true,
+        updated: true,
+        unchanged: false,
+        id: invoiceId,
         invoice_number: invoiceNumber,
         revision,
-        id: existing.rows[0].id,
-        shopify_customer_id: existing.rows[0].shopify_customer_id,
-        message: "Invoice already exists for this invoice_number and revision",
+        downloadable,
+        missing_required_totals: missing,
+        message: "Invoice updated with changed values",
       };
     }
 
@@ -128,67 +366,14 @@ export async function upsertInvoiceRevision(shop, payload) {
     );
 
     const invoiceId = inserted.rows[0].id;
-
-    await client.query("DELETE FROM invoice_lines WHERE invoice_id = $1", [
-      invoiceId,
-    ]);
-    await client.query("DELETE FROM invoice_tax_lines WHERE invoice_id = $1", [
-      invoiceId,
-    ]);
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i] || {};
-      await client.query(
-        `
-        INSERT INTO invoice_lines (
-          invoice_id, line_index, item_number, description,
-          qty_ordered, qty_shipped, qty_backorder,
-          unit_price, uom, extended_price
-        ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
-        `,
-        [
-          invoiceId,
-          i,
-          nullableText(line.item_number),
-          nullableText(line.description),
-          line.qty_ordered === null || line.qty_ordered === undefined
-            ? null
-            : String(line.qty_ordered),
-          line.qty_shipped === null || line.qty_shipped === undefined
-            ? null
-            : String(line.qty_shipped),
-          line.qty_backorder === null || line.qty_backorder === undefined
-            ? null
-            : String(line.qty_backorder),
-          line.unit_price === null || line.unit_price === undefined
-            ? null
-            : String(line.unit_price),
-          nullableText(line.uom),
-          nullableText(line.extended_price),
-        ]
-      );
-    }
-
-    for (let i = 0; i < taxLines.length; i++) {
-      const tax = taxLines[i] || {};
-      await client.query(
-        `
-        INSERT INTO invoice_tax_lines (invoice_id, line_index, code, amount)
-        VALUES ($1,$2,$3,$4)
-        `,
-        [
-          invoiceId,
-          i,
-          nullableText(tax.code),
-          nullableText(tax.amount),
-        ]
-      );
-    }
+    await replaceInvoiceChildren(client, invoiceId, lines, taxLines);
 
     await client.query("COMMIT");
     return {
       success: true,
       exists: false,
+      updated: false,
+      unchanged: false,
       id: invoiceId,
       invoice_number: invoiceNumber,
       revision,
