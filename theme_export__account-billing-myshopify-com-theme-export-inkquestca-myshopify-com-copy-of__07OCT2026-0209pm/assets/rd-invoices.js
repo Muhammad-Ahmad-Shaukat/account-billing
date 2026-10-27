@@ -628,6 +628,10 @@
     // PDF uses paginated HTML (repeated headers; footer only on last page)
     var pdfHtml = buildInvoiceHtml(currentInvoice, { forPdf: true });
 
+    printDocument(pdfHtml, 'Invoice ' + currentInvoice.invoice_number);
+  }
+
+  function printDocument(pdfHtml, title){
     var oldFrame = document.getElementById('rdInvoicePrintFrame');
     if (oldFrame && oldFrame.parentNode) oldFrame.parentNode.removeChild(oldFrame);
 
@@ -641,9 +645,7 @@
     var doc = iframe.contentDocument || (win && win.document);
     if (!doc || !win) return;
 
-    doc.title = (currentInvoice && currentInvoice.invoice_number)
-      ? ('Invoice ' + currentInvoice.invoice_number)
-      : 'Invoice';
+    doc.title = title;
 
     var styleEl = doc.createElement('style');
     styleEl.appendChild(doc.createTextNode(getInvoicePrintCss()));
@@ -696,6 +698,61 @@
 
     setTimeout(waitForAssets, 30);
   }
+
+  function buildStatementHtml(statement){
+    const invoices = statement.invoices.filter(function(inv){ return Number(inv.amount_due) > 0; });
+    const company = resolveCompany({ company: statement.company });
+    const totals = new Map();
+    invoices.forEach(function(inv){
+      const currency = inv.currency || 'CAD';
+      totals.set(currency, (totals.get(currency) || 0) + Math.round(Number(inv.amount_due) * 100));
+    });
+    const pages = [];
+    for (let i = 0; i < invoices.length; i += 20) pages.push(invoices.slice(i, i + 20));
+    return '<div class="iq-invoice">' + pages.map(function(rows, index){
+      const last = index === pages.length - 1;
+      return '<section class="iq-page' + (last ? ' iq-page-last' : '') + '">' +
+        '<div class="iq-accent"><div class="t"></div><div class="g"></div></div>' +
+        '<div class="iq-hdr"><div>' +
+        (company.logo_url ? '<img class="iq-logo" src="' + escapeHtml(company.logo_url) + '" alt="' + escapeHtml(company.company_name) + '">' : '') +
+        '<div class="iq-brand">' + escapeHtml(company.company_name) + '</div><div class="iq-co">' + companyAddressHtml(company) + '</div></div>' +
+        '<div class="iq-invtitle"><div class="t">STATEMENT OF ACCOUNT</div><h1>Unpaid invoices</h1>' +
+        '<div>As of ' + formatDate(statement.generated_at) + '</div><div>Page ' + (index + 1) + ' of ' + pages.length + '</div></div></div>' +
+        '<div class="iq-addr"><div><div class="iq-lbl">CUSTOMER</div><p>' + addressLines(invoices[0].sold_to) +
+        '</p><p>Customer no.: ' + escapeHtml(invoices[0].customer_no || cfg.customerId || '') + '</p></div></div>' +
+        '<div class="iq-itemsbar"><h3>UNPAID INVOICES</h3></div>' +
+        '<table class="iq-items"><thead><tr><th>Invoice</th><th>Date</th><th>Order</th><th>PO Number</th><th>Currency</th><th class="r">Invoice total</th><th class="r">Amount due</th></tr></thead><tbody>' +
+        rows.map(function(inv){ return '<tr><td>' + escapeHtml(inv.invoice_number) + '</td><td>' + formatDate(inv.invoice_date) +
+          '</td><td>' + escapeHtml(inv.order_no || '') + '</td><td>' + escapeHtml(inv.po_number || '') + '</td><td>' + escapeHtml(inv.currency || 'CAD') +
+          '</td><td class="r">' + money(inv.total_amount, inv.currency) + '</td><td class="r">' + money(inv.amount_due, inv.currency) + '</td></tr>'; }).join('') +
+        '</tbody></table>' + (last ? '<div class="iq-bottom"><div class="iq-right">' + Array.from(totals, function(entry){
+          return '<div class="iq-due"><span>Total unpaid (' + escapeHtml(entry[0]) + ')</span><span>' + money((entry[1] / 100).toFixed(2), entry[0]) + '</span></div>';
+        }).join('') + '</div></div>' : '<div class="iq-cont">Continued on next page...</div>') +
+        '<div class="iq-foot"><span>All unpaid invoices as of statement date. Part payments are reflected in Amount due.</span><span>Page ' + (index + 1) + '</span></div></section>';
+    }).join('') + '</div>';
+  }
+
+  const statementBtn = document.getElementById('rdStatementDownload');
+  const statementStatus = document.getElementById('rdStatementStatus');
+  if (statementBtn) statementBtn.addEventListener('click', async function(){
+    statementBtn.disabled = true;
+    if (statementStatus) statementStatus.textContent = 'Preparing statement...';
+    try {
+      const result = await fetchJson(cfg.proxyBase + '/statement');
+      if (!result.data || !Array.isArray(result.data.invoices)) throw new Error('Invalid statement response');
+      if (!result.data.invoices.some(function(inv){ return Number(inv.amount_due) > 0; })) {
+        if (statementStatus) statementStatus.textContent = 'No unpaid invoices for your account.';
+        return;
+      }
+      printDocument(buildStatementHtml(result.data), 'Statement of account');
+      if (statementStatus) statementStatus.textContent = 'Choose Save as PDF in the print dialog to download your statement.';
+    } catch (err) {
+      if (statementStatus) statementStatus.textContent = 'Unable to download statement. Please try again.';
+      console.error('Statement failed', err);
+    } finally {
+      statementBtn.disabled = false;
+    }
+  });
 
   async function openInvoice(id){
     preview.innerHTML = '<div class="rd-invoice-loading">Loading invoice...</div>';

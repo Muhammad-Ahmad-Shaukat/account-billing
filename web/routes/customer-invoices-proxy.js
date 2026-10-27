@@ -3,6 +3,7 @@ import { appProxyAuth } from "../middleware/app-proxy-auth.js";
 import { getCompanyBlock } from "../services/company.js";
 import {
   getInvoiceForCustomer,
+  getUnpaidStatement,
   listLatestInvoices,
   normalizeShopifyId,
 } from "../services/invoices.js";
@@ -47,6 +48,20 @@ router.get("/customer/invoices", async (req, res) => {
   } catch (err) {
     console.error("[customer-invoices list]", err);
     return res.status(500).json({ error: "Failed to load invoices" });
+  }
+});
+
+router.get("/customer/invoices/statement", async (req, res) => {
+  try {
+    const invoices = await getUnpaidStatement(
+      req.proxyShop, normalizeShopifyId(req.loggedInCustomerId)
+    );
+    return res.set("Cache-Control", "private, no-store").json({
+      data: { invoices, company: getCompanyBlock(), generated_at: new Date().toISOString() },
+    });
+  } catch (err) {
+    console.error("[customer-invoices statement]", err);
+    return res.status(500).json({ error: "Failed to load statement" });
   }
 });
 

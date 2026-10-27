@@ -2132,6 +2132,8 @@ data-search="
     </div>
 
     {% if customer %}
+      <button type="button" class="rd-invoice-modal-btn primary" id="rdStatementDownload" style="margin-bottom:16px;">{% if request.locale.iso_code == 'fr' %}T?l?charger le relev?{% else %}Download Statement{% endif %}</button>
+      <p id="rdStatementStatus" role="status" style="margin:0 0 16px;"></p>
       <script>
         window.RD_INVOICES = {
           proxyBase: '/apps/account-billing/customer/invoices',

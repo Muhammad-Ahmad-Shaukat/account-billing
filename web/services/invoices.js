@@ -577,6 +577,20 @@ export async function listLatestInvoices(shop, customerId, options = {}) {
   };
 }
 
+export async function getUnpaidStatement(shop, customerId) {
+  const result = await query(
+    `SELECT * FROM (
+      SELECT DISTINCT ON (invoice_number) * FROM invoices
+      WHERE shop = $1 AND shopify_customer_id = $2
+      ORDER BY invoice_number, revision DESC
+    ) latest
+    WHERE NULLIF(amount_due, '')::numeric > 0
+    ORDER BY invoice_date ASC NULLS LAST, invoice_number ASC`,
+    [shop, customerId]
+  );
+  return result.rows.map((row) => mapInvoiceRow(row));
+}
+
 export async function getInvoiceForCustomer(shop, customerId, invoiceId) {
   const result = await query(
     `
