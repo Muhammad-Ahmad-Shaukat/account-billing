@@ -2148,20 +2148,31 @@ data-search="
         });
       </script>
 
-      <div class="rd-invoice-stats" id="rdInvoiceStats">
+      <div class="rd-invoice-stats" id="rdInvoiceStats" aria-live="polite">
         <div class="rd-invoice-stat">
-          <div class="rd-invoice-stat-top">
-            <div class="rd-invoice-stat-label">Outstanding balance</div>
-          </div>
-          <div class="rd-invoice-stat-value" id="rdInvoiceOutstanding">Loading…</div>
-          <div class="rd-invoice-stat-sub">Across your account</div>
+          <div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">Total Invoices</div><div class="rd-invoice-stat-icon" aria-hidden="true">#</div></div>
+          <div class="rd-invoice-stat-value" id="rdInvoiceCount">Loading?</div>
+          <div class="rd-invoice-stat-sub">All invoices</div>
         </div>
         <div class="rd-invoice-stat">
-          <div class="rd-invoice-stat-top">
-            <div class="rd-invoice-stat-label">Invoices</div>
-          </div>
-          <div class="rd-invoice-stat-value" id="rdInvoiceCount">Loading…</div>
-          <div class="rd-invoice-stat-sub">On file</div>
+          <div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">Total Value</div><div class="rd-invoice-stat-icon" aria-hidden="true">$</div></div>
+          <div class="rd-invoice-stat-value" id="rdInvoiceValue">Loading?</div>
+          <div class="rd-invoice-stat-sub">Total invoiced amount</div>
+        </div>
+        <div class="rd-invoice-stat">
+          <div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">Paid</div><div class="rd-invoice-stat-icon" aria-hidden="true">?</div></div>
+          <div class="rd-invoice-stat-value" id="rdInvoicePaid">Loading?</div>
+          <div class="rd-invoice-stat-sub">Paid invoices</div>
+        </div>
+        <div class="rd-invoice-stat">
+          <div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">Pending</div><div class="rd-invoice-stat-icon" aria-hidden="true">!</div></div>
+          <div class="rd-invoice-stat-value" id="rdInvoicePending">Loading?</div>
+          <div class="rd-invoice-stat-sub">Awaiting payment</div>
+        </div>
+        <div class="rd-invoice-stat">
+          <div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">Outstanding balance</div><div class="rd-invoice-stat-icon" aria-hidden="true">$</div></div>
+          <div class="rd-invoice-stat-value" id="rdInvoiceOutstanding">Loading?</div>
+          <div class="rd-invoice-stat-sub">Across your account</div>
         </div>
       </div>
 

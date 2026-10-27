@@ -432,8 +432,21 @@
       statsEl.removeAttribute('hidden');
       statsEl.style.display = '';
     }
+    const summary = meta.summary;
     if (invoiceCountEl) {
-      invoiceCountEl.textContent = meta.total != null ? String(meta.total) : '0';
+      invoiceCountEl.textContent = summary ? String(summary.total_invoices) : '?';
+    }
+    const valueEl = document.getElementById('rdInvoiceValue');
+    const paidEl = document.getElementById('rdInvoicePaid');
+    const pendingEl = document.getElementById('rdInvoicePending');
+    if (paidEl) paidEl.textContent = summary ? String(summary.paid) : '?';
+    if (pendingEl) pendingEl.textContent = summary ? String(summary.pending) : '?';
+    if (valueEl) {
+      valueEl.innerHTML = summary
+        ? (summary.totals_by_currency.length
+          ? summary.totals_by_currency.map(function(total){ return money(total.total_value, total.currency); }).join('<br>')
+          : money('0.00', meta.outstanding_currency || 'CAD'))
+        : '?';
     }
     var outstandingText = '—';
     if (meta.outstanding_balance != null && meta.outstanding_balance !== '') {

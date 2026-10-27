@@ -1,0 +1,1222 @@
+[
+  {
+    "shopify_customer_id": "10479823519925",
+    "currency": "CAD",
+    "sold_to": {
+      "name": "TEST INVOICE - Demo Customer",
+      "address1": "100 Demo Street NW",
+      "city": "Edmonton",
+      "province": "AB",
+      "postal": "T5L 4S9",
+      "country": "CA"
+    },
+    "ship_to": {
+      "name": "TEST INVOICE - Demo Receiving",
+      "address1": "200 Ship Lane",
+      "city": "Calgary",
+      "province": "AB",
+      "postal": "T2P 1J9",
+      "country": "CA"
+    },
+    "customer_no": "TEST-CUSTOMER",
+    "salesperson": "JD",
+    "terms": "N30",
+    "ship_via": "CANPAR",
+    "tax_exempt_code": "",
+    "tax_registration_no": "123456789RT0001",
+    "shopify_order_id": null,
+    "invoice_number": "TEST-20261027-IQ-2609-1001",
+    "invoice_date": "2026-09-11",
+    "order_no": "TEST-SO-45021",
+    "order_date": "2026-09-10",
+    "po_number": "PO-77821",
+    "revision": 1,
+    "lines": [
+      {
+        "item_number": "SM-LC401XL-C",
+        "description": "SMART MATE COMP. BROTHER LC401XL CYAN INK 500p.",
+        "qty_ordered": 3,
+        "qty_shipped": 3,
+        "qty_backorder": 0,
+        "unit_price": "12.50",
+        "uom": "EACH",
+        "extended_price": "37.50"
+      },
+      {
+        "item_number": "SM-LC401XL-M",
+        "description": "SMART MATE COMP. BROTHER LC401XL MAGENTA INK 500p.",
+        "qty_ordered": 3,
+        "qty_shipped": 3,
+        "qty_backorder": 0,
+        "unit_price": "12.50",
+        "uom": "EACH",
+        "extended_price": "37.50"
+      },
+      {
+        "item_number": "SM-LC401XL-Y",
+        "description": "SMART MATE COMP. BROTHER LC401XL YELLOW INK 500p.",
+        "qty_ordered": 3,
+        "qty_shipped": 3,
+        "qty_backorder": 0,
+        "unit_price": "12.50",
+        "uom": "EACH",
+        "extended_price": "37.50"
+      },
+      {
+        "item_number": "TN221-M",
+        "description": "COMP. BROTHER TN221/225 MAGENTA UNIVERSAL 2,2K (15/BX)",
+        "qty_ordered": 4,
+        "qty_shipped": 4,
+        "qty_backorder": 0,
+        "unit_price": "22.00",
+        "uom": "EACH",
+        "extended_price": "88.00"
+      },
+      {
+        "item_number": "TN221-Y",
+        "description": "COMP. BROTHER TN221/225 YELLOW UNIVERSAL 2,2K (15/BX)",
+        "qty_ordered": 2,
+        "qty_shipped": 2,
+        "qty_backorder": 0,
+        "unit_price": "22.00",
+        "uom": "EACH",
+        "extended_price": "44.00"
+      },
+      {
+        "item_number": "TN221-K",
+        "description": "COMP. BROTHER TN221 BLACK 2,5K (15/BX)",
+        "qty_ordered": 2,
+        "qty_shipped": 1,
+        "qty_backorder": 1,
+        "unit_price": "21.00",
+        "uom": "EACH",
+        "extended_price": "21.00"
+      },
+      {
+        "item_number": "71B10C0",
+        "description": "ECO. COMPATIBLE TONER FOR LEXMARK CYAN (71B10C0) 2.3K",
+        "qty_ordered": 2,
+        "qty_shipped": 2,
+        "qty_backorder": 0,
+        "unit_price": "45.00",
+        "uom": "EACH",
+        "extended_price": "90.00"
+      },
+      {
+        "item_number": "71B10K0",
+        "description": "ECO. COMPATIBLE TONER FOR LEXMARK BLACK (71B10K0) 3K",
+        "qty_ordered": 1,
+        "qty_shipped": 1,
+        "qty_backorder": 0,
+        "unit_price": "48.00",
+        "uom": "EACH",
+        "extended_price": "48.00"
+      },
+      {
+        "item_number": "71B10M0",
+        "description": "ECO. COMPATIBLE TONER FOR LEXMARK MAGENTA (71B10M0) 2.3K",
+        "qty_ordered": 1,
+        "qty_shipped": 1,
+        "qty_backorder": 0,
+        "unit_price": "45.00",
+        "uom": "EACH",
+        "extended_price": "45.00"
+      },
+      {
+        "item_number": "W1380X",
+        "description": "ECO. COMPATIBLE TONER FOR HP #138X BLACK (W1380X) 4K",
+        "qty_ordered": 5,
+        "qty_shipped": 5,
+        "qty_backorder": 0,
+        "unit_price": "39.00",
+        "uom": "EACH",
+        "extended_price": "195.00"
+      },
+      {
+        "item_number": "B7RT5AN",
+        "description": "HP INKJET #63XL/#65XL BLACK (B7RT5AN) DJ 2130/2132 300PGS",
+        "qty_ordered": 7,
+        "qty_shipped": 7,
+        "qty_backorder": 0,
+        "unit_price": "18.00",
+        "uom": "EACH",
+        "extended_price": "126.00"
+      },
+      {
+        "item_number": "F6U63AN",
+        "description": "HP INKJET #63XL TRI-COLOR DESKJET 2130/2132 (F6U63AN) 300PGS",
+        "qty_ordered": 3,
+        "qty_shipped": 3,
+        "qty_backorder": 0,
+        "unit_price": "22.00",
+        "uom": "EACH",
+        "extended_price": "66.00"
+      },
+      {
+        "item_number": "4981C001",
+        "description": "CANON INKJET PG275XL BLACK TR4720/TS3520 (4981C001) 300PGS",
+        "qty_ordered": 10,
+        "qty_shipped": 10,
+        "qty_backorder": 0,
+        "unit_price": "16.00",
+        "uom": "EACH",
+        "extended_price": "160.00"
+      },
+      {
+        "item_number": "4987C001",
+        "description": "CANON INKJET CL276XL COLOR TR4720/TS3520 (4987C001) 300PGS",
+        "qty_ordered": 5,
+        "qty_shipped": 5,
+        "qty_backorder": 0,
+        "unit_price": "19.00",
+        "uom": "EACH",
+        "extended_price": "95.00"
+      },
+      {
+        "item_number": "78C0W00",
+        "description": "LEXMARK WASTE TONER BOTTLE 78C0W00 CS/X42X/52X/62X",
+        "qty_ordered": 2,
+        "qty_shipped": 2,
+        "qty_backorder": 0,
+        "unit_price": "28.00",
+        "uom": "EACH",
+        "extended_price": "56.00"
+      },
+      {
+        "item_number": "4K0T7LN",
+        "description": "HP INKJET #923E BLACK (4K0T7LN) PRO 8120 SERIES 1K",
+        "qty_ordered": 2,
+        "qty_shipped": 2,
+        "qty_backorder": 0,
+        "unit_price": "35.00",
+        "uom": "EACH",
+        "extended_price": "70.00"
+      },
+      {
+        "item_number": "W1480A",
+        "description": "HP TONER #148A BLACK (W1480A) LJ PRO 4001/4101 2.9K",
+        "qty_ordered": 4,
+        "qty_shipped": 4,
+        "qty_backorder": 0,
+        "unit_price": "52.00",
+        "uom": "EACH",
+        "extended_price": "208.00"
+      },
+      {
+        "item_number": "B221H00",
+        "description": "LEXMARK TONER B221H00 BLACK HY B/MB2236 3K",
+        "qty_ordered": 2,
+        "qty_shipped": 0,
+        "qty_backorder": 2,
+        "unit_price": "0.00",
+        "uom": "EACH",
+        "extended_price": "0.00"
+      },
+      {
+        "item_number": "C231HC0",
+        "description": "LEXMARK TONER C231HC0 CYAN HY C/MC2325/2425/2535 2.3K",
+        "qty_ordered": 1,
+        "qty_shipped": 1,
+        "qty_backorder": 0,
+        "unit_price": "61.00",
+        "uom": "EACH",
+        "extended_price": "61.00"
+      },
+      {
+        "item_number": "C231HM0",
+        "description": "LEXMARK TONER C231HM0 MAGENTA HY C/MC2325/2425/2535 2.3K",
+        "qty_ordered": 1,
+        "qty_shipped": 1,
+        "qty_backorder": 0,
+        "unit_price": "61.00",
+        "uom": "EACH",
+        "extended_price": "61.00"
+      },
+      {
+        "item_number": "C231HY0",
+        "description": "LEXMARK TONER C231HY0 YELLOW HY C/MC2325/2425/2535 2.3K",
+        "qty_ordered": 1,
+        "qty_shipped": 1,
+        "qty_backorder": 0,
+        "unit_price": "61.00",
+        "uom": "EACH",
+        "extended_price": "61.00"
+      },
+      {
+        "item_number": "20N1HK0",
+        "description": "LEXMARK TONER 20N1HK0 BLACK HY CS/X331 4.5K",
+        "qty_ordered": 2,
+        "qty_shipped": 2,
+        "qty_backorder": 0,
+        "unit_price": "72.00",
+        "uom": "EACH",
+        "extended_price": "144.00"
+      },
+      {
+        "item_number": "FREIGHT",
+        "description": "FREIGHT - CANPAR\nXXX TRACKING REFERENCE XXX",
+        "qty_ordered": null,
+        "qty_shipped": null,
+        "qty_backorder": null,
+        "unit_price": null,
+        "uom": null,
+        "extended_price": "18.50"
+      }
+    ],
+    "tax_lines": [
+      {
+        "code": "GST",
+        "amount": "88.50"
+      },
+      {
+        "code": "PSTSK",
+        "amount": "0.00"
+      }
+    ],
+    "subtotal": "1770.00",
+    "total_tax": "88.50",
+    "total_amount": "1858.50",
+    "less_payment": "0.00",
+    "amount_due": "1858.50"
+  },
+  {
+    "shopify_customer_id": "10479823519925",
+    "currency": "CAD",
+    "sold_to": {
+      "name": "TEST INVOICE - Demo Customer",
+      "address1": "100 Demo Street NW",
+      "city": "Edmonton",
+      "province": "AB",
+      "postal": "T5L 4S9",
+      "country": "CA"
+    },
+    "ship_to": {
+      "name": "TEST INVOICE - Demo Receiving",
+      "address1": "200 Ship Lane",
+      "city": "Calgary",
+      "province": "AB",
+      "postal": "T2P 1J9",
+      "country": "CA"
+    },
+    "customer_no": "TEST-CUSTOMER",
+    "salesperson": "JD",
+    "terms": "N30",
+    "ship_via": "CANPAR",
+    "tax_exempt_code": "",
+    "tax_registration_no": "123456789RT0001",
+    "shopify_order_id": null,
+    "invoice_number": "TEST-20261027-IQ-2609-1002",
+    "invoice_date": "2026-09-15",
+    "order_no": "TEST-SO-45088",
+    "order_date": "2026-09-14",
+    "po_number": "PO-77900",
+    "revision": 1,
+    "lines": [
+      {
+        "item_number": "TN221-K",
+        "description": "COMP. BROTHER TN221 BLACK 2,5K (15/BX)",
+        "qty_ordered": 6,
+        "qty_shipped": 3,
+        "qty_backorder": 3,
+        "unit_price": "21.00",
+        "uom": "EACH",
+        "extended_price": "63.00"
+      },
+      {
+        "item_number": "SM-LC401XL-C",
+        "description": "SMART MATE COMP. BROTHER LC401XL CYAN INK 500p.",
+        "qty_ordered": 3,
+        "qty_shipped": 0,
+        "qty_backorder": 3,
+        "unit_price": "0.00",
+        "uom": "EACH",
+        "extended_price": "0.00"
+      },
+      {
+        "item_number": "FREIGHT",
+        "description": "FREIGHT - CANPAR 1Z999AA10123456784",
+        "qty_ordered": null,
+        "qty_shipped": null,
+        "qty_backorder": null,
+        "unit_price": null,
+        "uom": null,
+        "extended_price": "12.00"
+      }
+    ],
+    "tax_lines": [
+      {
+        "code": "GST",
+        "amount": "3.75"
+      },
+      {
+        "code": "PSTSK",
+        "amount": "0.00"
+      }
+    ],
+    "subtotal": "75.00",
+    "total_tax": "3.75",
+    "total_amount": "78.75",
+    "less_payment": "0.00",
+    "amount_due": "78.75"
+  },
+  {
+    "shopify_customer_id": "10479823519925",
+    "currency": "CAD",
+    "sold_to": {
+      "name": "TEST INVOICE - Demo Customer",
+      "address1": "100 Demo Street NW",
+      "city": "Edmonton",
+      "province": "AB",
+      "postal": "T5L 4S9",
+      "country": "CA"
+    },
+    "ship_to": {
+      "name": "TEST INVOICE - Demo Receiving",
+      "address1": "200 Ship Lane",
+      "city": "Calgary",
+      "province": "AB",
+      "postal": "T2P 1J9",
+      "country": "CA"
+    },
+    "customer_no": "TEST-CUSTOMER",
+    "salesperson": "JD",
+    "terms": "N30",
+    "ship_via": "CANPAR",
+    "tax_exempt_code": "",
+    "tax_registration_no": "123456789RT0001",
+    "shopify_order_id": null,
+    "invoice_number": "TEST-20261027-IQ-2609-1010",
+    "invoice_date": "2026-09-28",
+    "order_no": "TEST-SO-45088",
+    "order_date": "2026-09-14",
+    "po_number": "PO-77900",
+    "revision": 1,
+    "lines": [
+      {
+        "item_number": "TN221-K",
+        "description": "COMP. BROTHER TN221 BLACK 2,5K (15/BX) — back order ship",
+        "qty_ordered": 6,
+        "qty_shipped": 3,
+        "qty_backorder": 0,
+        "unit_price": "21.00",
+        "uom": "EACH",
+        "extended_price": "63.00"
+      },
+      {
+        "item_number": "SM-LC401XL-C",
+        "description": "SMART MATE COMP. BROTHER LC401XL CYAN INK 500p.",
+        "qty_ordered": 3,
+        "qty_shipped": 3,
+        "qty_backorder": 0,
+        "unit_price": "12.50",
+        "uom": "EACH",
+        "extended_price": "37.50"
+      },
+      {
+        "item_number": "FREIGHT",
+        "description": "FREIGHT - PUROLATOR\nTRACK 3299988776655",
+        "qty_ordered": null,
+        "qty_shipped": null,
+        "qty_backorder": null,
+        "unit_price": null,
+        "uom": null,
+        "extended_price": "14.25"
+      }
+    ],
+    "tax_lines": [
+      {
+        "code": "GST",
+        "amount": "5.74"
+      },
+      {
+        "code": "PSTSK",
+        "amount": "0.00"
+      }
+    ],
+    "subtotal": "114.75",
+    "total_tax": "5.74",
+    "total_amount": "120.49",
+    "less_payment": "0.00",
+    "amount_due": "120.49"
+  },
+  {
+    "shopify_customer_id": "10479823519925",
+    "currency": "CAD",
+    "sold_to": {
+      "name": "TEST INVOICE - Demo Customer",
+      "address1": "100 Demo Street NW",
+      "city": "Edmonton",
+      "province": "AB",
+      "postal": "T5L 4S9",
+      "country": "CA"
+    },
+    "ship_to": {
+      "name": "TEST INVOICE - Demo Receiving",
+      "address1": "200 Ship Lane",
+      "city": "Calgary",
+      "province": "AB",
+      "postal": "T2P 1J9",
+      "country": "CA"
+    },
+    "customer_no": "TEST-CUSTOMER",
+    "salesperson": "JD",
+    "terms": "N30",
+    "ship_via": "CANPAR",
+    "tax_exempt_code": "",
+    "tax_registration_no": "123456789RT0001",
+    "shopify_order_id": null,
+    "invoice_number": "TEST-20261027-IQ-2608-0888",
+    "invoice_date": "2026-08-20",
+    "order_no": "TEST-SO-44110",
+    "order_date": "2026-08-19",
+    "po_number": "PO-77001",
+    "revision": 1,
+    "lines": [
+      {
+        "item_number": "W1380X",
+        "description": "ECO. COMPATIBLE TONER FOR HP #138X BLACK (W1380X) 4K",
+        "qty_ordered": 2,
+        "qty_shipped": 2,
+        "qty_backorder": 0,
+        "unit_price": "39.00",
+        "uom": "EACH",
+        "extended_price": "78.00"
+      },
+      {
+        "item_number": "FREIGHT",
+        "description": "FREIGHT - CANPAR 1Z888BB20999887766",
+        "qty_ordered": null,
+        "qty_shipped": null,
+        "qty_backorder": null,
+        "unit_price": null,
+        "uom": null,
+        "extended_price": "9.95"
+      }
+    ],
+    "tax_lines": [
+      {
+        "code": "GST",
+        "amount": "4.40"
+      }
+    ],
+    "subtotal": "87.95",
+    "total_tax": "4.40",
+    "total_amount": "92.35",
+    "less_payment": "92.35",
+    "amount_due": "0.00"
+  },
+  {
+    "shopify_customer_id": "10479823519925",
+    "currency": "CAD",
+    "sold_to": {
+      "name": "TEST INVOICE - Demo Customer",
+      "address1": "100 Demo Street NW",
+      "city": "Edmonton",
+      "province": "AB",
+      "postal": "T5L 4S9",
+      "country": "CA"
+    },
+    "ship_to": {
+      "name": "TEST INVOICE - Demo Receiving",
+      "address1": "200 Ship Lane",
+      "city": "Calgary",
+      "province": "AB",
+      "postal": "T2P 1J9",
+      "country": "CA"
+    },
+    "customer_no": "TEST-CUSTOMER",
+    "salesperson": "JD",
+    "terms": "N30",
+    "ship_via": "CANPAR",
+    "tax_exempt_code": "",
+    "tax_registration_no": "123456789RT0001",
+    "shopify_order_id": null,
+    "invoice_number": "TEST-20261027-IQ-2609-1020",
+    "invoice_date": "2026-09-18",
+    "order_no": "TEST-SO-45102",
+    "order_date": "2026-09-17",
+    "po_number": "PO-78111",
+    "revision": 1,
+    "lines": [
+      {
+        "item_number": "B7RT5AN",
+        "description": "HP INKJET #63XL/#65XL BLACK — incorrect price (rev 1)",
+        "qty_ordered": 4,
+        "qty_shipped": 4,
+        "qty_backorder": 0,
+        "unit_price": "20.00",
+        "uom": "EACH",
+        "extended_price": "80.00"
+      }
+    ],
+    "tax_lines": [
+      {
+        "code": "GST",
+        "amount": "4.00"
+      }
+    ],
+    "subtotal": "80.00",
+    "total_tax": "4.00",
+    "total_amount": "84.00",
+    "less_payment": "0.00",
+    "amount_due": "84.00"
+  },
+  {
+    "shopify_customer_id": "10479823519925",
+    "currency": "CAD",
+    "sold_to": {
+      "name": "TEST INVOICE - Demo Customer",
+      "address1": "100 Demo Street NW",
+      "city": "Edmonton",
+      "province": "AB",
+      "postal": "T5L 4S9",
+      "country": "CA"
+    },
+    "ship_to": {
+      "name": "TEST INVOICE - Demo Receiving",
+      "address1": "200 Ship Lane",
+      "city": "Calgary",
+      "province": "AB",
+      "postal": "T2P 1J9",
+      "country": "CA"
+    },
+    "customer_no": "TEST-CUSTOMER",
+    "salesperson": "JD",
+    "terms": "N30",
+    "ship_via": "CANPAR",
+    "tax_exempt_code": "",
+    "tax_registration_no": "123456789RT0001",
+    "shopify_order_id": null,
+    "invoice_number": "TEST-20261027-IQ-2609-1020",
+    "invoice_date": "2026-09-18",
+    "order_no": "TEST-SO-45102",
+    "order_date": "2026-09-17",
+    "po_number": "PO-78111",
+    "revision": 2,
+    "lines": [
+      {
+        "item_number": "B7RT5AN",
+        "description": "HP INKJET #63XL/#65XL BLACK — corrected price (rev 2)",
+        "qty_ordered": 4,
+        "qty_shipped": 4,
+        "qty_backorder": 0,
+        "unit_price": "18.00",
+        "uom": "EACH",
+        "extended_price": "72.00"
+      },
+      {
+        "item_number": "FREIGHT",
+        "description": "FREIGHT - CANPAR 1Z777CC30111222333",
+        "qty_ordered": null,
+        "qty_shipped": null,
+        "qty_backorder": null,
+        "unit_price": null,
+        "uom": null,
+        "extended_price": "8.00"
+      }
+    ],
+    "tax_lines": [
+      {
+        "code": "GST",
+        "amount": "4.00"
+      },
+      {
+        "code": "PSTSK",
+        "amount": "0.00"
+      }
+    ],
+    "subtotal": "80.00",
+    "total_tax": "4.00",
+    "total_amount": "84.00",
+    "less_payment": "20.00",
+    "amount_due": "64.00"
+  },
+  {
+    "shopify_customer_id": "10479823519925",
+    "currency": "CAD",
+    "sold_to": {
+      "name": "TEST INVOICE - Demo Customer",
+      "address1": "100 Demo Street NW",
+      "city": "Edmonton",
+      "province": "AB",
+      "postal": "T5L 4S9",
+      "country": "CA"
+    },
+    "ship_to": {
+      "name": "TEST INVOICE - Demo Receiving",
+      "address1": "200 Ship Lane",
+      "city": "Calgary",
+      "province": "AB",
+      "postal": "T2P 1J9",
+      "country": "CA"
+    },
+    "customer_no": "TEST-CUSTOMER",
+    "salesperson": "JD",
+    "terms": "N30",
+    "ship_via": "CANPAR",
+    "tax_exempt_code": "",
+    "tax_registration_no": "123456789RT0001",
+    "shopify_order_id": null,
+    "invoice_number": "TEST-20261027-IQ-2609-1030",
+    "invoice_date": "2026-09-22",
+    "order_no": "TEST-SO-45150",
+    "order_date": "2026-09-21",
+    "po_number": "PO-78222",
+    "revision": 1,
+    "lines": [
+      {
+        "item_number": "C231HC0",
+        "description": "LEXMARK TONER C231HC0 CYAN — awaiting stock",
+        "qty_ordered": 2,
+        "qty_shipped": 0,
+        "qty_backorder": 2,
+        "unit_price": "0.00",
+        "uom": "EACH",
+        "extended_price": "0.00"
+      },
+      {
+        "item_number": "C231HM0",
+        "description": "LEXMARK TONER C231HM0 MAGENTA — awaiting stock",
+        "qty_ordered": 2,
+        "qty_shipped": 0,
+        "qty_backorder": 2,
+        "unit_price": "0.00",
+        "uom": "EACH",
+        "extended_price": "0.00"
+      }
+    ],
+    "tax_lines": [
+      {
+        "code": "GST",
+        "amount": "0.00"
+      },
+      {
+        "code": "PSTSK",
+        "amount": "0.00"
+      }
+    ],
+    "subtotal": "0.00",
+    "total_tax": "0.00",
+    "total_amount": "0.00",
+    "less_payment": "0.00",
+    "amount_due": "0.00"
+  },
+  {
+    "shopify_customer_id": "10479823519925",
+    "currency": "CAD",
+    "sold_to": {
+      "name": "TEST INVOICE - Demo Customer",
+      "address1": "100 Demo Street NW",
+      "city": "Edmonton",
+      "province": "AB",
+      "postal": "T5L 4S9",
+      "country": "CA"
+    },
+    "ship_to": {
+      "name": "TEST INVOICE - Demo Receiving",
+      "address1": "200 Ship Lane",
+      "city": "Calgary",
+      "province": "AB",
+      "postal": "T2P 1J9",
+      "country": "CA"
+    },
+    "customer_no": "TEST-CUSTOMER",
+    "salesperson": "JD",
+    "terms": "N30",
+    "ship_via": "CANPAR",
+    "tax_exempt_code": "",
+    "tax_registration_no": "123456789RT0001",
+    "shopify_order_id": null,
+    "invoice_number": "TEST-20261027-IQ-2609-1040",
+    "invoice_date": "2026-09-25",
+    "order_no": "TEST-SO-PHONE-991",
+    "order_date": "2026-09-25",
+    "po_number": "PO-PHONE-1",
+    "revision": 1,
+    "lines": [
+      {
+        "item_number": "4981C001",
+        "description": "CANON INKJET PG275XL BLACK — phone order",
+        "qty_ordered": 6,
+        "qty_shipped": 6,
+        "qty_backorder": 0,
+        "unit_price": "16.00",
+        "uom": "EACH",
+        "extended_price": "96.00"
+      }
+    ],
+    "tax_lines": [
+      {
+        "code": "GST",
+        "amount": "4.80"
+      }
+    ],
+    "subtotal": "96.00",
+    "total_tax": "4.80",
+    "total_amount": "100.80",
+    "less_payment": "0.00",
+    "amount_due": "100.80"
+  },
+  {
+    "shopify_customer_id": "10479823519925",
+    "currency": "CAD",
+    "sold_to": {
+      "name": "TEST INVOICE - Demo Customer",
+      "address1": "100 Demo Street NW",
+      "city": "Edmonton",
+      "province": "AB",
+      "postal": "T5L 4S9",
+      "country": "CA"
+    },
+    "ship_to": {
+      "name": "TEST INVOICE - Demo Receiving",
+      "address1": "200 Ship Lane",
+      "city": "Calgary",
+      "province": "AB",
+      "postal": "T2P 1J9",
+      "country": "CA"
+    },
+    "customer_no": "TEST-CUSTOMER",
+    "salesperson": "JD",
+    "terms": "N30",
+    "ship_via": "CANPAR",
+    "tax_exempt_code": "",
+    "tax_registration_no": "123456789RT0001",
+    "shopify_order_id": null,
+    "invoice_number": "TEST-20261027-IQ-2609-1050-BAD",
+    "invoice_date": "2026-09-26",
+    "order_no": "TEST-SO-45199",
+    "order_date": "2026-09-26",
+    "po_number": "PO-78333",
+    "revision": 1,
+    "lines": [
+      {
+        "item_number": "TEST-BAD",
+        "description": "Incomplete totals — should not be downloadable",
+        "qty_ordered": 1,
+        "qty_shipped": 1,
+        "qty_backorder": 0,
+        "unit_price": "10.00",
+        "uom": "EACH",
+        "extended_price": "10.00"
+      }
+    ],
+    "tax_lines": [
+      {
+        "code": "GST",
+        "amount": "0.50"
+      }
+    ],
+    "subtotal": "10.00"
+  },
+  {
+    "shopify_customer_id": "10479823519925",
+    "currency": "CAD",
+    "sold_to": {
+      "name": "TEST INVOICE - Demo Customer",
+      "address1": "100 Demo Street NW",
+      "city": "Edmonton",
+      "province": "AB",
+      "postal": "T5L 4S9",
+      "country": "CA"
+    },
+    "ship_to": {
+      "name": "TEST INVOICE - Demo Receiving",
+      "address1": "200 Ship Lane",
+      "city": "Calgary",
+      "province": "AB",
+      "postal": "T2P 1J9",
+      "country": "CA"
+    },
+    "customer_no": "TEST-CUSTOMER",
+    "salesperson": "JD",
+    "terms": "N30",
+    "ship_via": "CANPAR",
+    "tax_exempt_code": "",
+    "tax_registration_no": "123456789RT0001",
+    "shopify_order_id": null,
+    "invoice_number": "TEST-20261027-3PAGE",
+    "invoice_date": "2026-09-11",
+    "order_no": "TEST-SO-45021",
+    "order_date": "2026-09-10",
+    "po_number": "PO-77821",
+    "revision": 1,
+    "lines": [
+      {
+        "item_number": "TEST-1",
+        "description": "TEST multi-page line 1 - SMART MATE COMP. BROTHER LC401XL CYAN INK 500p.",
+        "qty_ordered": 3,
+        "qty_shipped": 3,
+        "qty_backorder": 0,
+        "unit_price": "12.50",
+        "uom": "EACH",
+        "extended_price": "37.50"
+      },
+      {
+        "item_number": "TEST-2",
+        "description": "TEST multi-page line 2 - SMART MATE COMP. BROTHER LC401XL MAGENTA INK 500p.",
+        "qty_ordered": 3,
+        "qty_shipped": 3,
+        "qty_backorder": 0,
+        "unit_price": "12.50",
+        "uom": "EACH",
+        "extended_price": "37.50"
+      },
+      {
+        "item_number": "TEST-3",
+        "description": "TEST multi-page line 3 - SMART MATE COMP. BROTHER LC401XL YELLOW INK 500p.",
+        "qty_ordered": 3,
+        "qty_shipped": 3,
+        "qty_backorder": 0,
+        "unit_price": "12.50",
+        "uom": "EACH",
+        "extended_price": "37.50"
+      },
+      {
+        "item_number": "TEST-4",
+        "description": "TEST multi-page line 4 - COMP. BROTHER TN221/225 MAGENTA UNIVERSAL 2,2K (15/BX)",
+        "qty_ordered": 4,
+        "qty_shipped": 4,
+        "qty_backorder": 0,
+        "unit_price": "22.00",
+        "uom": "EACH",
+        "extended_price": "88.00"
+      },
+      {
+        "item_number": "TEST-5",
+        "description": "TEST multi-page line 5 - COMP. BROTHER TN221/225 YELLOW UNIVERSAL 2,2K (15/BX)",
+        "qty_ordered": 2,
+        "qty_shipped": 2,
+        "qty_backorder": 0,
+        "unit_price": "22.00",
+        "uom": "EACH",
+        "extended_price": "44.00"
+      },
+      {
+        "item_number": "TEST-6",
+        "description": "TEST multi-page line 6 - COMP. BROTHER TN221 BLACK 2,5K (15/BX)",
+        "qty_ordered": 2,
+        "qty_shipped": 1,
+        "qty_backorder": 1,
+        "unit_price": "21.00",
+        "uom": "EACH",
+        "extended_price": "21.00"
+      },
+      {
+        "item_number": "TEST-7",
+        "description": "TEST multi-page line 7 - ECO. COMPATIBLE TONER FOR LEXMARK CYAN (71B10C0) 2.3K",
+        "qty_ordered": 2,
+        "qty_shipped": 2,
+        "qty_backorder": 0,
+        "unit_price": "45.00",
+        "uom": "EACH",
+        "extended_price": "90.00"
+      },
+      {
+        "item_number": "TEST-8",
+        "description": "TEST multi-page line 8 - ECO. COMPATIBLE TONER FOR LEXMARK BLACK (71B10K0) 3K",
+        "qty_ordered": 1,
+        "qty_shipped": 1,
+        "qty_backorder": 0,
+        "unit_price": "48.00",
+        "uom": "EACH",
+        "extended_price": "48.00"
+      },
+      {
+        "item_number": "TEST-9",
+        "description": "TEST multi-page line 9 - ECO. COMPATIBLE TONER FOR LEXMARK MAGENTA (71B10M0) 2.3K",
+        "qty_ordered": 1,
+        "qty_shipped": 1,
+        "qty_backorder": 0,
+        "unit_price": "45.00",
+        "uom": "EACH",
+        "extended_price": "45.00"
+      },
+      {
+        "item_number": "TEST-10",
+        "description": "TEST multi-page line 10 - ECO. COMPATIBLE TONER FOR HP #138X BLACK (W1380X) 4K",
+        "qty_ordered": 5,
+        "qty_shipped": 5,
+        "qty_backorder": 0,
+        "unit_price": "39.00",
+        "uom": "EACH",
+        "extended_price": "195.00"
+      },
+      {
+        "item_number": "TEST-11",
+        "description": "TEST multi-page line 11 - HP INKJET #63XL/#65XL BLACK (B7RT5AN) DJ 2130/2132 300PGS",
+        "qty_ordered": 7,
+        "qty_shipped": 7,
+        "qty_backorder": 0,
+        "unit_price": "18.00",
+        "uom": "EACH",
+        "extended_price": "126.00"
+      },
+      {
+        "item_number": "TEST-12",
+        "description": "TEST multi-page line 12 - HP INKJET #63XL TRI-COLOR DESKJET 2130/2132 (F6U63AN) 300PGS",
+        "qty_ordered": 3,
+        "qty_shipped": 3,
+        "qty_backorder": 0,
+        "unit_price": "22.00",
+        "uom": "EACH",
+        "extended_price": "66.00"
+      },
+      {
+        "item_number": "TEST-13",
+        "description": "TEST multi-page line 13 - CANON INKJET PG275XL BLACK TR4720/TS3520 (4981C001) 300PGS",
+        "qty_ordered": 10,
+        "qty_shipped": 10,
+        "qty_backorder": 0,
+        "unit_price": "16.00",
+        "uom": "EACH",
+        "extended_price": "160.00"
+      },
+      {
+        "item_number": "TEST-14",
+        "description": "TEST multi-page line 14 - CANON INKJET CL276XL COLOR TR4720/TS3520 (4987C001) 300PGS",
+        "qty_ordered": 5,
+        "qty_shipped": 5,
+        "qty_backorder": 0,
+        "unit_price": "19.00",
+        "uom": "EACH",
+        "extended_price": "95.00"
+      },
+      {
+        "item_number": "TEST-15",
+        "description": "TEST multi-page line 15 - LEXMARK WASTE TONER BOTTLE 78C0W00 CS/X42X/52X/62X",
+        "qty_ordered": 2,
+        "qty_shipped": 2,
+        "qty_backorder": 0,
+        "unit_price": "28.00",
+        "uom": "EACH",
+        "extended_price": "56.00"
+      },
+      {
+        "item_number": "TEST-16",
+        "description": "TEST multi-page line 16 - HP INKJET #923E BLACK (4K0T7LN) PRO 8120 SERIES 1K",
+        "qty_ordered": 2,
+        "qty_shipped": 2,
+        "qty_backorder": 0,
+        "unit_price": "35.00",
+        "uom": "EACH",
+        "extended_price": "70.00"
+      },
+      {
+        "item_number": "TEST-17",
+        "description": "TEST multi-page line 17 - HP TONER #148A BLACK (W1480A) LJ PRO 4001/4101 2.9K",
+        "qty_ordered": 4,
+        "qty_shipped": 4,
+        "qty_backorder": 0,
+        "unit_price": "52.00",
+        "uom": "EACH",
+        "extended_price": "208.00"
+      },
+      {
+        "item_number": "TEST-18",
+        "description": "TEST multi-page line 18 - LEXMARK TONER B221H00 BLACK HY B/MB2236 3K",
+        "qty_ordered": 2,
+        "qty_shipped": 0,
+        "qty_backorder": 2,
+        "unit_price": "0.00",
+        "uom": "EACH",
+        "extended_price": "0.00"
+      },
+      {
+        "item_number": "TEST-19",
+        "description": "TEST multi-page line 19 - LEXMARK TONER C231HC0 CYAN HY C/MC2325/2425/2535 2.3K",
+        "qty_ordered": 1,
+        "qty_shipped": 1,
+        "qty_backorder": 0,
+        "unit_price": "61.00",
+        "uom": "EACH",
+        "extended_price": "61.00"
+      },
+      {
+        "item_number": "TEST-20",
+        "description": "TEST multi-page line 20 - LEXMARK TONER C231HM0 MAGENTA HY C/MC2325/2425/2535 2.3K",
+        "qty_ordered": 1,
+        "qty_shipped": 1,
+        "qty_backorder": 0,
+        "unit_price": "61.00",
+        "uom": "EACH",
+        "extended_price": "61.00"
+      },
+      {
+        "item_number": "TEST-21",
+        "description": "TEST multi-page line 21 - LEXMARK TONER C231HY0 YELLOW HY C/MC2325/2425/2535 2.3K",
+        "qty_ordered": 1,
+        "qty_shipped": 1,
+        "qty_backorder": 0,
+        "unit_price": "61.00",
+        "uom": "EACH",
+        "extended_price": "61.00"
+      },
+      {
+        "item_number": "TEST-22",
+        "description": "TEST multi-page line 22 - LEXMARK TONER 20N1HK0 BLACK HY CS/X331 4.5K",
+        "qty_ordered": 2,
+        "qty_shipped": 2,
+        "qty_backorder": 0,
+        "unit_price": "72.00",
+        "uom": "EACH",
+        "extended_price": "144.00"
+      },
+      {
+        "item_number": "TEST-23",
+        "description": "TEST multi-page line 23 - SMART MATE COMP. BROTHER LC401XL CYAN INK 500p.",
+        "qty_ordered": 3,
+        "qty_shipped": 3,
+        "qty_backorder": 0,
+        "unit_price": "12.50",
+        "uom": "EACH",
+        "extended_price": "37.50"
+      },
+      {
+        "item_number": "TEST-24",
+        "description": "TEST multi-page line 24 - SMART MATE COMP. BROTHER LC401XL MAGENTA INK 500p.",
+        "qty_ordered": 3,
+        "qty_shipped": 3,
+        "qty_backorder": 0,
+        "unit_price": "12.50",
+        "uom": "EACH",
+        "extended_price": "37.50"
+      },
+      {
+        "item_number": "TEST-25",
+        "description": "TEST multi-page line 25 - SMART MATE COMP. BROTHER LC401XL YELLOW INK 500p.",
+        "qty_ordered": 3,
+        "qty_shipped": 3,
+        "qty_backorder": 0,
+        "unit_price": "12.50",
+        "uom": "EACH",
+        "extended_price": "37.50"
+      },
+      {
+        "item_number": "TEST-26",
+        "description": "TEST multi-page line 26 - COMP. BROTHER TN221/225 MAGENTA UNIVERSAL 2,2K (15/BX)",
+        "qty_ordered": 4,
+        "qty_shipped": 4,
+        "qty_backorder": 0,
+        "unit_price": "22.00",
+        "uom": "EACH",
+        "extended_price": "88.00"
+      },
+      {
+        "item_number": "TEST-27",
+        "description": "TEST multi-page line 27 - COMP. BROTHER TN221/225 YELLOW UNIVERSAL 2,2K (15/BX)",
+        "qty_ordered": 2,
+        "qty_shipped": 2,
+        "qty_backorder": 0,
+        "unit_price": "22.00",
+        "uom": "EACH",
+        "extended_price": "44.00"
+      },
+      {
+        "item_number": "TEST-28",
+        "description": "TEST multi-page line 28 - COMP. BROTHER TN221 BLACK 2,5K (15/BX)",
+        "qty_ordered": 2,
+        "qty_shipped": 1,
+        "qty_backorder": 1,
+        "unit_price": "21.00",
+        "uom": "EACH",
+        "extended_price": "21.00"
+      },
+      {
+        "item_number": "TEST-29",
+        "description": "TEST multi-page line 29 - ECO. COMPATIBLE TONER FOR LEXMARK CYAN (71B10C0) 2.3K",
+        "qty_ordered": 2,
+        "qty_shipped": 2,
+        "qty_backorder": 0,
+        "unit_price": "45.00",
+        "uom": "EACH",
+        "extended_price": "90.00"
+      },
+      {
+        "item_number": "TEST-30",
+        "description": "TEST multi-page line 30 - ECO. COMPATIBLE TONER FOR LEXMARK BLACK (71B10K0) 3K",
+        "qty_ordered": 1,
+        "qty_shipped": 1,
+        "qty_backorder": 0,
+        "unit_price": "48.00",
+        "uom": "EACH",
+        "extended_price": "48.00"
+      },
+      {
+        "item_number": "TEST-31",
+        "description": "TEST multi-page line 31 - ECO. COMPATIBLE TONER FOR LEXMARK MAGENTA (71B10M0) 2.3K",
+        "qty_ordered": 1,
+        "qty_shipped": 1,
+        "qty_backorder": 0,
+        "unit_price": "45.00",
+        "uom": "EACH",
+        "extended_price": "45.00"
+      },
+      {
+        "item_number": "TEST-32",
+        "description": "TEST multi-page line 32 - ECO. COMPATIBLE TONER FOR HP #138X BLACK (W1380X) 4K",
+        "qty_ordered": 5,
+        "qty_shipped": 5,
+        "qty_backorder": 0,
+        "unit_price": "39.00",
+        "uom": "EACH",
+        "extended_price": "195.00"
+      },
+      {
+        "item_number": "TEST-33",
+        "description": "TEST multi-page line 33 - HP INKJET #63XL/#65XL BLACK (B7RT5AN) DJ 2130/2132 300PGS",
+        "qty_ordered": 7,
+        "qty_shipped": 7,
+        "qty_backorder": 0,
+        "unit_price": "18.00",
+        "uom": "EACH",
+        "extended_price": "126.00"
+      },
+      {
+        "item_number": "TEST-34",
+        "description": "TEST multi-page line 34 - HP INKJET #63XL TRI-COLOR DESKJET 2130/2132 (F6U63AN) 300PGS",
+        "qty_ordered": 3,
+        "qty_shipped": 3,
+        "qty_backorder": 0,
+        "unit_price": "22.00",
+        "uom": "EACH",
+        "extended_price": "66.00"
+      },
+      {
+        "item_number": "TEST-35",
+        "description": "TEST multi-page line 35 - CANON INKJET PG275XL BLACK TR4720/TS3520 (4981C001) 300PGS",
+        "qty_ordered": 10,
+        "qty_shipped": 10,
+        "qty_backorder": 0,
+        "unit_price": "16.00",
+        "uom": "EACH",
+        "extended_price": "160.00"
+      },
+      {
+        "item_number": "TEST-36",
+        "description": "TEST multi-page line 36 - CANON INKJET CL276XL COLOR TR4720/TS3520 (4987C001) 300PGS",
+        "qty_ordered": 5,
+        "qty_shipped": 5,
+        "qty_backorder": 0,
+        "unit_price": "19.00",
+        "uom": "EACH",
+        "extended_price": "95.00"
+      }
+    ],
+    "tax_lines": [
+      {
+        "code": "GST",
+        "amount": "142.10"
+      },
+      {
+        "code": "PSTSK",
+        "amount": "0.00"
+      }
+    ],
+    "subtotal": "2842.00",
+    "total_tax": "142.10",
+    "total_amount": "2984.10",
+    "less_payment": "0.00",
+    "amount_due": "2984.10"
+  }
+]

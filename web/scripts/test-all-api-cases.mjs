@@ -6,7 +6,7 @@ import "../load-env.js";
 const BASE = process.env.TEST_BASE_URL || "https://account-billing.onrender.com";
 const SECRET = process.env.INVOICE_INGEST_SECRET || "dev-invoice-ingest-secret-change-me";
 const SHOP = process.env.INVOICE_SHOP_DOMAIN || "account-billing.myshopify.com";
-const CUSTOMER = "31249944510693";
+const CUSTOMER = process.env.TEST_CUSTOMER_ID || "31249944510693";
 
 const headers = {
   "Content-Type": "application/json",
@@ -322,6 +322,7 @@ let createdId = null;
 }
 
 // 11 Outstanding set + get
+if (process.env.TEST_WRITE_OUTSTANDING === "1") {
 {
   const r = await req("POST", "/api/outstanding/ingest", {
     shopify_customer_id: CUSTOMER,
@@ -354,6 +355,8 @@ let createdId = null;
     r.status === 200 && r.json?.data?.exists === false,
     JSON.stringify(r)
   );
+}
+
 }
 
 console.log(`\n==============================`);

@@ -498,7 +498,8 @@
         
         menuColumns.forEach((column) => {
           const title = column.querySelector('.ai-footer-menu-title-{{ ai_gen_id }}');
-          
+          if (!title) return;
+
           title.addEventListener('click', () => {
             if (window.innerWidth <= 749) {
               const isActive = column.classList.contains('active');

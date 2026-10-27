@@ -467,6 +467,32 @@ function mapInvoiceRow(row, extras = {}) {
  * Latest revision per invoice_number for a customer.
  */
 export async function listLatestInvoices(shop, customerId, options = {}) {
+  const summaryResult = await query(
+    `SELECT currency, COUNT(*)::int AS total_invoices,
+      COALESCE(SUM(NULLIF(total_amount, '')::numeric), 0)::text AS total_value,
+      COUNT(*) FILTER (WHERE NULLIF(amount_due, '')::numeric <= 0)::int AS paid,
+      COUNT(*) FILTER (WHERE NULLIF(amount_due, '')::numeric > 0)::int AS pending,
+      COUNT(*) FILTER (WHERE NULLIF(amount_due, '') IS NULL)::int AS unknown
+    FROM (
+      SELECT DISTINCT ON (invoice_number) invoice_number, currency, total_amount, amount_due
+      FROM invoices
+      WHERE shop = $1 AND shopify_customer_id = $2
+      ORDER BY invoice_number, revision DESC
+    ) latest
+    GROUP BY currency`,
+    [shop, customerId]
+  );
+  const summary = {
+    total_invoices: 0, paid: 0, pending: 0, unknown: 0,
+    totals_by_currency: summaryResult.rows.map((row) => ({
+      currency: row.currency || "CAD", total_value: row.total_value,
+    })),
+  };
+  for (const row of summaryResult.rows) {
+    for (const key of ["total_invoices", "paid", "pending", "unknown"]) {
+      summary[key] += Number(row[key]);
+    }
+  }
   const page = Math.max(1, parseInt(options.page, 10) || 1);
   const pageSize = Math.min(
     100,
@@ -542,6 +568,7 @@ export async function listLatestInvoices(shop, customerId, options = {}) {
   return {
     data: listResult.rows.map((row) => mapInvoiceRow(row)),
     meta: {
+      summary,
       page,
       pageSize,
       total,
