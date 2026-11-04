@@ -21,6 +21,8 @@
   const invoiceCountEl = document.getElementById('rdInvoiceCount');
   const overviewOutstandingEl = document.getElementById('rdOverviewOutstanding');
 
+  const isFrench = /^fr(?:-|$)/i.test(cfg.locale || document.documentElement.lang || 'en');
+  if (!tbody) return;
   let page = 1;
   const pageSize = cfg.pageSize || 20;
   let totalPages = 1;
@@ -86,7 +88,7 @@
     const number = parseFloat(value);
     if (isNaN(number)) return escapeHtml(value);
     try {
-      return new Intl.NumberFormat('en-CA', {
+      return new Intl.NumberFormat(isFrench ? 'fr-CA' : 'en-CA', {
         style: 'currency',
         currency: currency || 'CAD'
       }).format(number);
@@ -102,7 +104,7 @@
     if (parts.length !== 3) return escapeHtml(raw);
     const d = new Date(Date.UTC(+parts[0], +parts[1] - 1, +parts[2]));
     if (isNaN(d.getTime())) return escapeHtml(raw);
-    return escapeHtml(d.toLocaleDateString('en-US', {
+    return escapeHtml(d.toLocaleDateString(isFrench ? 'fr-CA' : 'en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
@@ -320,6 +322,7 @@
    *  PDF (forPdf true): paginate lines, repeat header each page, footer only on last page.
    */
   function buildInvoiceHtml(invoice, options){
+    if (isFrench) return buildFrenchInvoiceHtml(invoice, options);
     options = options || {};
     const forPdf = !!options.forPdf;
     const lines = Array.isArray(invoice.lines) ? invoice.lines : [];
@@ -369,6 +372,130 @@
     }).join('') + '</div>';
   }
 
+  const FRENCH_INVOICE_CSS = "\n  .iq-invoice { font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif; color: #1c2b33; max-width: 8.5in; margin: 0 auto; }\n  .iq-invoice * { box-sizing: border-box; }\n  .iq-page { width: 8.5in; min-height: 11in; padding: 0.35in 0.55in 0.3in; position: relative; background: #fff; }\n  /* Header band (dark teal) */\n  .iq-band { background: #00404c; color: #fff; display: flex; justify-content: space-between;\n             align-items: flex-start; padding: 12px 24px; }\n  .iq-band .iq-brand { font-size: 20px; font-weight: 700; letter-spacing: 5px; }\n  .iq-band .iq-brand small { display: block; font-size: 10px; font-weight: 400; letter-spacing: 0.5px; margin-top: 6px; }\n  .iq-band .iq-co { font-size: 10px; line-height: 1.6; margin-top: 6px; }\n  .iq-band .iq-invtitle { text-align: right; }\n  .iq-band .iq-invtitle h1 { font-size: 26px; font-weight: 700; margin: 0 0 8px; letter-spacing: 1px; }\n  .iq-band .iq-invtitle p { font-size: 11px; margin: 0; line-height: 1.6; }\n  /* Slim continued band (later pages) */\n  .iq-band-slim { background: #00404c; color: #fff; display: flex; justify-content: space-between;\n                  align-items: center; padding: 12px 24px; }\n  .iq-band-slim .iq-brand { font-size: 15px; font-weight: 700; letter-spacing: 4px; }\n  .iq-band-slim p { font-size: 12px; margin: 0; }\n  /* Addresses */\n  .iq-addr { display: flex; gap: 20px; margin-top: 12px; }\n  .iq-addr > div { flex: 1; border: 1px solid #d9e0de; padding: 10px 16px; }\n  .iq-lbl { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; color: #00404c; margin-bottom: 5px; }\n  .iq-addr p { font-size: 11.5px; line-height: 1.55; margin: 0; }\n  .iq-addr p b { font-weight: 700; }\n  /* Order meta strip */\n  .iq-meta { display: flex; margin-top: 12px; border: 1px solid #d9e0de; }\n  .iq-meta div { flex: 1; padding: 6px 8px; font-size: 11px; }\n  .iq-meta span { display: block; font-size: 8.5px; font-weight: 600; letter-spacing: 0.2px; color: #5b6b72; margin-bottom: 4px; }\n  /* Sample-data badge */\n  .iq-badge { font-size: 10px; font-weight: 700; color: #8a6d00; margin: 10px 0 6px; letter-spacing: 0.3px; }\n  /* Line items table */\n  .iq-items { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 11px; }\n  .iq-items th { background: #00404c; color: #fff; font-size: 10.5px; font-weight: 700;\n                 padding: 6px 6px; text-align: left; vertical-align: middle; }\n  .iq-items td { padding: 2px 4px; border-bottom: 1px solid #e6ebea; border-left: 1px solid #eef1f0;\n                 vertical-align: top; font-size: 10.5px; line-height: 1.25; overflow-wrap: break-word; }\n  .iq-items td:first-child { border-left: none; }\n  .iq-items .c { text-align: center; } .iq-items .r { text-align: right; }\n  .iq-cont { text-align: center; font-size: 12.5px; font-weight: 700; color: #00404c; padding-top: 10px; }\n  /* Bottom two-column section */\n  .iq-bottom { display: flex; gap: 22px; margin-top: 16px; }\n  .iq-left { flex: 1.15; font-size: 12px; }\n  .iq-gst { font-size: 12.5px; font-weight: 700; color: #00404c; margin-bottom: 8px; }\n  .iq-left p { margin: 0 0 5px; line-height: 1.5; }\n  .iq-pm { border-top: 1px solid #d9e0de; margin-top: 16px; padding-top: 12px; }\n  .iq-pm h3 { font-size: 11px; font-weight: 700; color: #00404c; letter-spacing: 0.5px; margin: 0 0 8px; }\n  .iq-pm h4 { font-size: 11px; font-weight: 700; margin: 8px 0 4px; }\n  .iq-pm-sub { border-top: 1px dashed #d9e0de; margin-top: 10px; padding-top: 10px; }\n  .iq-right { flex: 1; }\n  .iq-taxbox { background: #f2f5f4; padding: 12px 16px 16px; margin-bottom: 14px; }\n  .iq-taxbox h3 { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; color: #00404c; margin: 0 0 8px; }\n  .iq-trow { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; }\n  .iq-due { background: #2ea05f; color: #fff; display: flex;\n            justify-content: space-between; align-items: center;\n            padding: 12px 16px; margin-top: 10px; font-size: 15px; font-weight: 700; }\n  .iq-foot { text-align: center; font-size: 11px; color: #5b6b72;\n             border-top: 1px solid #d9e0de; padding-top: 10px; margin-top: 16px; }\n  @media print {\n    @page { size: letter; margin: 0; }\n    .iq-page { page-break-after: always; }\n    .iq-page:last-child { page-break-after: auto; }\n  }\n.iq-fr-logo{display:block;width:160px;max-width:100%;height:auto;max-height:64px;object-fit:contain;background:#fff;padding:6px;}.iq-band-slim .iq-fr-logo{width:120px;max-height:44px;}";
+  function buildFrenchInvoiceHtml(data, options){
+    const company = resolveCompany(data);
+    const logo = company.logo_url ? '<img class="iq-fr-logo" src="' + escapeHtml(company.logo_url) + '" alt="' + escapeHtml(company.company_name) + '">' : escapeHtml(company.company_name);
+    const amount = value => value == null || value === '' ? '' : (Number.isFinite(Number(value)) ? new Intl.NumberFormat('fr-CA', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(Number(value)) : escapeHtml(value));
+    const invoice = Object.assign({}, data, {number: data.invoice_number, date: formatDate(data.invoice_date), order_date: formatDate(data.order_date)});
+    invoice.sold_to = Object.assign({}, data.sold_to, {addr1: data.sold_to && data.sold_to.address1});
+    invoice.ship_to = Object.assign({}, data.ship_to, {addr1: data.ship_to && data.ship_to.address1});
+    const lines = (data.lines || []).map(line => Object.assign({}, line, {qty_ord: line.qty_ordered, qty_shp: line.qty_shipped, bo: line.qty_backorder}));
+    const pages = options && options.forPdf ? chunkLinesForPdf(lines) : [lines];
+    return '<style>' + FRENCH_INVOICE_CSS + '</style><div class="iq-invoice">' + pages.map((pageLines, index) => `  <section class="iq-page">
+    ${index === 0 ? `
+    <div class="iq-band">
+      <div>
+        <div class="iq-brand">${logo}<small>(DIV. DE 605494 ALBERTA LTD)</small></div>
+        <div class="iq-co">14617 - 134 Ave NW, Edmonton, AB T5L 4S9<br>
+          Tél. : (780) 454-4321 &nbsp;&bull;&nbsp; Téléc. : (780) 452-5405</div>
+      </div>
+      <div class="iq-invtitle">
+        <h1>FACTURE</h1>
+        <p>Numéro de facture : ${escapeHtml(invoice.number)}<br>
+          Date : ${escapeHtml(invoice.date)} &nbsp;&bull;&nbsp; Page ${escapeHtml((index + 1))} de ${escapeHtml(pages.length)}</p>
+      </div>
+    </div>
+
+    <div class="iq-addr">
+      <div>
+        <div class="iq-lbl">VENDU À</div>
+        <p><b>${escapeHtml(invoice.sold_to.name)}</b><br>
+          ${escapeHtml(invoice.sold_to.addr1)}<br>
+          ${escapeHtml(invoice.sold_to.city)}, ${escapeHtml(invoice.sold_to.province)} ${escapeHtml(invoice.sold_to.postal)}<br>
+          ${escapeHtml(invoice.sold_to.country)}</p>
+      </div>
+      <div>
+        <div class="iq-lbl">EXPÉDIÉ À</div>
+        <p><b>${escapeHtml(invoice.ship_to.name)}</b><br>
+          ${escapeHtml(invoice.ship_to.addr1)}<br>
+          ${escapeHtml(invoice.ship_to.city)}, ${escapeHtml(invoice.ship_to.province)} ${escapeHtml(invoice.ship_to.postal)}<br>
+          ${escapeHtml(invoice.ship_to.country)}</p>
+      </div>
+    </div>
+
+    <div class="iq-meta">
+      <div style="flex:1.1"><span>Nº DE CLIENT</span>${escapeHtml(invoice.customer_no)}</div>
+      <div style="flex:1.3"><span>DATE DE COMMANDE</span>${escapeHtml(invoice.order_date)}</div>
+      <div style="flex:1.2"><span>Nº DE COMMANDE</span>${escapeHtml(invoice.order_no)}</div>
+      <div><span>VENDEUR</span>${escapeHtml(invoice.salesperson)}</div>
+      <div style="flex:1.3"><span>BON DE COMMANDE</span>${escapeHtml(invoice.po_number)}</div>
+      <div><span>EXPÉDIÉ PAR</span>${escapeHtml(invoice.ship_via)}</div>
+      <div><span>CONDITIONS</span>${escapeHtml(invoice.terms)}</div>
+    </div>
+    ` : `
+    <div class="iq-band-slim">
+      <div class="iq-brand">${logo}</div>
+      <p>Facture ${escapeHtml(invoice.number)} &mdash; Suite &nbsp;&bull;&nbsp; ${escapeHtml(invoice.date)} &nbsp;&bull;&nbsp; Page ${escapeHtml((index + 1))} de ${escapeHtml(pages.length)}</p>
+    </div>
+    `}
+
+    <table class="iq-items">
+      <colgroup><col style="width:6.2%"><col style="width:6.2%"><col style="width:4.9%"><col style="width:13.3%"><col style="width:43.3%"><col style="width:9.8%"><col style="width:6.2%"><col style="width:10.1%"></colgroup>
+
+<tr>
+  <th class="c">Qté<br>comm.</th><th class="c">Qté<br>exp.</th><th class="c">En<br>att.</th>
+  <th>Nº d'article</th><th>Description</th>
+  <th class="r">Prix<br>unitaire</th><th class="c">Unité</th><th class="r">Prix<br>étendu</th>
+</tr>
+
+      ${pageLines.map(line => `
+      <tr>
+        <td class="c">${escapeHtml(line.qty_ord)}</td>
+        <td class="c">${escapeHtml(line.qty_shp)}</td>
+        <td class="c">${escapeHtml(line.bo)}</td>
+        <td>${escapeHtml(line.item_number)}</td>
+        <td>${escapeHtml(line.description)}</td>
+        <td class="r">${amount(line.unit_price)}</td>
+        <td class="c">${escapeHtml(line.uom)}</td>
+        <td class="r">${amount(line.extended_price)}</td>
+      </tr>
+      `).join('')}
+    </table>
+
+    ${index === pages.length - 1 ? `
+
+<div class="iq-bottom">
+  <div class="iq-left">
+    <div class="iq-gst">Nº de TPS/TVH : 139587877</div>
+    <p>Aucun retour sans notre autorisation écrite (RMA).</p>
+    <p>Des frais de 2 % par mois (24 % par année) seront facturés sur les comptes en souffrance.</p>
+    <p>Toute réclamation doit être faite dans les 5 jours suivant la réception des marchandises.</p>
+    <p>Des frais de 3 % peuvent s'appliquer à tout paiement par carte de crédit.</p>
+    <div class="iq-pm">
+      <h3>MODES DE PAIEMENT</h3>
+      <h4>Virement/TÉF</h4>
+      <p>Numéro d'institution : 003</p>
+      <p>Transit : 07378</p>
+      <p>Numéro de compte : 1027812</p>
+      <div class="iq-pm-sub">
+        <h4>Paiement de facture</h4>
+        <p>Ink Quest</p>
+      </div>
+    </div>
+  </div>
+  <div class="iq-right">
+    <div class="iq-taxbox">
+      <h3>SOMMAIRE DES TAXES</h3>
+      ${(data.tax_lines || []).map(tax => '<div class="iq-trow"><span>' + escapeHtml(tax.code) + '</span><span>' + amount(tax.amount) + '</span></div>').join('')}
+      <div class="iq-trow"><span>Code d'exemption de taxe</span><span>${escapeHtml(invoice.tax_exempt_code)}</span></div>
+    </div>
+    <div class="iq-trow"><span>Sous-total</span><span>${amount(invoice.subtotal)}</span></div>
+    <div class="iq-trow"><span>Total des taxes de vente</span><span>${amount(invoice.total_tax)}</span></div>
+    <div class="iq-trow"><span>Montant total</span><span>${amount(invoice.total_amount)}</span></div>
+    <div class="iq-trow"><span>Moins paiement</span><span>${amount(invoice.less_payment)}</span></div>
+    <div class="iq-due"><span>Montant dû</span><span>${amount(invoice.amount_due)}</span></div>
+  </div>
+</div>
+
+    ` : `
+    <div class="iq-cont">Suite à la page suivante&hellip;</div>
+    `}
+
+    <div class="iq-foot">INK QUEST &nbsp;&bull;&nbsp; 14617 &ndash; 134 Ave NW, Edmonton, AB T5L 4S9</div>
+  </section>`).join('') + '</div>';
+  }
+
   async function fetchJson(url){
     console.log('[RD Invoices] request', {
       url: url,
@@ -397,24 +524,24 @@
   function paymentStatus(inv){
     const raw = inv && inv.amount_due;
     if (raw == null || String(raw).trim() === '') {
-      return { label: 'Unknown', cls: 'processing' };
+      return { label: (isFrench ? "Inconnu" : 'Unknown'), cls: 'processing' };
     }
     const n = Number(String(raw).replace(/,/g, ''));
     if (!Number.isFinite(n)) {
-      return { label: 'Unknown', cls: 'processing' };
+      return { label: (isFrench ? "Inconnu" : 'Unknown'), cls: 'processing' };
     }
     if (n <= 0) {
-      return { label: 'Paid', cls: 'paid' };
+      return { label: (isFrench ? "Payée" : 'Paid'), cls: 'paid' };
     }
-    return { label: 'Due', cls: 'pending' };
+    return { label: (isFrench ? "À payer" : 'Due'), cls: 'pending' };
   }
 
   function renderEmpty(){
     tbody.innerHTML =
       '<tr><td colspan="8"><div class="rd-invoice-empty">' +
-        '<h3>No invoices</h3>' +
-        '<p>There are no invoices for your account right now.</p>' +
-        '<button type="button" class="rd-invoice-refresh" id="rdInvoiceRefresh">Refresh</button>' +
+        '<h3>' + (isFrench ? "Aucune facture" : 'No invoices') + '</h3>' +
+        '<p>' + (isFrench ? "Aucune facture disponible pour votre compte." : 'There are no invoices for your account right now.') + '</p>' +
+        '<button type="button" class="rd-invoice-refresh" id="rdInvoiceRefresh">' + (isFrench ? "Actualiser" : 'Refresh') + '</button>' +
       '</div></td></tr>';
     if (pager) pager.hidden = true;
     const refreshBtn = document.getElementById('rdInvoiceRefresh');
@@ -491,7 +618,7 @@
         '<td class="rd-invoice-total">' + money(inv.amount_due, inv.currency) + '</td>' +
         '<td><span class="rd-invoice-badge ' + pay.cls + '">' + escapeHtml(pay.label) + '</span></td>' +
         '<td><div class="rd-invoice-actions">' +
-          '<button type="button" class="rd-invoice-action" title="View Invoice" data-invoice-id="' + escapeHtml(inv.id) + '">View</button>' +
+          '<button type="button" class="rd-invoice-action" title="View Invoice" data-invoice-id="' + escapeHtml(inv.id) + '">' + (isFrench ? "Voir" : 'View') + '</button>' +
           pdfBtnHtml +
         '</div></td>' +
       '</tr>';
@@ -515,7 +642,7 @@
     page = meta.page || 1;
     pager.hidden = !meta.total;
     pagerInfo.textContent = meta.total
-      ? ('Page ' + page + ' of ' + totalPages + ' - ' + meta.total + ' invoices')
+      ? ('Page ' + page + (isFrench ? ' de ' : ' of ') + totalPages + ' - ' + meta.total + (isFrench ? ' factures' : ' invoices'))
       : '';
     prevBtn.disabled = page <= 1;
     nextBtn.disabled = page >= totalPages;
@@ -527,7 +654,7 @@
       statsEl.hidden = false;
       statsEl.removeAttribute('hidden');
     }
-    tbody.innerHTML = '<tr><td colspan="8"><div class="rd-invoice-loading">Loading invoices...</div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8"><div class="rd-invoice-loading">' + (isFrench ? "Chargement des factures..." : 'Loading invoices...') + '</div></td></tr>';
     try {
       const result = await fetchJson(buildListUrl(page));
       const rows = Array.isArray(result.data) ? result.data : [];
@@ -645,6 +772,7 @@
     var doc = iframe.contentDocument || (win && win.document);
     if (!doc || !win) return;
 
+    doc.documentElement.lang = isFrench ? 'fr-CA' : 'en-CA';
     doc.title = title;
 
     var styleEl = doc.createElement('style');
@@ -716,19 +844,19 @@
         '<div class="iq-hdr"><div>' +
         (company.logo_url ? '<img class="iq-logo" src="' + escapeHtml(company.logo_url) + '" alt="' + escapeHtml(company.company_name) + '">' : '') +
         '<div class="iq-brand">' + escapeHtml(company.company_name) + '</div><div class="iq-co">' + companyAddressHtml(company) + '</div></div>' +
-        '<div class="iq-invtitle"><div class="t">STATEMENT OF ACCOUNT</div><h1>Unpaid invoices</h1>' +
-        '<div>As of ' + formatDate(statement.generated_at) + '</div><div>Page ' + (index + 1) + ' of ' + pages.length + '</div></div></div>' +
-        '<div class="iq-addr"><div><div class="iq-lbl">CUSTOMER</div><p>' + addressLines(invoices[0].sold_to) +
-        '</p><p>Customer no.: ' + escapeHtml(invoices[0].customer_no || cfg.customerId || '') + '</p></div></div>' +
-        '<div class="iq-itemsbar"><h3>UNPAID INVOICES</h3></div>' +
-        '<table class="iq-items"><thead><tr><th>Invoice</th><th>Date</th><th>Order</th><th>PO Number</th><th>Currency</th><th class="r">Invoice total</th><th class="r">Amount due</th></tr></thead><tbody>' +
+        '<div class="iq-invtitle"><div class="t">' + (isFrench ? 'RELEVÉ DE COMPTE' : 'STATEMENT OF ACCOUNT') + '</div><h1>' + (isFrench ? 'Factures impayées' : 'Unpaid invoices') + '</h1>' +
+        '<div>' + (isFrench ? 'En date du ' : 'As of ') + formatDate(statement.generated_at) + '</div><div>Page ' + (index + 1) + (isFrench ? ' sur ' : ' of ') + pages.length + '</div></div></div>' +
+        '<div class="iq-addr"><div><div class="iq-lbl">' + (isFrench ? 'CLIENT' : 'CUSTOMER') + '</div><p>' + addressLines(invoices[0].sold_to) +
+        '</p><p>' + (isFrench ? 'N° de client : ' : 'Customer no.: ') + escapeHtml(invoices[0].customer_no || cfg.customerId || '') + '</p></div></div>' +
+        '<div class="iq-itemsbar"><h3>' + (isFrench ? 'FACTURES IMPAYÉES' : 'UNPAID INVOICES') + '</h3></div>' +
+        '<table class="iq-items"><thead><tr><th>' + (isFrench ? 'Facture' : 'Invoice') + '</th><th>Date</th><th>' + (isFrench ? 'Commande' : 'Order') + '</th><th>' + (isFrench ? 'N° de bon de commande' : 'PO Number') + '</th><th>' + (isFrench ? 'Devise' : 'Currency') + '</th><th class="r">' + (isFrench ? 'Total de la facture' : 'Invoice total') + '</th><th class="r">' + (isFrench ? 'Montant dû' : 'Amount due') + '</th></tr></thead><tbody>' +
         rows.map(function(inv){ return '<tr><td>' + escapeHtml(inv.invoice_number) + '</td><td>' + formatDate(inv.invoice_date) +
           '</td><td>' + escapeHtml(inv.order_no || '') + '</td><td>' + escapeHtml(inv.po_number || '') + '</td><td>' + escapeHtml(inv.currency || 'CAD') +
           '</td><td class="r">' + money(inv.total_amount, inv.currency) + '</td><td class="r">' + money(inv.amount_due, inv.currency) + '</td></tr>'; }).join('') +
         '</tbody></table>' + (last ? '<div class="iq-bottom"><div class="iq-right">' + Array.from(totals, function(entry){
-          return '<div class="iq-due"><span>Total unpaid (' + escapeHtml(entry[0]) + ')</span><span>' + money((entry[1] / 100).toFixed(2), entry[0]) + '</span></div>';
-        }).join('') + '</div></div>' : '<div class="iq-cont">Continued on next page...</div>') +
-        '<div class="iq-foot"><span>All unpaid invoices as of statement date. Part payments are reflected in Amount due.</span><span>Page ' + (index + 1) + '</span></div></section>';
+          return '<div class="iq-due"><span>' + (isFrench ? 'Total impayé (' : 'Total unpaid (') + escapeHtml(entry[0]) + ')</span><span>' + money((entry[1] / 100).toFixed(2), entry[0]) + '</span></div>';
+        }).join('') + '</div></div>' : '<div class="iq-cont">' + (isFrench ? 'Suite à la page suivante...' : 'Continued on next page...') + '</div>') +
+        '<div class="iq-foot"><span>' + (isFrench ? 'Toutes les factures impayées à la date du relevé. Les paiements partiels sont pris en compte dans le montant dû.' : 'All unpaid invoices as of statement date. Part payments are reflected in Amount due.') + '</span><span>Page ' + (index + 1) + '</span></div></section>';
     }).join('') + '</div>';
   }
 
@@ -736,18 +864,18 @@
   const statementStatus = document.getElementById('rdStatementStatus');
   if (statementBtn) statementBtn.addEventListener('click', async function(){
     statementBtn.disabled = true;
-    if (statementStatus) statementStatus.textContent = 'Preparing statement...';
+    if (statementStatus) statementStatus.textContent = (isFrench ? 'Préparation du relevé...' : 'Preparing statement...');
     try {
       const result = await fetchJson(cfg.proxyBase + '/statement');
       if (!result.data || !Array.isArray(result.data.invoices)) throw new Error('Invalid statement response');
       if (!result.data.invoices.some(function(inv){ return Number(inv.amount_due) > 0; })) {
-        if (statementStatus) statementStatus.textContent = 'No unpaid invoices for your account.';
+        if (statementStatus) statementStatus.textContent = (isFrench ? 'Aucune facture impayée pour votre compte.' : 'No unpaid invoices for your account.');
         return;
       }
-      printDocument(buildStatementHtml(result.data), 'Statement of account');
-      if (statementStatus) statementStatus.textContent = 'Choose Save as PDF in the print dialog to download your statement.';
+      printDocument(buildStatementHtml(result.data), (isFrench ? 'Relevé de compte' : 'Statement of account'));
+      if (statementStatus) statementStatus.textContent = (isFrench ? 'Choisissez Enregistrer au format PDF dans la fenêtre d’impression pour télécharger votre relevé.' : 'Choose Save as PDF in the print dialog to download your statement.');
     } catch (err) {
-      if (statementStatus) statementStatus.textContent = 'Unable to download statement. Please try again.';
+      if (statementStatus) statementStatus.textContent = (isFrench ? 'Impossible de télécharger le relevé. Veuillez réessayer.' : 'Unable to download statement. Please try again.');
       console.error('Statement failed', err);
     } finally {
       statementBtn.disabled = false;
@@ -755,7 +883,7 @@
   });
 
   async function openInvoice(id){
-    preview.innerHTML = '<div class="rd-invoice-loading">Loading invoice...</div>';
+    preview.innerHTML = '<div class="rd-invoice-loading">' + (isFrench ? "Chargement de la facture..." : 'Loading invoice...') + '</div>';
     modal.classList.add('active');
     try {
       const result = await fetchJson(cfg.proxyBase + '/' + encodeURIComponent(id));
@@ -775,7 +903,7 @@
   async function downloadInvoicePdf(id){
     try {
       if (!currentInvoice || String(currentInvoice.id) !== String(id)) {
-        preview.innerHTML = '<div class="rd-invoice-loading">Preparing PDF...</div>';
+        preview.innerHTML = '<div class="rd-invoice-loading">' + (isFrench ? "Préparation du PDF..." : 'Preparing PDF...') + '</div>';
         modal.classList.add('active');
         const result = await fetchJson(cfg.proxyBase + '/' + encodeURIComponent(id) + '?download=1');
         if (!result || !result.data) {

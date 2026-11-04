@@ -2126,17 +2126,18 @@ data-search="
 
     <div class="rd-invoice-hero">
       <div>
-        <h2>Invoices</h2>
-        <p>View and download invoices for your account.</p>
+        <h2>{% if request.locale.iso_code contains 'fr' %}Factures{% else %}Invoices{% endif %}</h2>
+        <p>{% if request.locale.iso_code contains 'fr' %}Consultez et téléchargez les factures de votre compte.{% else %}View and download invoices for your account.{% endif %}</p>
       </div>
     </div>
 
     {% if customer %}
-      <button type="button" class="rd-invoice-modal-btn primary" id="rdStatementDownload" style="margin-bottom:16px;">{% if request.locale.iso_code == 'fr' %}T?l?charger le relev?{% else %}Download Statement{% endif %}</button>
+      <button type="button" class="rd-invoice-modal-btn primary" id="rdStatementDownload" style="margin-bottom:16px;">{% if request.locale.iso_code == 'fr' %}Télécharger le relevé{% else %}Download Statement{% endif %}</button>
       <p id="rdStatementStatus" role="status" style="margin:0 0 16px;"></p>
       <script>
         window.RD_INVOICES = {
           proxyBase: '/apps/account-billing/customer/invoices',
+          locale: {{ request.locale.iso_code | json }},
           loggedIn: true,
           pageSize: 20,
           customerId: {{ customer.id | json }},
@@ -2152,29 +2153,29 @@ data-search="
 
       <div class="rd-invoice-stats" id="rdInvoiceStats" aria-live="polite">
         <div class="rd-invoice-stat">
-          <div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">Total Invoices</div><div class="rd-invoice-stat-icon" aria-hidden="true">#</div></div>
+          <div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">{% if request.locale.iso_code contains 'fr' %}Total des factures{% else %}Total Invoices{% endif %}</div><div class="rd-invoice-stat-icon" aria-hidden="true">#</div></div>
           <div class="rd-invoice-stat-value" id="rdInvoiceCount">Loading?</div>
-          <div class="rd-invoice-stat-sub">All invoices</div>
+          <div class="rd-invoice-stat-sub">{% if request.locale.iso_code contains 'fr' %}Toutes les factures{% else %}All invoices{% endif %}</div>
         </div>
         <div class="rd-invoice-stat">
-          <div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">Total Value</div><div class="rd-invoice-stat-icon" aria-hidden="true">$</div></div>
+          <div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">{% if request.locale.iso_code contains 'fr' %}Valeur totale{% else %}Total Value{% endif %}</div><div class="rd-invoice-stat-icon" aria-hidden="true">$</div></div>
           <div class="rd-invoice-stat-value" id="rdInvoiceValue">Loading?</div>
-          <div class="rd-invoice-stat-sub">Total invoiced amount</div>
+          <div class="rd-invoice-stat-sub">{% if request.locale.iso_code contains 'fr' %}Montant total facturé{% else %}Total invoiced amount{% endif %}</div>
         </div>
         <div class="rd-invoice-stat">
-          <div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">Paid</div><div class="rd-invoice-stat-icon" aria-hidden="true">?</div></div>
+          <div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">{% if request.locale.iso_code contains 'fr' %}Payées{% else %}Paid{% endif %}</div><div class="rd-invoice-stat-icon" aria-hidden="true">?</div></div>
           <div class="rd-invoice-stat-value" id="rdInvoicePaid">Loading?</div>
-          <div class="rd-invoice-stat-sub">Paid invoices</div>
+          <div class="rd-invoice-stat-sub">{% if request.locale.iso_code contains 'fr' %}Factures payées{% else %}Paid invoices{% endif %}</div>
         </div>
         <div class="rd-invoice-stat">
-          <div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">Pending</div><div class="rd-invoice-stat-icon" aria-hidden="true">!</div></div>
+          <div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">{% if request.locale.iso_code contains 'fr' %}En attente{% else %}Pending{% endif %}</div><div class="rd-invoice-stat-icon" aria-hidden="true">!</div></div>
           <div class="rd-invoice-stat-value" id="rdInvoicePending">Loading?</div>
-          <div class="rd-invoice-stat-sub">Awaiting payment</div>
+          <div class="rd-invoice-stat-sub">{% if request.locale.iso_code contains 'fr' %}En attente de paiement{% else %}Awaiting payment{% endif %}</div>
         </div>
         <div class="rd-invoice-stat">
-          <div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">Outstanding balance</div><div class="rd-invoice-stat-icon" aria-hidden="true">$</div></div>
+          <div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">{% if request.locale.iso_code contains 'fr' %}Solde impayé{% else %}Outstanding balance{% endif %}</div><div class="rd-invoice-stat-icon" aria-hidden="true">$</div></div>
           <div class="rd-invoice-stat-value" id="rdInvoiceOutstanding">Loading?</div>
-          <div class="rd-invoice-stat-sub">Across your account</div>
+          <div class="rd-invoice-stat-sub">{% if request.locale.iso_code contains 'fr' %}Pour votre compte{% else %}Across your account{% endif %}</div>
         </div>
       </div>
 
@@ -2187,18 +2188,18 @@ data-search="
           <input
             type="search"
             id="rdInvoiceSearch"
-            placeholder="Search invoice #, order #, PO..."
+            placeholder="{% if request.locale.iso_code contains 'fr' %}Rechercher une facture, une commande, un BC...{% else %}Search invoice #, order #, PO...{% endif %}"
             autocomplete="off"
           >
         </div>
-        <input type="date" class="rd-invoice-filter" id="rdInvoiceDateFrom" title="From date" aria-label="From date">
-        <input type="date" class="rd-invoice-filter" id="rdInvoiceDateTo" title="To date" aria-label="To date">
-        <select class="rd-invoice-filter" id="rdInvoiceBalance" aria-label="Balance filter">
-          <option value="">All balances</option>
-          <option value="due">Amount due</option>
-          <option value="paid">Paid / zero due</option>
+        <input type="date" class="rd-invoice-filter" id="rdInvoiceDateFrom" title="{% if request.locale.iso_code contains 'fr' %}Date de début{% else %}From date{% endif %}" aria-label="{% if request.locale.iso_code contains 'fr' %}Date de début{% else %}From date{% endif %}">
+        <input type="date" class="rd-invoice-filter" id="rdInvoiceDateTo" title="{% if request.locale.iso_code contains 'fr' %}Date de fin{% else %}To date{% endif %}" aria-label="{% if request.locale.iso_code contains 'fr' %}Date de fin{% else %}To date{% endif %}">
+        <select class="rd-invoice-filter" id="rdInvoiceBalance" aria-label="{% if request.locale.iso_code contains 'fr' %}Filtrer par solde{% else %}Balance filter{% endif %}">
+          <option value="">{% if request.locale.iso_code contains 'fr' %}Tous les soldes{% else %}All balances{% endif %}</option>
+          <option value="due">{% if request.locale.iso_code contains 'fr' %}Montant dû{% else %}Amount due{% endif %}</option>
+          <option value="paid">{% if request.locale.iso_code contains 'fr' %}Payées / solde nul{% else %}Paid / zero due{% endif %}</option>
         </select>
-        <button type="button" class="rd-invoice-filter" id="rdInvoiceFilterClear" style="font-weight:700;">Clear</button>
+        <button type="button" class="rd-invoice-filter" id="rdInvoiceFilterClear" style="font-weight:700;">{% if request.locale.iso_code contains 'fr' %}Effacer{% else %}Clear{% endif %}</button>
       </div>
 
       <div class="rd-invoice-table-card">
@@ -2206,14 +2207,14 @@ data-search="
           <table class="rd-invoice-table">
             <thead>
               <tr>
-                <th>Invoice</th>
-                <th>Invoice Date</th>
-                <th>Order</th>
-                <th>PO Number</th>
-                <th>Total</th>
-                <th>Amount Due</th>
-                <th>Payment Status</th>
-                <th>Actions</th>
+                <th>{% if request.locale.iso_code contains 'fr' %}Facture{% else %}Invoice{% endif %}</th>
+                <th>{% if request.locale.iso_code contains 'fr' %}Date de facture{% else %}Invoice Date{% endif %}</th>
+                <th>{% if request.locale.iso_code contains 'fr' %}Commande{% else %}Order{% endif %}</th>
+                <th>{% if request.locale.iso_code contains 'fr' %}Bon de commande{% else %}PO Number{% endif %}</th>
+                <th>{% if request.locale.iso_code contains 'fr' %}Total{% else %}Total{% endif %}</th>
+                <th>{% if request.locale.iso_code contains 'fr' %}Montant dû{% else %}Amount Due{% endif %}</th>
+                <th>{% if request.locale.iso_code contains 'fr' %}État du paiement{% else %}Payment Status{% endif %}</th>
+                <th>{% if request.locale.iso_code contains 'fr' %}Actions{% else %}Actions{% endif %}</th>
               </tr>
             </thead>
             <tbody id="rdInvoiceTableBody">
@@ -2229,15 +2230,15 @@ data-search="
         <div class="rd-invoice-pager" id="rdInvoicePager" hidden>
           <div class="rd-invoice-pager-info" id="rdInvoicePagerInfo"></div>
           <div class="rd-invoice-pager-btns">
-            <button type="button" class="rd-invoice-pager-btn" id="rdInvoicePrev">Previous</button>
-            <button type="button" class="rd-invoice-pager-btn" id="rdInvoiceNext">Next</button>
+            <button type="button" class="rd-invoice-pager-btn" id="rdInvoicePrev">{% if request.locale.iso_code contains 'fr' %}Précédent{% else %}Previous{% endif %}</button>
+            <button type="button" class="rd-invoice-pager-btn" id="rdInvoiceNext">{% if request.locale.iso_code contains 'fr' %}Suivant{% else %}Next{% endif %}</button>
           </div>
         </div>
       </div>
     {% else %}
       <div class="rd-invoice-empty">
-        <h3>Sign in to view invoices</h3>
-        <p>Please log in to see invoices for your account.</p>
+        <h3>{% if request.locale.iso_code contains 'fr' %}Connectez-vous pour consulter vos factures{% else %}Sign in to view invoices{% endif %}</h3>
+        <p>{% if request.locale.iso_code contains 'fr' %}Veuillez vous connecter pour consulter vos factures.{% else %}Please log in to see invoices for your account.{% endif %}</p>
         <p style="margin-top:12px;"><a href="{{ routes.account_login_url }}" style="color:#0d4f4f;font-weight:700;">Log in</a></p>
       </div>
     {% endif %}
@@ -2261,7 +2262,7 @@ data-search="
     <div class="rd-invoice-modal-top">
 
       <div class="rd-invoice-modal-title">
-        Invoice Detail
+        {% if request.locale.iso_code contains 'fr' %}Détail de la facture{% else %}Invoice Detail{% endif %}
       </div>
 
       <div class="rd-invoice-modal-actions">
@@ -2271,7 +2272,7 @@ data-search="
           class="rd-invoice-modal-btn primary"
           id="rdInvoiceDownloadPdf"
         >
-          Download PDF
+          {% if request.locale.iso_code contains 'fr' %}Télécharger le PDF{% else %}Download PDF{% endif %}
         </button>
 
         <button
@@ -2279,7 +2280,7 @@ data-search="
           class="rd-invoice-modal-btn"
           id="rdInvoiceClose"
         >
-          Close
+          {% if request.locale.iso_code contains 'fr' %}Fermer{% else %}Close{% endif %}
         </button>
 
       </div>
@@ -3024,7 +3025,7 @@ document.body.style.overflow="";
 
 })();
 </script>
-<script src="{{ 'rd-invoices.js' | asset_url }}&v=20261026a" defer></script>
+<script src="{{ 'rd-invoices.js' | asset_url }}" defer></script>
 
 <!-- =========================================================
      INK QUEST RESELLER PORTAL - EN / FR UI TRANSLATION
@@ -3268,7 +3269,7 @@ document.body.style.overflow="";
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode: function (node) {
         const parent = node.parentElement;
-        if (!parent || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/i.test(parent.tagName)) {
+        if (!parent || parent.closest('#rdInvoiceTableBody, #rdInvoicePreview') || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/i.test(parent.tagName)) {
           return NodeFilter.FILTER_REJECT;
         }
         return NodeFilter.FILTER_ACCEPT;
@@ -3295,7 +3296,7 @@ document.body.style.overflow="";
     while ((node = walker.nextNode())) nodes.push(node);
 
     nodes.forEach(function (textNode) {
-      if (!textNode.nodeValue) return;
+      if (!textNode.nodeValue || (textNode.parentElement && textNode.parentElement.closest('script, style, #rdInvoiceTableBody, #rdInvoicePreview'))) return;
       let value = textNode.nodeValue;
       Object.keys(months).forEach(function (month) {
         value = value.replace(new RegExp('\\b' + month + '\\b', 'g'), months[month]);
