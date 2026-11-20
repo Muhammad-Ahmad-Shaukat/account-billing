@@ -1,0 +1,887 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* =========================================================
+     ABOUT US (NEW DESIGN) - SCOPED STYLES
+     ========================================================= */
+  #iq-about-new-{{ section.id }} {
+    --iq-teal: #00404c;
+    --iq-teal-2: #0d6e7a;
+    --iq-teal-soft: #e7f1f2;
+    --iq-ink: #101820;
+    --iq-muted: #5b6b71;
+    --iq-bg: #f5f8f8;
+    --iq-card-shadow: 0 10px 28px rgba(0, 64, 76, 0.09);
+    --iq-radius: 14px;
+    font-family: 'Poppins', sans-serif;
+    color: var(--iq-teal-ink, var(--iq-ink));
+    background: #ffffff;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    isolation: isolate;
+  }
+
+  #iq-about-new-{{ section.id }} *,
+  #iq-about-new-{{ section.id }} *::before,
+  #iq-about-new-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #iq-about-new-{{ section.id }} img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 24px;
+    padding-right: 24px;
+    width: 100%;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--iq-teal-2);
+    margin: 0 0 14px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-h1 {
+    font-size: clamp(34px, 5vw, 56px);
+    font-weight: 700;
+    line-height: 1.12;
+    color: var(--iq-teal);
+    margin: 0 0 18px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-h2 {
+    font-size: clamp(26px, 3.4vw, 38px);
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--iq-teal);
+    margin: 0 0 14px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-lead {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--iq-muted);
+    margin: 0;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-center { text-align: center; }
+
+  /* ============ HERO ============ */
+  #iq-about-new-{{ section.id }} .iq-hero {
+    position: relative;
+    padding: 84px 0 72px;
+    background: linear-gradient(180deg, #edf4f4 0%, #ffffff 100%);
+    overflow: hidden;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-blob-1 {
+    width: 480px; height: 480px;
+    top: -160px; left: -140px;
+    background: radial-gradient(circle, #9fd8e8, transparent 70%);
+  }
+
+  #iq-about-new-{{ section.id }} .iq-blob-2 {
+    width: 420px; height: 420px;
+    top: -100px; right: -120px;
+    background: radial-gradient(circle, #7fe0c4, transparent 70%);
+  }
+
+  #iq-about-new-{{ section.id }} .iq-hero-inner {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-hero .iq-lead {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 48px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-stat {
+    background: #ffffff;
+    border: 1px solid #e3ecec;
+    border-radius: var(--iq-radius);
+    box-shadow: var(--iq-card-shadow);
+    padding: 26px 14px;
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--iq-teal);
+    line-height: 1.35;
+  }
+
+  /* ============ TRUSTED BY ============ */
+  #iq-about-new-{{ section.id }} .iq-trusted {
+    padding: 64px 0 56px;
+    background: #ffffff;
+    border-top: 1px solid #eef2f2;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-trusted .iq-h2 { margin-bottom: 8px; }
+
+  #iq-about-new-{{ section.id }} .iq-trusted-sub {
+    font-size: 15px;
+    color: var(--iq-muted);
+    margin: 0 0 36px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-marquee {
+    overflow: hidden;
+    width: 100%;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  #iq-about-new-{{ section.id }} .iq-track {
+    display: flex;
+    align-items: center;
+    gap: 76px;
+    width: max-content;
+    animation: iq-about-scroll 32s linear infinite;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-marquee:hover .iq-track {
+    animation-play-state: paused;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-track img {
+    height: 44px;
+    width: auto;
+    max-width: 170px;
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: 0.8;
+    flex-shrink: 0;
+  }
+
+  @keyframes iq-about-scroll {
+    to { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #iq-about-new-{{ section.id }} .iq-track { animation: none; flex-wrap: wrap; width: 100%; justify-content: center; }
+  }
+
+  /* ============ STORY ============ */
+  #iq-about-new-{{ section.id }} .iq-story {
+    padding: 72px 0;
+    background: var(--iq-bg);
+  }
+
+  #iq-about-new-{{ section.id }} .iq-story-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 0.75fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-story p {
+    font-size: 16.5px;
+    line-height: 1.75;
+    color: #33424a;
+    margin: 0 0 20px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-story p:last-child { margin-bottom: 0; }
+
+  #iq-about-new-{{ section.id }} .iq-locations {
+    background: var(--iq-teal);
+    border-radius: var(--iq-radius);
+    padding: 36px 32px;
+    color: #ffffff;
+    box-shadow: var(--iq-card-shadow);
+  }
+
+  #iq-about-new-{{ section.id }} .iq-locations h3 {
+    font-size: 19px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    color: #ffffff;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-locations p {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: #cfe0e2;
+    margin: 0 0 22px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-loc {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    font-size: 15.5px;
+    font-weight: 500;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-loc svg {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+  }
+
+  /* ============ PRODUCTS ============ */
+  #iq-about-new-{{ section.id }} .iq-products {
+    padding: 72px 0;
+    background: #ffffff;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-products .iq-lead {
+    max-width: 820px;
+    margin: 0 auto 40px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-cards-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-card {
+    background: #ffffff;
+    border: 1px solid #e6eeee;
+    border-radius: var(--iq-radius);
+    box-shadow: var(--iq-card-shadow);
+    padding: 34px 28px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-card-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--iq-teal-soft);
+    color: var(--iq-teal);
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--iq-teal);
+    margin: 0 0 10px;
+    line-height: 1.4;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-card p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--iq-muted);
+    margin: 0;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-closing {
+    max-width: 780px;
+    margin: 40px auto 0;
+    font-size: 16.5px;
+    line-height: 1.7;
+    color: #33424a;
+    text-align: center;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-closing strong { color: var(--iq-teal); }
+
+  /* ============ COMMITMENT ============ */
+  #iq-about-new-{{ section.id }} .iq-commitment {
+    padding: 72px 0;
+    background: var(--iq-bg);
+  }
+
+  #iq-about-new-{{ section.id }} .iq-commitment .iq-lead {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-priorities-label {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--iq-teal);
+    margin: 34px 0 22px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-cards-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-commit-card {
+    background: #ffffff;
+    border: 1px solid #e6eeee;
+    border-top: 4px solid var(--iq-teal);
+    border-radius: var(--iq-radius);
+    box-shadow: var(--iq-card-shadow);
+    padding: 30px 24px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--iq-teal-soft);
+    margin-bottom: 16px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-check svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-commit-card h3 {
+    font-size: 16.5px;
+    font-weight: 600;
+    color: var(--iq-teal);
+    margin: 0 0 8px;
+    line-height: 1.45;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-commit-card p {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--iq-muted);
+    margin: 0;
+  }
+
+  /* ============ VALUES ============ */
+  #iq-about-new-{{ section.id }} .iq-values {
+    padding: 72px 0;
+    background: #ffffff;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-value-card {
+    background: #ffffff;
+    border: 1px solid #e6eeee;
+    border-radius: var(--iq-radius);
+    box-shadow: var(--iq-card-shadow);
+    padding: 32px 28px;
+    text-align: left;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-value-card h3 {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--iq-teal);
+    margin: 0 0 10px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-value-card p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--iq-muted);
+    margin: 0;
+  }
+
+  /* ============ FEATURE CARDS ============ */
+  #iq-about-new-{{ section.id }} .iq-features {
+    padding: 72px 0;
+    background: var(--iq-bg);
+  }
+
+  #iq-about-new-{{ section.id }} .iq-feature-card {
+    background: #ffffff;
+    border: 1px solid #e6eeee;
+    border-radius: var(--iq-radius);
+    box-shadow: var(--iq-card-shadow);
+    padding: 36px 24px;
+    text-align: center;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-feature-card img {
+    height: 52px;
+    width: auto;
+    max-width: 120px;
+    object-fit: contain;
+    margin: 0 auto 18px;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-feature-card h3 {
+    font-size: 16.5px;
+    font-weight: 600;
+    color: var(--iq-teal);
+    margin: 0;
+    line-height: 1.45;
+  }
+
+  /* ============ CTA ============ */
+  #iq-about-new-{{ section.id }} .iq-cta {
+    background: var(--iq-teal);
+    padding: 76px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-cta::before {
+    content: "";
+    position: absolute;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    top: -260px;
+    right: -160px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.10), transparent 70%);
+    pointer-events: none;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-cta h2 {
+    font-size: clamp(26px, 3.6vw, 40px);
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 14px;
+    position: relative;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-cta p {
+    font-size: 16px;
+    color: #cfe0e2;
+    margin: 0 0 34px;
+    position: relative;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-cta-btns {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-btn {
+    display: inline-block;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15.5px;
+    font-weight: 600;
+    padding: 15px 38px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+
+  #iq-about-new-{{ section.id }} .iq-btn-solid {
+    background: #ffffff;
+    color: var(--iq-teal);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+  }
+
+  #iq-about-new-{{ section.id }} .iq-btn-solid:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22);
+  }
+
+  #iq-about-new-{{ section.id }} .iq-btn-outline {
+    background: transparent;
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.75);
+  }
+
+  #iq-about-new-{{ section.id }} .iq-btn-outline:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: #ffffff;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 990px) {
+    #iq-about-new-{{ section.id }} .iq-story-grid {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+
+    #iq-about-new-{{ section.id }} .iq-cards-4 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 749px) {
+    #iq-about-new-{{ section.id }} .iq-hero { padding: 60px 0 52px; }
+
+    #iq-about-new-{{ section.id }} .iq-stats {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 36px;
+    }
+
+    #iq-about-new-{{ section.id }} .iq-stat {
+      padding: 20px 10px;
+      font-size: 16px;
+    }
+
+    #iq-about-new-{{ section.id }} .iq-cards-3 {
+      grid-template-columns: 1fr;
+    }
+
+    #iq-about-new-{{ section.id }} .iq-track { gap: 52px; }
+
+    #iq-about-new-{{ section.id }} .iq-track img { height: 36px; }
+
+    #iq-about-new-{{ section.id }} .iq-story,
+    #iq-about-new-{{ section.id }} .iq-products,
+    #iq-about-new-{{ section.id }} .iq-commitment,
+    #iq-about-new-{{ section.id }} .iq-values,
+    #iq-about-new-{{ section.id }} .iq-features {
+      padding: 52px 0;
+    }
+
+    #iq-about-new-{{ section.id }} .iq-cta { padding: 56px 0; }
+
+    #iq-about-new-{{ section.id }} .iq-btn {
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 560px) {
+    #iq-about-new-{{ section.id }} .iq-cards-4 {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div id="iq-about-new-{{ section.id }}" class="iq-about-new">
+
+  <!-- ================= HERO ================= -->
+  <div class="iq-hero">
+    <div class="iq-blob iq-blob-1"></div>
+    <div class="iq-blob iq-blob-2"></div>
+    <div class="iq-wrap">
+      <div class="iq-hero-inner">
+        <p class="iq-eyebrow">{% if request.locale.iso_code == 'fr' %}À propos d'Ink Quest{% else %}{{ section.settings.eyebrow }}{% endif %}</p>
+        <h1 class="iq-h1">{% if request.locale.iso_code == 'fr' %}Nous avons une mission{% else %}{{ section.settings.heading }}{% endif %}</h1>
+        <p class="iq-lead">{% if request.locale.iso_code == 'fr' %}Notre mission est de fournir une plateforme complète et conviviale qui intègre toutes les fonctions commerciales essentielles en une seule et unique solution.{% else %}{{ section.settings.hero_text }}{% endif %}</p>
+        <div class="iq-stats">
+          <div class="iq-stat">{% if request.locale.iso_code == 'fr' %}Depuis 1983{% else %}{{ section.settings.stat_1 }}{% endif %}</div>
+          <div class="iq-stat">{% if request.locale.iso_code == 'fr' %}Plus de 40 ans d'expérience{% else %}{{ section.settings.stat_2 }}{% endif %}</div>
+          <div class="iq-stat">{% if request.locale.iso_code == 'fr' %}3 entrepôts au Canada{% else %}{{ section.settings.stat_3 }}{% endif %}</div>
+          <div class="iq-stat">{% if request.locale.iso_code == 'fr' %}Couverture d'un océan à l'autre{% else %}{{ section.settings.stat_4 }}{% endif %}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TRUSTED BY ================= -->
+  <div class="iq-trusted">
+    <div class="iq-wrap iq-center">
+      <h2 class="iq-h2">{% if request.locale.iso_code == 'fr' %}Ils nous font confiance{% else %}{{ section.settings.trusted_heading }}{% endif %}</h2>
+      <p class="iq-trusted-sub">{% if request.locale.iso_code == 'fr' %}Plus de 10 000 fondateurs et propriétaires d'entreprise.{% else %}{{ section.settings.trusted_subtext }}{% endif %}</p>
+    </div>
+    <div class="iq-marquee" aria-label="Brands we carry">
+      <div class="iq-track">
+        <img src="https://inkquestca.myshopify.com/cdn/shop/files/Brother_logo_svg.png?v=1762518489" alt="Brother" loading="lazy" width="170" height="44">
+        <img src="https://inkquestca.myshopify.com/cdn/shop/files/Canon_logo_vector.png?v=1762698496" alt="Canon" loading="lazy" width="170" height="44">
+        <img src="https://inkquestca.myshopify.com/cdn/shop/files/Epson_logo_svg.png?v=1762518488" alt="Epson" loading="lazy" width="170" height="44">
+        <img src="https://inkquestca.myshopify.com/cdn/shop/files/Lexmark-primary-logo_svg.png?v=1762518488" alt="Lexmark" loading="lazy" width="170" height="44">
+        <img src="https://inkquestca.myshopify.com/cdn/shop/files/Xerox.png?v=1762965617" alt="Xerox" loading="lazy" width="170" height="44">
+        <img src="https://inkquestca.myshopify.com/cdn/shop/files/Samsung_logo_blue.png?v=1762965700" alt="Samsung" loading="lazy" width="170" height="44">
+        <img src="https://inkquestca.myshopify.com/cdn/shop/files/Pendl.png?v=1762965723" alt="Pendl" loading="lazy" width="170" height="44">
+        <img src="https://inkquestca.myshopify.com/cdn/shop/files/Brother_logo_svg.png?v=1762518489" alt="Brother" loading="lazy" aria-hidden="true" width="170" height="44">
+        <img src="https://inkquestca.myshopify.com/cdn/shop/files/Canon_logo_vector.png?v=1762698496" alt="Canon" loading="lazy" aria-hidden="true" width="170" height="44">
+        <img src="https://inkquestca.myshopify.com/cdn/shop/files/Epson_logo_svg.png?v=1762518488" alt="Epson" loading="lazy" aria-hidden="true" width="170" height="44">
+        <img src="https://inkquestca.myshopify.com/cdn/shop/files/Lexmark-primary-logo_svg.png?v=1762518488" alt="Lexmark" loading="lazy" aria-hidden="true" width="170" height="44">
+        <img src="https://inkquestca.myshopify.com/cdn/shop/files/Xerox.png?v=1762965617" alt="Xerox" loading="lazy" aria-hidden="true" width="170" height="44">
+        <img src="https://inkquestca.myshopify.com/cdn/shop/files/Samsung_logo_blue.png?v=1762965700" alt="Samsung" loading="lazy" aria-hidden="true" width="170" height="44">
+        <img src="https://inkquestca.myshopify.com/cdn/shop/files/Pendl.png?v=1762965723" alt="Pendl" loading="lazy" aria-hidden="true" width="170" height="44">
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FOUNDING STORY ================= -->
+  <div class="iq-story">
+    <div class="iq-wrap">
+      <div class="iq-story-grid">
+        <div>
+          <p class="iq-eyebrow">{% if request.locale.iso_code == 'fr' %}Notre histoire{% else %}{{ section.settings.story_eyebrow }}{% endif %}</p>
+          <h2 class="iq-h2">{% if request.locale.iso_code == 'fr' %}Notre histoire fondatrice{% else %}{{ section.settings.story_heading }}{% endif %}</h2>
+          <div style="height:18px"></div>
+          <p>{% if request.locale.iso_code == 'fr' %}Fondée en 1983, Ink Quest est une entreprise fièrement canadienne qui se consacre à fournir des fournitures d'imagerie fiables et un service client exceptionnel. Avec plus de quarante ans d'expérience, nous avons bâti notre réputation sur la confiance, la qualité et l'innovation, en soutenant les revendeurs et les entreprises à travers le pays avec les produits et les solutions dont ils ont besoin pour réussir.{% else %}{{ section.settings.story_p1 }}{% endif %}</p>
+          <p>{% if request.locale.iso_code == 'fr' %}Depuis nos bureaux et entrepôts en Alberta, en Colombie-Britannique et au Québec, nous assurons une couverture d'un océan à l'autre, garantissant un service rapide et efficace à nos partenaires partout au Canada.{% else %}{{ section.settings.story_p2 }}{% endif %}</p>
+        </div>
+        <div class="iq-locations">
+          <h3>{% if request.locale.iso_code == 'fr' %}Nos emplacements{% else %}{{ section.settings.locations_heading }}{% endif %}</h3>
+          <p>{% if request.locale.iso_code == 'fr' %}Bureaux et entrepôts au service des revendeurs partenaires partout au Canada.{% else %}{{ section.settings.locations_text }}{% endif %}</p>
+          <div class="iq-loc">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#7fe0c4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Alberta
+          </div>
+          <div class="iq-loc">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#7fe0c4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            {% if request.locale.iso_code == 'fr' %}Colombie-Britannique{% else %}British Columbia{% endif %}
+          </div>
+          <div class="iq-loc">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#7fe0c4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            {% if request.locale.iso_code == 'fr' %}Québec{% else %}Quebec{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= OUR PRODUCTS ================= -->
+  <div class="iq-products">
+    <div class="iq-wrap">
+      <div class="iq-center">
+        <p class="iq-eyebrow">{% if request.locale.iso_code == 'fr' %}Ce que nous offrons{% else %}{{ section.settings.products_eyebrow }}{% endif %}</p>
+        <h2 class="iq-h2">{% if request.locale.iso_code == 'fr' %}Nos produits{% else %}{{ section.settings.products_heading }}{% endif %}</h2>
+        <div style="height:14px"></div>
+        <p class="iq-lead">{% if request.locale.iso_code == 'fr' %}Chez Ink Quest, nous fournissons une gamme complète de produits d'imagerie pour les grandes marques, notamment Brother, Lexmark, Samsung, Epson, Okidata, Konica, Sharp, Xerox, Minolta, et Canon.{% else %}{{ section.settings.products_intro }}{% endif %}</p>
+      </div>
+      <div class="iq-cards-4">
+        <div class="iq-card">
+          <div class="iq-card-num">01</div>
+          <h3>{% if request.locale.iso_code == 'fr' %}Cartouches de marque originale{% else %}{{ section.settings.product_card1_title }}{% endif %}</h3>
+          <p>{% if request.locale.iso_code == 'fr' %}Gamme complète de produits d'imagerie de grandes marques.{% else %}{{ section.settings.product_card1_text }}{% endif %}</p>
+        </div>
+        <div class="iq-card">
+          <div class="iq-card-num">02</div>
+          <h3>{% if request.locale.iso_code == 'fr' %}Cartouches remanufacturées{% else %}{{ section.settings.product_card2_title }}{% endif %}</h3>
+          <p>{% if request.locale.iso_code == 'fr' %}Cartouches remanufacturées professionnellement par des marques de premier plan.{% else %}{{ section.settings.product_card2_text }}{% endif %}</p>
+        </div>
+        <div class="iq-card">
+          <div class="iq-card-num">03</div>
+          <h3>{% if request.locale.iso_code == 'fr' %}Gammes compatibles de haute qualité{% else %}{{ section.settings.product_card3_title }}{% endif %}</h3>
+          <p>{% if request.locale.iso_code == 'fr' %}Cartouches d'encre, rubans et toners.{% else %}{{ section.settings.product_card3_text }}{% endif %}</p>
+        </div>
+        <div class="iq-card">
+          <div class="iq-card-num">04</div>
+          <h3>{% if request.locale.iso_code == 'fr' %}Imprimantes multifonctions (MFP){% else %}{{ section.settings.product_card4_title }}{% endif %}</h3>
+          <p>{% if request.locale.iso_code == 'fr' %}Une sélection pour compléter vos solutions d'impression.{% else %}{{ section.settings.product_card4_text }}{% endif %}</p>
+        </div>
+      </div>
+      <p class="iq-closing">{% if request.locale.iso_code == 'fr' %}Grâce à notre vaste inventaire et à notre équipe compétente, nous offrons une véritable expérience d'achat unique pour tous vos besoins en matière d'imagerie.{% else %}{{ section.settings.products_closing }}{% endif %}</p>
+    </div>
+  </div>
+
+  <!-- ================= OUR COMMITMENT ================= -->
+  <div class="iq-commitment">
+    <div class="iq-wrap">
+      <div class="iq-center">
+        <p class="iq-eyebrow">{% if request.locale.iso_code == 'fr' %}Pourquoi InkQuest{% else %}{{ section.settings.commitment_eyebrow }}{% endif %}</p>
+        <h2 class="iq-h2">{% if request.locale.iso_code == 'fr' %}Notre engagement{% else %}{{ section.settings.commitment_heading }}{% endif %}</h2>
+        <div style="height:14px"></div>
+        <p class="iq-lead">{% if request.locale.iso_code == 'fr' %}Chez Ink Quest, notre mission est de rendre les affaires simples, efficaces et gratifiantes pour nos clients, nos fournisseurs et nos employés. Nous croyons aux relations à long terme fondées sur l'intégrité, la fiabilité et le succès partagé.{% else %}{{ section.settings.commitment_intro }}{% endif %}</p>
+      </div>
+      <p class="iq-priorities-label">{% if request.locale.iso_code == 'fr' %}Nos priorités clés sont les suivantes :{% else %}{{ section.settings.commitment_label }}{% endif %}</p>
+      <div class="iq-cards-4">
+        <div class="iq-commit-card">
+          <span class="iq-check"><svg viewBox="0 0 24 24" fill="none" stroke="#00404c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <h3>{% if request.locale.iso_code == 'fr' %}Service client exceptionnel{% else %}{{ section.settings.commit_card1_title }}{% endif %}</h3>
+          <p>{% if request.locale.iso_code == 'fr' %}Avec un soutien rapide et personnalisé.{% else %}{{ section.settings.commit_card1_text }}{% endif %}</p>
+        </div>
+        <div class="iq-commit-card">
+          <span class="iq-check"><svg viewBox="0 0 24 24" fill="none" stroke="#00404c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <h3>{% if request.locale.iso_code == 'fr' %}Gamme de produits diversifiée{% else %}{{ section.settings.commit_card2_title }}{% endif %}</h3>
+          <p>{% if request.locale.iso_code == 'fr' %}Adaptée aux besoins de votre entreprise.{% else %}{{ section.settings.commit_card2_text }}{% endif %}</p>
+        </div>
+        <div class="iq-commit-card">
+          <span class="iq-check"><svg viewBox="0 0 24 24" fill="none" stroke="#00404c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <h3>{% if request.locale.iso_code == 'fr' %}Prix compétitifs{% else %}{{ section.settings.commit_card3_title }}{% endif %}</h3>
+          <p>{% if request.locale.iso_code == 'fr' %}Sans compromettre la qualité.{% else %}{{ section.settings.commit_card3_text }}{% endif %}</p>
+        </div>
+        <div class="iq-commit-card">
+          <span class="iq-check"><svg viewBox="0 0 24 24" fill="none" stroke="#00404c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <h3>{% if request.locale.iso_code == 'fr' %}Logistique avancée{% else %}{{ section.settings.commit_card4_title }}{% endif %}</h3>
+          <p>{% if request.locale.iso_code == 'fr' %}Traitement efficace des commandes.{% else %}{{ section.settings.commit_card4_text }}{% endif %}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= OUR VALUES ================= -->
+  <div class="iq-values">
+    <div class="iq-wrap">
+      <div class="iq-center" style="margin-bottom:40px">
+        <p class="iq-eyebrow">{% if request.locale.iso_code == 'fr' %}Ce qui nous définit{% else %}{{ section.settings.values_eyebrow }}{% endif %}</p>
+        <h2 class="iq-h2">{% if request.locale.iso_code == 'fr' %}Nos valeurs{% else %}{{ section.settings.values_heading }}{% endif %}</h2>
+      </div>
+      <div class="iq-cards-4">
+        {% if request.locale.iso_code == 'fr' %}{% assign v1 = "Le client d'abord – Votre satisfaction est le moteur de tout ce que nous faisons." | split: '–' %}{% else %}{% assign v1 = section.settings.value_1 | split: '–' %}{% endif %}
+        <div class="iq-value-card">
+          <h3>{{ v1[0] | strip }}</h3>
+          <p>{{ v1[1] | strip }}</p>
+        </div>
+        {% if request.locale.iso_code == 'fr' %}{% assign v2 = "Intégrité – Nous opérons avec honnêteté, transparence et professionnalisme." | split: '–' %}{% else %}{% assign v2 = section.settings.value_2 | split: '–' %}{% endif %}
+        <div class="iq-value-card">
+          <h3>{{ v2[0] | strip }}</h3>
+          <p>{{ v2[1] | strip }}</p>
+        </div>
+        {% if request.locale.iso_code == 'fr' %}{% assign v3 = "Partenariat – Nous croyons en la construction de relations durables qui créent un succès mutuel." | split: '–' %}{% else %}{% assign v3 = section.settings.value_3 | split: '–' %}{% endif %}
+        <div class="iq-value-card">
+          <h3>{{ v3[0] | strip }}</h3>
+          <p>{{ v3[1] | strip }}</p>
+        </div>
+        {% if request.locale.iso_code == 'fr' %}{% assign v4 = "Excellence – Nous nous efforçons continuellement d'améliorer nos produits, nos processus et nos services." | split: '–' %}{% else %}{% assign v4 = section.settings.value_4 | split: '–' %}{% endif %}
+        <div class="iq-value-card">
+          <h3>{{ v4[0] | strip }}</h3>
+          <p>{{ v4[1] | strip }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FEATURE CARDS ================= -->
+  <div class="iq-features">
+    <div class="iq-wrap">
+      <div class="iq-center" style="margin-bottom:40px">
+        <p class="iq-eyebrow">{% if request.locale.iso_code == 'fr' %}L'avantage InkQuest{% else %}{{ section.settings.features_eyebrow }}{% endif %}</p>
+        <h2 class="iq-h2">{% if request.locale.iso_code == 'fr' %}Pourquoi les revendeurs choisissent InkQuest{% else %}{{ section.settings.features_heading }}{% endif %}</h2>
+      </div>
+      <div class="iq-cards-4">
+        <div class="iq-feature-card">
+          <img src="https://cdn.shopify.com/s/files/1/0981/0844/0757/files/Group_2b43e965-2b65-4772-a1ae-59310d88a4f4.png?v=1786643277" alt="{% if request.locale.iso_code == 'fr' %}Service client supérieur{% else %}{{ section.settings.feature_1 }}{% endif %}" loading="lazy">
+          <h3>{% if request.locale.iso_code == 'fr' %}Service client supérieur{% else %}{{ section.settings.feature_1 }}{% endif %}</h3>
+        </div>
+        <div class="iq-feature-card">
+          <img src="https://cdn.shopify.com/s/files/1/0981/0844/0757/files/Group_c87e7856-5665-47a6-8ffe-48f168ef930a.png?v=1786643271" alt="{% if request.locale.iso_code == 'fr' %}Réseau de distribution national{% else %}{{ section.settings.feature_2 }}{% endif %}" loading="lazy">
+          <h3>{% if request.locale.iso_code == 'fr' %}Réseau de distribution national{% else %}{{ section.settings.feature_2 }}{% endif %}</h3>
+        </div>
+        <div class="iq-feature-card">
+          <img src="https://cdn.shopify.com/s/files/1/0981/0844/0757/files/Vector_99ea24ca-d75c-4235-b035-c63cbbf8d4b4.png?v=1786643264" alt="{% if request.locale.iso_code == 'fr' %}Vaste catalogue de produits{% else %}{{ section.settings.feature_3 }}{% endif %}" loading="lazy">
+          <h3>{% if request.locale.iso_code == 'fr' %}Vaste catalogue de produits{% else %}{{ section.settings.feature_3 }}{% endif %}</h3>
+        </div>
+        <div class="iq-feature-card">
+          <img src="https://cdn.shopify.com/s/files/1/0981/0844/0757/files/Vector_5f26924d-4d35-4a88-a3fd-1928c1def251.png?v=1786643258" alt="{% if request.locale.iso_code == 'fr' %}Propriété et exploitation canadiennes{% else %}{{ section.settings.feature_4 }}{% endif %}" loading="lazy">
+          <h3>{% if request.locale.iso_code == 'fr' %}Propriété et exploitation canadiennes{% else %}{{ section.settings.feature_4 }}{% endif %}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= CTA ================= -->
+  <div class="iq-cta">
+    <div class="iq-wrap">
+      <h2>{% if request.locale.iso_code == 'fr' %}Prêt à grandir avec InkQuest?{% else %}{{ section.settings.cta_heading }}{% endif %}</h2>
+      {%- if section.settings.cta_text != blank -%}
+      <p>{{ section.settings.cta_text }}</p>
+      {%- endif -%}
+      <div class="iq-cta-btns">
+        <a class="iq-btn iq-btn-solid" href="{{ section.settings.cta_btn1_url }}">{% if request.locale.iso_code == 'fr' %}Devenir revendeur{% else %}{{ section.settings.cta_btn1_text }}{% endif %}</a>
+        <a class="iq-btn iq-btn-outline" href="{{ section.settings.cta_btn2_url }}">{% if request.locale.iso_code == 'fr' %}Nous contacter{% else %}{{ section.settings.cta_btn2_text }}{% endif %}</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "About Us (New Design)",
+  "tag": "section",
+  "class": "iq-about-new-section",
+  "settings": [
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "About Ink Quest" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "We\u2019re on a mission" },
+    { "type": "textarea", "id": "hero_text", "label": "Hero text", "default": "Our mission is to provide a comprehensive, user-friendly platform that integrates all essential business functions into a single." },
+    { "type": "text", "id": "stat_1", "label": "Stat 1", "default": "Since 1983" },
+    { "type": "text", "id": "stat_2", "label": "Stat 2", "default": "40+ years of experience" },
+    { "type": "text", "id": "stat_3", "label": "Stat 3", "default": "3 warehouse locations" },
+    { "type": "text", "id": "stat_4", "label": "Stat 4", "default": "Coast-to-coast coverage" },
+
+    { "type": "header", "content": "Trusted by" },
+    { "type": "text", "id": "trusted_heading", "label": "Heading", "default": "Trusted by" },
+    { "type": "text", "id": "trusted_subtext", "label": "Subtext", "default": "10,000+ founders & business owners." },
+
+    { "type": "header", "content": "Founding story" },
+    { "type": "text", "id": "story_eyebrow", "label": "Eyebrow", "default": "Our story" },
+    { "type": "text", "id": "story_heading", "label": "Heading", "default": "Our founding story" },
+    { "type": "textarea", "id": "story_p1", "label": "Paragraph 1", "default": "Founded in 1983, Ink Quest is a proudly Canadian-owned and operated company dedicated to delivering reliable imaging supplies and outstanding customer service. With over four decades of experience, we\u2019ve built our reputation on trust, quality, and innovation \u2014 supporting resellers and businesses across the country with the products and solutions they need to succeed." },
+    { "type": "textarea", "id": "story_p2", "label": "Paragraph 2", "default": "From our offices and warehouse facilities in Alberta, British Columbia, and Quebec, we provide coast-to-coast coverage, ensuring fast and efficient service for our partners throughout Canada." },
+    { "type": "text", "id": "locations_heading", "label": "Locations card heading", "default": "Our locations" },
+    { "type": "textarea", "id": "locations_text", "label": "Locations card text", "default": "Offices and warehouse facilities serving reseller partners across Canada." },
+
+    { "type": "header", "content": "Our Products" },
+    { "type": "text", "id": "products_eyebrow", "label": "Eyebrow", "default": "What we offer" },
+    { "type": "text", "id": "products_heading", "label": "Heading", "default": "Our Products" },
+    { "type": "textarea", "id": "products_intro", "label": "Intro", "default": "At Ink Quest, we supply a comprehensive range of imaging products for major brands, including Brother, Lexmark, Samsung, Epson, Okidata, Konica, Sharp, Xerox, Minolta, and Canon." },
+    { "type": "text", "id": "product_card1_title", "label": "Card 1 title", "default": "Original brand name cartridges" },
+    { "type": "textarea", "id": "product_card1_text", "label": "Card 1 text", "default": "Comprehensive range of imaging products from major brands." },
+    { "type": "text", "id": "product_card2_title", "label": "Card 2 title", "default": "Remanufactured cartridges" },
+    { "type": "textarea", "id": "product_card2_text", "label": "Card 2 text", "default": "Professionally remanufactured cartridges from leading brands." },
+    { "type": "text", "id": "product_card3_title", "label": "Card 3 title", "default": "High-quality compatible lines" },
+    { "type": "textarea", "id": "product_card3_text", "label": "Card 3 text", "default": "Of inkjets, ribbons, and toner cartridges." },
+    { "type": "text", "id": "product_card4_title", "label": "Card 4 title", "default": "Multi-function printers (MFPs)" },
+    { "type": "textarea", "id": "product_card4_text", "label": "Card 4 text", "default": "A selection to complement your printing solutions." },
+    { "type": "textarea", "id": "products_closing", "label": "Closing line", "default": "With our extensive inventory and knowledgeable team, we provide a true one-stop shopping experience for all your imaging needs." },
+
+    { "type": "header", "content": "Our Commitment" },
+    { "type": "text", "id": "commitment_eyebrow", "label": "Eyebrow", "default": "Why InkQuest" },
+    { "type": "text", "id": "commitment_heading", "label": "Heading", "default": "Our Commitment" },
+    { "type": "textarea", "id": "commitment_intro", "label": "Intro", "default": "At Ink Quest, our mission is to make business simple, efficient, and rewarding \u2014 for our customers, suppliers, and employees. We believe in long-term relationships built on integrity, reliability, and shared success." },
+    { "type": "text", "id": "commitment_label", "label": "Priorities label", "default": "Our key priorities include:" },
+    { "type": "text", "id": "commit_card1_title", "label": "Card 1 title", "default": "Exceptional customer service" },
+    { "type": "text", "id": "commit_card1_text", "label": "Card 1 text", "default": "With quick, personalized support." },
+    { "type": "text", "id": "commit_card2_title", "label": "Card 2 title", "default": "Diverse product mix" },
+    { "type": "text", "id": "commit_card2_text", "label": "Card 2 text", "default": "Tailored to your business needs." },
+    { "type": "text", "id": "commit_card3_title", "label": "Card 3 title", "default": "Competitive pricing" },
+    { "type": "text", "id": "commit_card3_text", "label": "Card 3 text", "default": "Without compromising quality." },
+    { "type": "text", "id": "commit_card4_title", "label": "Card 4 title", "default": "Advanced logistics" },
+    { "type": "text", "id": "commit_card4_text", "label": "Card 4 text", "default": "Efficient order fulfillment." },
+
+    { "type": "header", "content": "Our Values" },
+    { "type": "text", "id": "values_eyebrow", "label": "Eyebrow", "default": "What we stand for" },
+    { "type": "text", "id": "values_heading", "label": "Heading", "default": "Our Values" },
+    { "type": "text", "id": "value_1", "label": "Value 1 (Title \u2013 text)", "default": "Customer First \u2013 Your satisfaction drives everything we do." },
+    { "type": "text", "id": "value_2", "label": "Value 2 (Title \u2013 text)", "default": "Integrity \u2013 We operate with honesty, transparency, and professionalism." },
+    { "type": "text", "id": "value_3", "label": "Value 3 (Title \u2013 text)", "default": "Partnership \u2013 We believe in building lasting relationships that create mutual success." },
+    { "type": "text", "id": "value_4", "label": "Value 4 (Title \u2013 text)", "default": "Excellence \u2013 We continuously strive to improve our products, processes, and service." },
+
+    { "type": "header", "content": "Feature cards" },
+    { "type": "text", "id": "features_eyebrow", "label": "Eyebrow", "default": "The InkQuest advantage" },
+    { "type": "text", "id": "features_heading", "label": "Heading", "default": "Why resellers choose InkQuest" },
+    { "type": "text", "id": "feature_1", "label": "Feature 1", "default": "Superior Customer Service" },
+    { "type": "text", "id": "feature_2", "label": "Feature 2", "default": "National Distributor Network" },
+    { "type": "text", "id": "feature_3", "label": "Feature 3", "default": "Extensive Product Catalog" },
+    { "type": "text", "id": "feature_4", "label": "Feature 4", "default": "Canadian Owned & Operated" },
+
+    { "type": "header", "content": "Call to action" },
+    { "type": "text", "id": "cta_heading", "label": "Heading", "default": "Ready to grow with InkQuest?" },
+    { "type": "textarea", "id": "cta_text", "label": "Subtext (optional)" },
+    { "type": "text", "id": "cta_btn1_text", "label": "Button 1 text", "default": "Become a Reseller" },
+    { "type": "url", "id": "cta_btn1_url", "label": "Button 1 link" },
+    { "type": "text", "id": "cta_btn2_text", "label": "Button 2 text", "default": "Contact Us" },
+    { "type": "url", "id": "cta_btn2_url", "label": "Button 2 link" }
+  ],
+  "presets": [
+    { "name": "About Us (New Design)" }
+  ]
+}
+{% endschema %}

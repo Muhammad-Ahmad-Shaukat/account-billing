@@ -1,0 +1,372 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+.iq-howto-page{
+  --teal:#00404c; --teal-2:#005a6a; --teal-light:#e6f2f3; --teal-mid:#0e7a8a;
+  --bg:#ffffff; --bg-soft:#f4f7f7; --bg-card:#ffffff; --ink:#101d20; --ink-2:#3d4f54; --ink-3:#6b7d82;
+  --line:#dde8e9; --amber:#e67e22; --amber-bg:#fef3e8; --green:#1a7a4c; --green-bg:#e8f5ee;
+  --red:#b3372a; --red-bg:#fbeae8;
+  --radius:16px; --shadow:0 8px 30px rgba(0,64,76,.08);
+}
+@media (prefers-color-scheme: dark){.iq-howto-page{ --bg:#0d1a1d; --bg-soft:#112529; --bg-card:#16292e; --ink:#edf4f5; --ink-2:#b9cdd1; --ink-3:#8aa0a6; --line:#234046; --teal-light:#16373d; --amber-bg:#2f2417; --green-bg:#163326; --red-bg:#331d1a; --shadow:0 8px 30px rgba(0,0,0,.35); }}
+.iq-howto-page *{box-sizing:border-box}
+.iq-howto-page{scroll-behavior:smooth}
+.iq-howto-page{margin:0;font-family:"Plus Jakarta Sans",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+.iq-howto-page a{color:var(--teal-2);text-decoration:none}
+@media(prefers-color-scheme:dark){.iq-howto-page a{color:#7fd1de}}
+.iq-howto-page img{max-width:100%;display:block}
+.iq-howto-page .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.iq-howto-page .section-head{padding:44px 0 8px}
+.iq-howto-page .kicker{font-size:12px;letter-spacing:.16em;font-weight:800;text-transform:uppercase;color:var(--teal-mid);display:flex;align-items:center;gap:10px}
+.iq-howto-page .kicker::before{content:"";width:28px;height:2px;background:var(--amber);display:block}
+.iq-howto-page h1{font-family:"Source Serif 4",serif;font-size:clamp(34px,5vw,52px);line-height:1.05;margin:12px 0 12px;letter-spacing:-.02em}
+.iq-howto-page .lede{font-size:18px;color:var(--ink-2);max-width:720px;margin:0}
+.iq-howto-page .lede strong{color:var(--ink)}
+.iq-howto-page .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:28px 0 22px}
+.iq-howto-page .pills{display:flex;flex-wrap:wrap;gap:8px}
+.iq-howto-page .pill{border:1.5px solid var(--line);background:var(--bg-card);color:var(--ink-2);padding:8px 14px;border-radius:999px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer}
+.iq-howto-page .pill.active{background:var(--teal);border-color:var(--teal);color:#fff}
+.iq-howto-page .search{position:relative;min-width:240px;flex:0 1 300px}
+.iq-howto-page .search input{width:100%;padding:11px 14px 11px 38px;border:1.5px solid var(--line);border-radius:999px;background:var(--bg-card);color:var(--ink);font:inherit;font-size:14px}
+.iq-howto-page .search span{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.6}
+.iq-howto-page .featured{display:grid;grid-template-columns:1.15fr .85fr;background:var(--bg-card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:22px}
+.iq-howto-page .featured img{width:100%;height:100%;object-fit:cover;min-height:320px}
+.iq-howto-page .featured-body{padding:28px 28px 24px;display:flex;flex-direction:column}
+.iq-howto-page .tag{display:inline-flex;align-self:flex-start;font-size:11px;letter-spacing:.12em;font-weight:800;text-transform:uppercase;padding:6px 9px;border-radius:999px;background:var(--teal-light);color:var(--teal)}
+@media(prefers-color-scheme:dark){.iq-howto-page .tag{color:#a8e0e8}}
+.iq-howto-page .tag.amber{background:var(--amber-bg);color:#9a4a0a}
+.iq-howto-page .tag.green{background:var(--green-bg);color:var(--green)}
+@media(prefers-color-scheme:dark){.iq-howto-page .tag.amber{color:#ffb26b}
+.iq-howto-page .tag.green{color:#7be0a8}}
+.iq-howto-page .featured h2{font-size:28px;line-height:1.15;margin:14px 0 10px;letter-spacing:-.02em}
+.iq-howto-page .featured p{color:var(--ink-2);margin:0 0 16px}
+.iq-howto-page .meta{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--ink-3);margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
+.iq-howto-page .read-link{font-weight:800;color:var(--teal);cursor:pointer;background:none;border:0;font:inherit;padding:0;text-align:left}
+@media(prefers-color-scheme:dark){.iq-howto-page .read-link{color:#7fd1de}}
+.iq-howto-page .read-link:hover{text-decoration:underline}
+.iq-howto-page .steps-chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:var(--teal-mid);background:var(--teal-light);border-radius:999px;padding:4px 10px}
+@media(prefers-color-scheme:dark){.iq-howto-page .steps-chip{color:#a8e0e8}}
+.iq-howto-page .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.iq-howto-page .card{background:var(--bg-card);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s, box-shadow .15s}
+.iq-howto-page .card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.iq-howto-page .card .thumb{height:178px;overflow:hidden;background:var(--bg-soft)}
+.iq-howto-page .card .thumb img{width:100%;height:100%;object-fit:cover}
+.iq-howto-page .card .thumb.icon-thumb{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--teal-light),var(--bg-soft))}
+.iq-howto-page .card .thumb.icon-thumb svg{width:56px;height:56px;stroke:var(--teal-mid);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.iq-howto-page .card-body{padding:18px;display:flex;flex-direction:column;flex:1}
+.iq-howto-page .card h3{font-size:17.5px;line-height:1.3;margin:10px 0 8px;letter-spacing:-.01em}
+.iq-howto-page .card p{font-size:14.5px;color:var(--ink-2);margin:0 0 14px}
+.iq-howto-page .card .meta{font-size:12.5px}
+.iq-howto-page .card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.iq-howto-page .btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#fff !important;padding:13px 22px;border-radius:999px;font-weight:800;font-size:14.5px;border:0;cursor:pointer}
+.iq-howto-page .btn.secondary{background:transparent;color:var(--teal) !important;border:1.5px solid var(--line)}
+@media(prefers-color-scheme:dark){.iq-howto-page .btn.secondary{color:#edf4f5 !important}}
+.iq-howto-page .lower{display:grid;grid-template-columns:1.6fr .9fr;gap:18px;margin:26px 0}
+.iq-howto-page .panel{background:var(--bg-soft);border:1px solid var(--line);border-radius:18px;padding:22px}
+.iq-howto-page .panel h3{margin:0 0 6px;font-size:20px}
+.iq-howto-page .panel p.sub{color:var(--ink-2);font-size:14.5px;margin:0 0 16px}
+.iq-howto-page .calc-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.iq-howto-page label{font-size:12.5px;font-weight:700;letter-spacing:.02em;color:var(--ink-2);display:block;margin-bottom:6px}
+.iq-howto-page input[type=number], .iq-howto-page select{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg-card);color:var(--ink);font:inherit}
+.iq-howto-page .calc-result{margin-top:16px;background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;text-align:center}
+.iq-howto-page .calc-result b{font-size:22px;display:block;line-height:1.1}
+.iq-howto-page .calc-result span{font-size:12px;color:var(--ink-3);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.iq-howto-page .calc-status{margin-top:12px;border-radius:12px;padding:12px 14px;font-size:14.5px;font-weight:700;display:none}
+.iq-howto-page .calc-status.show{display:block}
+.iq-howto-page .calc-status.ok{background:var(--green-bg);color:var(--green)}
+.iq-howto-page .calc-status.low{background:var(--amber-bg);color:#9a4a0a}
+.iq-howto-page .calc-status.now{background:var(--red-bg);color:var(--red)}
+@media(prefers-color-scheme:dark){.iq-howto-page .calc-status.low{color:#ffb26b}
+.iq-howto-page .calc-status.now{color:#ff9d8f}
+.iq-howto-page .calc-status.ok{color:#7be0a8}}
+.iq-howto-page .calc-note{font-size:12.5px;color:var(--ink-3);margin-top:10px}
+.iq-howto-page .topics{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
+.iq-howto-page .topics li{padding:12px 0;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
+.iq-howto-page .topics li:last-child{border:0}
+.iq-howto-page .topics .num{width:28px;height:28px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;margin-top:2px}
+.iq-howto-page .topics b{font-size:14.5px;line-height:1.35;display:block}
+.iq-howto-page .topics small{color:var(--ink-3)}
+.iq-howto-page .topics button{background:none;border:0;font:inherit;padding:0;text-align:left;cursor:pointer;color:inherit}
+.iq-howto-page .topics button:hover b{text-decoration:underline}
+.iq-howto-page .plays{margin:8px 0 26px;border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;background:var(--bg-card)}
+.iq-howto-page .plays strong{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.iq-howto-page .plays span{font-weight:700;font-size:14.5px}
+.iq-howto-page dialog{border:0;padding:0;max-width:760px;width:calc(100% - 28px);max-height:88vh;border-radius:20px;background:var(--bg);color:var(--ink);box-shadow:0 24px 80px rgba(0,0,0,.3)}
+.iq-howto-page dialog::backdrop{background:rgba(0,32,38,.6);backdrop-filter:blur(3px)}
+.iq-howto-page .modal-head{position:sticky;top:0;background:var(--bg);padding:18px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;align-items:flex-start;z-index:2}
+.iq-howto-page .modal-head h2{margin:6px 0 4px;font-size:24px;line-height:1.2}
+.iq-howto-page .close{border:1.5px solid var(--line);background:var(--bg-card);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);flex-shrink:0}
+.iq-howto-page .modal-body{padding:22px 24px 30px;font-size:16px;color:var(--ink-2)}
+.iq-howto-page .modal-body h4{color:var(--ink);margin:22px 0 8px;font-size:17px}
+.iq-howto-page .modal-body ul{padding-left:20px}
+.iq-howto-page .modal-body li{margin:6px 0}
+.iq-howto-page .modal-body table{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0}
+.iq-howto-page .modal-body th, .iq-howto-page .modal-body td{border:1px solid var(--line);padding:9px 10px;text-align:left}
+.iq-howto-page .modal-body th{background:var(--bg-soft)}
+.iq-howto-page .callout{background:var(--teal-light);border-radius:12px;padding:14px 16px;margin:16px 0;font-size:14.5px}
+.iq-howto-page ol.steps{list-style:none;counter-reset:step;margin:14px 0;padding:0}
+.iq-howto-page ol.steps>li{counter-increment:step;position:relative;padding:0 0 18px 52px;margin:0}
+.iq-howto-page ol.steps>li::before{content:counter(step);position:absolute;left:0;top:0;width:36px;height:36px;border-radius:50%;background:var(--teal);color:#fff;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center}
+.iq-howto-page ol.steps>li::after{content:"";position:absolute;left:17.5px;top:42px;bottom:2px;width:2px;background:var(--line)}
+.iq-howto-page ol.steps>li:last-child::after{display:none}
+.iq-howto-page ol.steps>li b.step-t{display:block;color:var(--ink);font-size:16.5px;margin-bottom:2px}
+.iq-howto-page ol.steps>li p{margin:0}
+.iq-howto-page footer{padding:22px 0 36px;color:var(--ink-3);font-size:13.5px;border-top:1px solid var(--line)}
+.iq-howto-page .empty{display:none;text-align:center;padding:36px;border:1px dashed var(--line);border-radius:16px;color:var(--ink-3)}
+@media(max-width:900px){.iq-howto-page .grid{grid-template-columns:1fr 1fr}
+.iq-howto-page .featured, .iq-howto-page .lower{grid-template-columns:1fr}
+.iq-howto-page .featured img{min-height:220px}}
+@media(max-width:560px){.iq-howto-page .grid{grid-template-columns:1fr}
+.iq-howto-page .calc-row{grid-template-columns:1fr}
+.iq-howto-page .calc-result{grid-template-columns:1fr}
+.iq-howto-page .toolbar{flex-direction:column;align-items:stretch}
+.iq-howto-page .search{flex:1}}
+@media(prefers-reduced-motion:reduce){.iq-howto-page *{transition:none !important;scroll-behavior:auto !important}}
+</style>
+<div class="iq-howto-page">
+<main class="wrap">
+  <!-- SECTION HEADER -->
+  <header class="section-head">
+    <div class="kicker">For Resellers • Learn by Doing</div>
+    <h1>How-To Guides</h1>
+    <p class="lede">Step-by-step resources for smarter inventory and print management. <strong>Every guide is a walkthrough, not an essay</strong> — numbered steps, the tools you need before you start, and the check that tells you it worked. Built for the counter, the stockroom, and the customer’s print room.</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="pills" id="pills">
+      <button class="pill active" data-filter="all">All Guides</button>
+      <button class="pill" data-filter="inventory">Inventory</button>
+      <button class="pill" data-filter="print">Print Management</button>
+      <button class="pill" data-filter="cartridge">Cartridges &amp; Drums</button>
+      <button class="pill" data-filter="fix">Fix It Fast</button>
+    </div>
+    <div class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Search guides — e.g. reorder point, jam, drum, label…" aria-label="Search guides"></div>
+  </div>
+
+  <!-- FEATURED -->
+  <article class="featured article" data-cat="inventory" data-search="inventory reorder point stock count 90 day sales velocity cycle count shelf par level sku dead stock">
+    <img src="{{ 'how-to-guides-1.webp' | asset_url }}" alt="Hand sliding a toner cartridge into a colour laser printer during a step-by-step cartridge change">
+    <div class="featured-body">
+      <span class="tag">Featured • Inventory</span>
+      <h2>Run Your First Full Stock Count — and Turn It Into Reorder Points That Work</h2>
+      <p>Most stockrooms run on memory and hope. This walkthrough takes you from a one-afternoon count to a shelf where every fast mover has a reorder point, a par level, and a label — so “are we out of TN-760s?” never gets asked again.</p>
+      <button class="read-link" onclick="openGuide('stockcount')">Open the walkthrough →</button>
+      <div class="meta"><span>8 steps</span><span>Oct 12, 2026</span><span>≈ 1 afternoon</span><span>Difficulty: Starter</span></div>
+    </div>
+  </article>
+
+  
+
+  <!-- GRID -->
+  <section class="grid" id="grid">
+    <article class="card article" data-cat="inventory" data-search="par level label shelf bin stockroom customer spare cartridge organize">
+      <div class="thumb"><img src="{{ 'how-to-guides-2.webp' | asset_url }}" alt="Warehouse shelving rows stacked with labelled stock boxes"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="tag">Inventory</span><span class="steps-chip">6 steps</span></div>
+        <h3>Set Up Par Levels &amp; Shelf Labels So Anyone Can Find — and Count — Anything</h3>
+        <p>One cartridge in the printer, one on the shelf, one on order. The par-level system, the label format that ends “where does this go?”, and the two-minute weekly check that keeps it true.</p>
+        <button class="read-link" onclick="openGuide('parlevels')">Open the walkthrough →</button>
+        <div class="meta"><span>Oct 8, 2026</span><span>≈ 1 hour</span><span>Starter</span></div>
+      </div>
+    </article>
+
+    <article class="card article" data-cat="print" data-search="fleet audit map printer inventory walk building models serial cost per page discover devices">
+      <div class="thumb"><img src="{{ 'how-to-guides-3.webp' | asset_url }}" alt="Row of office multifunction printers making up a managed print fleet"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="tag amber">Print Management</span><span class="steps-chip">7 steps</span></div>
+        <h3>Audit a Customer’s Printer Fleet in One Visit: The Walk, the Sheet, the Map</h3>
+        <p>You can’t manage what you haven’t counted. A one-visit method to record every printer, its cartridge, and its rough volume — the fleet map every quote, par level, and service offer starts from.</p>
+        <button class="read-link" onclick="openGuide('fleetaudit')">Open the walkthrough →</button>
+        <div class="meta"><span>Oct 2, 2026</span><span>≈ 45 min per site</span><span>Starter</span></div>
+      </div>
+    </article>
+
+    <article class="card article" data-cat="cartridge" data-search="replace toner cartridge change swap install seal rocking shake mess clean hands steps">
+      <div class="thumb"><img src="{{ 'how-to-guides-4.webp' | asset_url }}" alt="Close-up of hands fitting a colour toner cartridge into an open laser printer"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="tag">Cartridges &amp; Drums</span><span class="steps-chip">7 steps</span></div>
+        <h3>Change a Toner Cartridge Cleanly, Every Time — the Counter Demo Your Customers Copy</h3>
+        <p>The two-minute swap done right: the rock that evens the toner, the seal pull that doesn’t tear, and the test page that proves it. Teach it once and customers stop calling mid-panic.</p>
+        <button class="read-link" onclick="openGuide('tonerswap')">Open the walkthrough →</button>
+        <div class="meta"><span>Sep 25, 2026</span><span>≈ 2 minutes</span><span>Starter</span></div>
+      </div>
+    </article>
+
+    <article class="card article only-full" data-cat="cartridge" data-search="drum unit replace reset counter brother dr730 dr420 imaging unit streaks faded warning light">
+      <div class="thumb icon-thumb" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3"/></svg></div>
+      <div class="card-body">
+        <div class="card-top"><span class="tag">Cartridges &amp; Drums</span><span class="steps-chip">6 steps</span></div>
+        <h3>Replace a Drum Unit and Reset the Counter — Without the Callback</h3>
+        <p>The drum light that won’t clear is almost never a faulty drum. The swap sequence, the model-specific reset, and the corona-wire clean that fixes “new drum, same streaks.”</p>
+        <button class="read-link" onclick="openGuide('drum')">Open the walkthrough →</button>
+        <div class="meta"><span>Sep 18, 2026</span><span>≈ 10 minutes</span><span>Intermediate</span></div>
+      </div>
+    </article>
+
+    <article class="card article only-full" data-cat="fix" data-search="troubleshoot streaks faded prints ghosting blank pages spots print quality diagnose fix">
+      <div class="thumb"><img src="{{ 'how-to-guides-5.webp' | asset_url }}" alt="Technician servicing an open multifunction printer on site with a tool kit"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="tag green">Fix It Fast</span><span class="steps-chip">6 steps</span></div>
+        <h3>Diagnose Streaks, Fading &amp; Ghosting From One Test Page</h3>
+        <p>Most print-quality complaints are readable: the defect on the page names the part. Print the test page, measure the repeat, and know whether it’s the cartridge, the drum, or the fuser — before you swap anything.</p>
+        <button class="read-link" onclick="openGuide('diagnose')">Open the walkthrough →</button>
+        <div class="meta"><span>Sep 11, 2026</span><span>≈ 15 minutes</span><span>Intermediate</span></div>
+      </div>
+    </article>
+
+    <article class="card article only-full" data-cat="print" data-search="meter read cost per page report quarterly review spreadsheet pages volume calculate customer report">
+      <div class="thumb icon-thumb" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M21 20H3"/><path d="M4 10l6-6 5 3 4-4"/></svg></div>
+      <div class="card-body">
+        <div class="card-top"><span class="tag amber">Print Management</span><span class="steps-chip">6 steps</span></div>
+        <h3>Take Meter Reads &amp; Build a Cost-Per-Page Report a Customer Actually Reads</h3>
+        <p>Configuration page in hand, spreadsheet open: capture the counters, do the one division that matters, and turn it into a one-page quarterly report that renews accounts by itself.</p>
+        <button class="read-link" onclick="openGuide('meterreads')">Open the walkthrough →</button>
+        <div class="meta"><span>Sep 4, 2026</span><span>≈ 30 min per account</span><span>Intermediate</span></div>
+      </div>
+    </article>
+
+    <article class="card article only-full" data-cat="fix" data-search="paper jam clear safely torn sheet rollers fuser path remove stuck feed misfeed">
+      <div class="thumb icon-thumb" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h6M9 15.5l4-1 2 2.5"/></svg></div>
+      <div class="card-body">
+        <div class="card-top"><span class="tag green">Fix It Fast</span><span class="steps-chip">6 steps</span></div>
+        <h3>Clear a Paper Jam Without Tearing the Sheet — or Damaging the Fuser</h3>
+        <p>Most jam damage happens during the rescue, not the jam. The pull direction that matters, where the torn corner hides, and the two checks that stop the same jam coming back tomorrow.</p>
+        <button class="read-link" onclick="openGuide('jam')">Open the walkthrough →</button>
+        <div class="meta"><span>Aug 28, 2026</span><span>≈ 5 minutes</span><span>Starter</span></div>
+      </div>
+    </article>
+  </section>
+
+  <div class="empty" id="emptyState">No guides match that search. Try “reorder point”, “drum”, or “jam”.</div>
+
+  <!-- LOWER: reorder-point tool + start-here paths -->
+  <section class="lower only-full">
+    <div class="panel">
+      <h3>Try it: Reorder-Point Calculator</h3>
+      <p class="sub">The math from the featured guide, live. Enter one SKU’s numbers and see its days of cover, its reorder point, and how many to order — using your own sales, not a rule of thumb.</p>
+      <div class="calc-row">
+        <div><label>Average daily sales (units)</label><input type="number" id="dailySales" value="0.8" min="0" step="0.1"></div>
+        <div><label>Stock on hand (units)</label><input type="number" id="onHand" value="14" min="0" step="1"></div>
+        <div><label>Supplier lead time (days)</label><input type="number" id="leadTime" value="4" min="0" step="1"></div>
+        <div><label>Safety buffer (days)</label><input type="number" id="safetyDays" value="5" min="0" step="1"></div>
+      </div>
+      <div class="calc-result">
+        <div><span>Days of cover</span><b id="coverOut">18</b></div>
+        <div><span>Reorder point</span><b id="pointOut">7 units</b></div>
+        <div><span>Order now qty</span><b id="qtyOut">0</b></div>
+      </div>
+      <div class="calc-status" id="calcStatus" role="status"></div>
+      <p class="calc-note">Reorder point = average daily sales × (lead time + safety days). Suggested order quantity tops you back up to the reorder point — round up to case packs where your supplier requires it. Worked example: the featured guide runs these same numbers across a full shelf.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Start Here: Pick Your Path</h3>
+      <p class="sub">New to the guides? Each path is a short sequence — do them in order and each one makes the next easier.</p>
+      <ul class="topics">
+        <li><span class="num">1</span><div><button onclick="openGuide('stockcount')"><b>Stockroom in a day</b><small>Full count → reorder points → par levels &amp; labels (Guides 1 + 2)</small></button></div></li>
+        <li><span class="num">2</span><div><button onclick="openGuide('fleetaudit')"><b>Know the fleet</b><small>Fleet audit in one visit → meter reads &amp; cost-per-page reports (Guides 3 + 7)</small></button></div></li>
+        <li><span class="num">3</span><div><button onclick="openGuide('tonerswap')"><b>Counter confidence</b><small>Clean toner swap → drum replacement &amp; reset (Guides 4 + 5)</small></button></div></li>
+        <li><span class="num">4</span><div><button onclick="openGuide('diagnose')"><b>First-call fixes</b><small>Read a test page → clear jams without damage (Guides 6 + 8)</small></button></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="plays only-full">
+    <strong>Guide topics</strong>
+    <span>Reorder points</span><span>Par levels</span><span>Fleet audits</span><span>Meter reads</span><span>Drum resets</span><span>Jam clearing</span>
+  </div>
+
+  <footer>
+    
+    <p>Ink Quest • Reseller-only ink &amp; toner • Warehouses in AB, BC &amp; QC • Guides reflect common practice for mainstream Brother, HP, Canon, Lexmark, and Epson devices — menu names and reset sequences vary by model, so confirm against your printer’s manual before servicing a customer’s machine.</p>
+  </footer>
+</main>
+
+<!-- GUIDE READER -->
+<dialog id="reader" aria-labelledby="readerTitle">
+  <div class="modal-head">
+    <div><span class="tag" id="readerTag">Guide</span><h2 id="readerTitle"></h2><div style="font-size:13px;color:var(--ink-3)" id="readerMeta"></div></div>
+    <button class="close" onclick="document.getElementById('reader').close()" aria-label="Close guide">✕</button>
+  </div>
+  <div class="modal-body" id="readerBody"></div>
+</dialog>
+</div>
+<script>
+var GUIDES = {
+  stockcount:{tag:"Inventory",title:"Run Your First Full Stock Count — and Turn It Into Reorder Points That Work",meta:"Oct 12, 2026 • 8 steps • ≈ 1 afternoon • Difficulty: Starter",body:"<p>A reorder point is only as good as the count underneath it. This walkthrough does both in one pass: an accurate shelf count first, then the simple sales math that turns counts into ‘order now’ triggers. Budget one quiet afternoon; you’ll need a clipboard or tablet, shelf labels, and your last 90 days of sales by SKU.</p><h4>Before you start</h4><ul><li>Sales report: units sold per SKU, last 90 days.</li><li>Supplier lead times for your main lines (days from order to shelf).</li><li>Labels and a marker — you’ll mark par levels as you go.</li></ul><h4>The walkthrough</h4><ol class='steps'><li><b class='step-t'>Freeze the shelf</b><p>Pick a low-traffic window and pause picking for the count. Stock that moves mid-count is how counts — and every reorder point built on them — go wrong.</p></li><li><b class='step-t'>Count by location, not by list</b><p>Walk shelf by shelf and write down what is physically there, including the open box on the counter and the unit in the demo printer. Count what exists, not what the system says should exist.</p></li><li><b class='step-t'>Reconcile and investigate the gaps</b><p>Compare count to system. Small gaps are picking errors; a gap on a high-value cartridge is worth ten minutes of questions now, not a surprise write-off later. Adjust the system to the count — the shelf is the truth.</p></li><li><b class='step-t'>Calculate average daily sales per SKU</b><p>Units sold in 90 days ÷ 90. A cartridge that sold 72 units runs at 0.8/day. Do this for every SKU you stock; skip anything with no sales history and handle it in Step 7.</p></li><li><b class='step-t'>Set the reorder point</b><p><strong>Reorder point = average daily sales × (lead time + safety days).</strong> Example: 0.8/day × (4 days lead + 5 safety) = 7.2 → round up to 8. When the shelf hits 8, the order goes in — no judgement call required. Try your own numbers in the calculator on this page.</p></li><li><b class='step-t'>Mark it on the shelf</b><p>Write the reorder point on the bin label (‘Reorder at 8’). A trigger nobody can see is a trigger nobody pulls. The person who notices stock is low is usually not the person who set the number.</p></li><li><b class='step-t'>Deal with the zeros</b><p>Any SKU with stock on hand and zero sales in 90 days gets a decision today: return it, bundle it, mark it down deliberately, or consciously keep one as a service spare. What it doesn’t get is a reorder point.</p></li><li><b class='step-t'>Switch to cycle counts</b><p>Never do this full count again. Count a few shelves each week on rotation — every SKU gets touched monthly, drift gets caught while it’s small, and next year’s ‘big count’ is just another Tuesday.</p></li></ol><div class='callout'><strong>The check that it worked:</strong> pick your five fastest movers. For each one you should be able to say, from the label alone, how many are on the shelf and at what number you reorder. If you can, the system is live.</div>"},
+  parlevels:{tag:"Inventory",title:"Set Up Par Levels & Shelf Labels So Anyone Can Find — and Count — Anything",meta:"Oct 8, 2026 • 6 steps • ≈ 1 hour • Difficulty: Starter",body:"<p>Par level is the stockroom version of a full tank: the number that means ‘enough’. Set it for your own shelves first; the same system, offered to customers for their supply cupboard, is one of the easiest service wins a reseller can hand an account. You’ll need labels, a marker, and your reorder points from the stock-count guide.</p><h4>The walkthrough</h4><ol class='steps'><li><b class='step-t'>Pick the SKUs that earn a par level</b><p>Fast movers and anything a customer would call an emergency when it runs out. Slow, order-on-demand items don’t need pars — they need a note that says exactly that.</p></li><li><b class='step-t'>Set par = one full cycle of demand</b><p>A working formula: <strong>par = average daily sales × (lead time + safety days + review days)</strong>, where review days is how often you check (weekly = 7). It’s the reorder point plus what you’ll sell before the next check.</p></li><li><b class='step-t'>Write the label in the order eyes need it</b><p>Cartridge code big (‘TN-760’), printer family under it, then two numbers: ‘PAR 12 • REORDER AT 8’. Anyone — a new hire, a customer’s office manager — should be able to read the shelf without asking you.</p></li><li><b class='step-t'>One SKU, one home</b><p>Every cartridge lives in exactly one labelled spot. Overflow goes in a marked overflow area, never ‘wherever it fits’. Split stock is how a store runs out of a cartridge it owns three of.</p></li><li><b class='step-t'>Do the two-minute weekly check</b><p>Walk the fast-mover shelf once a week. Anything at or below its reorder number goes on the order list — that’s the whole job. Two minutes, same time each week, no exceptions during busy season; busy season is the point.</p></li><li><b class='step-t'>Set pars at the customer’s site the same way</b><p>For accounts on standing orders: one in the printer, one on their shelf is par 2 for most offices. Label their cupboard shelf with the cartridge code and your phone number. When they can see ‘one left’, they call before the emergency, not during it.</p></li></ol><div class='callout'><strong>The check that it worked:</strong> ask someone who didn’t set it up to find and count three random SKUs. Under a minute each, with no help from you, means the labels are doing their job.</div>"},
+  fleetaudit:{tag:"Print Management",title:"Audit a Customer’s Printer Fleet in One Visit: The Walk, the Sheet, the Map",meta:"Oct 2, 2026 • 7 steps • ≈ 45 min per site • Difficulty: Starter",body:"<p>Every managed-print conversation, quote, and par-level offer starts from the same artifact: an accurate list of what the customer actually prints on. This is the one-visit method. Bring a phone (camera + notes), a pen, and this step list — no special software required.</p><h4>The walkthrough</h4><ol class='steps'><li><b class='step-t'>Start at reception, walk a loop</b><p>Printers hide in offices, back rooms, and beside the person who ‘just prints labels’. Walk a full loop of the site and note every device — including the dusty one nobody admits to using. It still consumes cartridges someone buys.</p></li><li><b class='step-t'>Photograph the model plate</b><p>For each printer, photo the model/serial label (usually rear or inside the front door). A photo beats handwriting: no transposed digits, and you have the serial for warranty and service history later.</p></li><li><b class='step-t'>Open it and note the cartridge code</b><p>Record the exact cartridge or bottle code in the machine — not what the customer thinks it takes. Note whether it’s standard or high yield, and how many spares are on their shelf.</p></li><li><b class='step-t'>Print or read the meter</b><p>Print the configuration / supplies status page (menu → Reports on most models) and photo it. The total page counter is your volume baseline; the supplies percentages tell you what runs out first.</p></li><li><b class='step-t'>Ask the three questions per device</b><p>Who uses it? What do they print? What annoys them about it? The answers sort the fleet into ‘fine’, ‘hungry’, and ‘replace soon’ faster than any spec sheet — and the annoyances are your service openings.</p></li><li><b class='step-t'>Build the fleet map the same day</b><p>One row per printer: location, model, serial, cartridge code, spare on shelf, meter read, notes. Same day, while the walk is fresh — a map finished next week is a map with guesses in it.</p></li><li><b class='step-t'>Leave a copy, keep the original</b><p>Send the customer the clean version. It’s genuinely useful to them, it proves the visit produced something, and it quietly establishes that you — not a competitor — hold the record of their fleet.</p></li></ol><table><tr><th>Fleet map column</th><th>Why it earns its place</th></tr><tr><td>Cartridge code</td><td>Drives par levels and standing orders</td></tr><tr><td>Meter read + date</td><td>Baseline for cost-per-page at the next read</td></tr><tr><td>Spares on shelf</td><td>Shows what they’ll need before your next visit</td></tr><tr><td>‘Annoyance’ note</td><td>Your follow-up call writes itself</td></tr></table><div class='callout'><strong>The check that it worked:</strong> from the map alone, you can answer ‘what does the printer in accounts take, and when will it run out?’ for every device on site. If yes, every other guide in this section gets easier.</div>"},
+  tonerswap:{tag:"Cartridges & Drums",title:"Change a Toner Cartridge Cleanly, Every Time — the Counter Demo Your Customers Copy",meta:"Sep 25, 2026 • 7 steps • ≈ 2 minutes • Difficulty: Starter",body:"<p>It’s the most common task in printing and the one done worst — usually rushed, mid-panic, with the old cartridge dripping on a desk. Done properly it takes two minutes and zero mess. This is the sequence to demo at the counter and to walk customers through on the phone.</p><h4>Before you start</h4><ul><li>New cartridge, still sealed. A sheet of scrap paper to rest the old cartridge on — never on the desk, never on documents.</li><li>Know the difference for your model: some printers (most Brother) use a separate drum the cartridge clicks into; some (most HP/Canon) are all-in-one. The steps below flag where they split.</li></ul><h4>The walkthrough</h4><ol class='steps'><li><b class='step-t'>Print a test page first</b><p>If the printer still prints, run one page before the swap. It’s your ‘before’ sample — if quality doesn’t improve after the change, the cartridge was never the problem and you’ve saved a good cartridge from the bin.</p></li><li><b class='step-t'>Power on, open up, wait for the fuser</b><p>Leave the printer on (most models position the cartridge for removal). Open the front cover or top. If the machine was just printing heavily, give the fuser area a minute — it’s the one part that can burn you.</p></li><li><b class='step-t'>Lift the old cartridge straight out</b><p>By its handle, level, no tipping. Straight onto the scrap paper. On drum-separate models, press the release lever and lift the cartridge out of the drum unit, leaving the drum in the printer.</p></li><li><b class='step-t'>Rock the new cartridge — don’t shake it</b><p>Out of the box, holding it level, rock it gently side to side five or six times. This evens the toner inside. Hard shaking compacts toner at one end and causes the light-first-pages complaint that comes back as a ‘defective’ return.</p></li><li><b class='step-t'>Pull the seal in one straight line</b><p>Remove any orange clips or tabs, then pull the sealing tape straight out horizontally — not up, not at an angle. A torn seal left inside is the top cause of a brand-new cartridge printing blank streaks.</p></li><li><b class='step-t'>Slide it in until it clicks</b><p>Align with the rails or guides and push firmly until it seats with a click. A cartridge 95% seated prints 0% well. Close the cover and let the printer cycle — it’s calibrating, not broken.</p></li><li><b class='step-t'>Print the test page again and compare</b><p>Same page as Step 1. Even, full coverage, no background shading. Bag the old cartridge (the new one’s box works) for return or recycling — and note the date on the customer’s fleet map if you keep one.</p></li></ol><div class='callout'><strong>If the new cartridge prints light:</strong> remove it, rock it again, reseat it. Still light? Check the printer’s toner-save / EcoMode setting before blaming the cartridge — it’s the culprit surprisingly often.</div>"},
+  drum:{tag:"Cartridges & Drums",title:"Replace a Drum Unit and Reset the Counter — Without the Callback",meta:"Sep 18, 2026 • 6 steps • ≈ 10 minutes • Difficulty: Intermediate",body:"<p>On printers with a separate drum (Brother’s TN/DR system is the common one), the drum outlives several toner cartridges — and when it’s replaced, the printer doesn’t know unless you tell it. Skip the reset and the ‘replace drum’ warning stays on, the customer calls, and a good install becomes a callback. Model menus vary slightly; the sequence below is the pattern, with the common Brother path as the example.</p><h4>The walkthrough</h4><ol class='steps'><li><b class='step-t'>Confirm it’s really the drum</b><p>Drum symptoms: repeating marks down the page at a fixed interval, overall background greying, or print that stays poor with a known-good toner. If a fresh toner fixed it, it wasn’t the drum — don’t sell one.</p></li><li><b class='step-t'>Power on, open the front cover</b><p>Leave the machine on — the reset sequence needs it. Pull the drum-and-toner assembly out as one unit and set it on scrap paper.</p></li><li><b class='step-t'>Move the toner to the new drum</b><p>Release the old cartridge from the old drum (green lever on Brother units), click it into the new drum until it locks. Handle the new drum by its edges — the green photosensitive surface in the middle doesn’t forgive fingerprints or bright light, so work promptly and don’t set it face-down.</p></li><li><b class='step-t'>Clean the corona wire</b><p>Slide the tab on the drum unit back and forth several times to clean the corona wire, then return it to its home position (the arrows must align). Skipping this is the classic cause of ‘new drum, same vertical streak’.</p></li><li><b class='step-t'>Reinstall and run the reset</b><p>Assembly back in, cover still open on most Brother models: press and hold the OK / Secure + X or Go button combination for your model (commonly: with the cover open, hold <em>OK</em> for 2 seconds, then press <em>1</em> to reset the drum counter when prompted). Close the cover when the display clears. Other brands expose the reset under Menu → Machine Info → Reset Parts Life. The exact keys vary by model — check the manual once, then write the sequence on the customer’s fleet map for next time.</p></li><li><b class='step-t'>Prove it with a drum test print</b><p>Print a supplies / drum status page: the drum life should read 100% and the warning should be gone. Then print a full-coverage test page and check for the repeating defect from Step 1 — it should be gone too.</p></li></ol><div class='callout'><strong>The check that it worked:</strong> drum life at 100%, no warning light, and a clean test page. All three, or the job isn’t finished — a reset without the test page is how callbacks are born.</div>"}
+};
+
+
+Object.assign(GUIDES, {
+  diagnose:{tag:"Fix It Fast",title:"Diagnose Streaks, Fading & Ghosting From One Test Page",meta:"Sep 11, 2026 • 6 steps • ≈ 15 minutes • Difficulty: Intermediate",body:"<p>Print defects are not random — each component in the paper path leaves its fingerprint at its own spacing. One test page, one ruler, and this sequence will usually name the faulty part before you swap a single thing. Keep the customer’s ‘bad’ page; it’s evidence, not garbage.</p><h4>The walkthrough</h4><ol class='steps'><li><b class='step-t'>Print a proper test page</b><p>Use the printer’s own demo / quality page (Menu → Reports), plus one page with a light grey fill from the computer if you can. Note which tray and paper — half of all ‘defects’ are damp or wrong-setting paper, and the test page tells you.</p></li><li><b class='step-t'>Classify the defect before touching anything</b><p>Streaks running down the page (feed direction) point to a fixed contact point — drum scratch, dirty corona, or a nicked cartridge roller. Bands across the page point to a rotating part out of round or a failing cartridge. Random spots are usually loose toner or debris in the path.</p></li><li><b class='step-t'>Measure the repeat distance</b><p>If a mark repeats down the page, measure the gap between repeats with a ruler. That distance is the circumference of the part causing it — small repeats (≈ drum diameter) mean the drum, short repeats mean a cartridge roller, long repeats mean the fuser. It’s the single most useful measurement in print troubleshooting.</p></li><li><b class='step-t'>Do the halfway test for fuser vs cartridge</b><p>Print a page and open the cover mid-print (or unplug at the right moment on models that allow it) so the sheet stops half-fed, before the fuser. If the unfused image on the sheet is already defective, the problem is cartridge/drum. If it’s clean there, the fuser is damaging it on the way out.</p></li><li><b class='step-t'>Swap-test with a known-good cartridge</b><p>Only now change parts — one at a time, starting with the cheapest suspect. A known-good cartridge from your shelf isolates cartridge-vs-printer in two minutes. Fading that follows the cartridge is the cartridge; fading that stays is the printer (transfer roller or high-voltage contact).</p></li><li><b class='step-t'>Record the verdict on the fleet map</b><p>Date, symptom, measured repeat, part replaced. The next complaint on this machine starts from your notes instead of from zero — and a pattern across visits is how you justify a replacement printer with evidence.</p></li></ol><table><tr><th>Symptom</th><th>First suspect</th></tr><tr><td>Even fading across the page</td><td>Low toner (rock the cartridge), then toner-save setting</td></tr><tr><td>Vertical streak or line, same place</td><td>Drum surface or corona wire — clean, then replace drum</td></tr><tr><td>Repeating mark down the page</td><td>The part whose circumference matches the gap</td></tr><tr><td>Ghost of a previous image</td><td>Fuser (hot ghost) or drum (cold ghost) — halfway test decides</td></tr><tr><td>Grey background haze</td><td>Worn drum, or wrong/recycled paper with high moisture</td></tr></table><div class='callout'><strong>The check that it worked:</strong> three consecutive clean test pages, including one after the machine has sat for ten minutes. Some fuser ghosts only appear from cold — a single good page straight after a swap isn’t proof.</div>"},
+  meterreads:{tag:"Print Management",title:"Take Meter Reads & Build a Cost-Per-Page Report a Customer Actually Reads",meta:"Sep 4, 2026 • 6 steps • ≈ 30 min per account • Difficulty: Intermediate",body:"<p>Cost per page is the number that turns ‘your toner seems expensive’ into a real conversation. This walkthrough builds it from two meter reads and the customer’s actual cartridge spend — no print-management software required, just the configuration page and a spreadsheet.</p><h4>The walkthrough</h4><ol class='steps'><li><b class='step-t'>Print the configuration page on every device</b><p>Menu → Reports → Configuration / Supplies Status on most models. It shows the total page counter and current supplies levels. Photo or file it — this is read #1, with today’s date written on it.</p></li><li><b class='step-t'>Log the baseline</b><p>Spreadsheet columns: printer, location, date, total pages, toner level %, drum life %. One row per printer per read. Baselines feel like paperwork; they are actually the whole product — without read #1, read #2 is just a number.</p></li><li><b class='step-t'>Repeat at the quarter (or use the audit’s read)</b><p>Pages printed in the period = read #2 − read #1, per printer. If you did the fleet-audit guide when you onboarded the account, you already own read #1 — this is where that visit pays off.</p></li><li><b class='step-t'>Total the real cartridge spend</b><p>Pull every cartridge invoice for that account in the period — yours are easy; ask about any bought elsewhere, because a report that misses spend is a report that gets dismissed. Include drums and bottles, not just toner.</p></li><li><b class='step-t'>Do the one division</b><p><strong>Cost per page = total cartridge spend ÷ total pages printed.</strong> Worked example: $412 of cartridges over a quarter ÷ 18,700 pages = 2.2¢ per page. Split colour and mono if the counters allow it — colour CPP is where the surprises (and the high-yield conversation) live.</p></li><li><b class='step-t'>Send one page, not ten</b><p>The customer report fits on a single page: pages printed, cost per page, the two hungriest printers by name, and one recommendation (‘switching the M477 to high-yield saves ≈ $X next quarter’). One page gets read in the meeting; ten pages get read never.</p></li></ol><div class='callout'><strong>The check that it worked:</strong> the customer asks a question about a specific printer. That’s the moment the report stops being your paperwork and becomes their management tool — and the moment renewing with you becomes the default.</div>"},
+  jam:{tag:"Fix It Fast",title:"Clear a Paper Jam Without Tearing the Sheet — or Damaging the Fuser",meta:"Aug 28, 2026 • 6 steps • ≈ 5 minutes • Difficulty: Starter",body:"<p>The jam itself rarely hurts a printer. The rescue does — torn corners left in the path, scratched drums, and fuser film ripped by a sheet yanked backwards. This is the safe sequence to use yourself and to talk customers through on the phone before they ‘fix’ it with force.</p><h4>The walkthrough</h4><ol class='steps'><li><b class='step-t'>Cancel, power down, let it cool</b><p>Cancel the job, switch the printer off, and unplug it if you’ll be reaching inside. If it was printing heavily, wait a few minutes — the fuser stays hot after the fan stops, and it sits exactly where jammed sheets like to stop.</p></li><li><b class='step-t'>Open every door before pulling anything</b><p>Front, rear, duplexer, trays out. Find the whole sheet first: where its leading edge stopped tells you where it failed (pickup, fuser, or exit), and you can’t extract what you haven’t located. Most printers have a rear door specifically so a sheet can come out straight.</p></li><li><b class='step-t'>Pull in the direction of travel, both hands</b><p>Grip the sheet evenly with both hands and pull slowly along the path the paper normally travels — almost never backwards against the rollers. Steady pressure, no jerking. If it resists, rock it a millimetre at a time rather than escalating force.</p></li><li><b class='step-t'>Account for the whole sheet</b><p>Lay the extracted sheet flat and look at it: is it complete? A missing corner is still inside, and it will cause the next jam — usually mid-job, an hour later. Check the path with a torch and remove fragments with tweezers, never with a screwdriver or knife near rollers.</p></li><li><b class='step-t'>Inspect the path and the paper</b><p>Look for the cause while you’re in there: a stray label, a curled or damp stack, an overloaded tray, guides not snug against the paper. Fan the stack, flip it, or swap in fresh paper from a new ream — most repeat jams are paper, not printer.</p></li><li><b class='step-t'>Close up and print a test page</b><p>Doors shut, trays seated, power on, one test page. Then print the original job once. A jam that returns in the same place, same way, every time is a worn roller or a sensor flag — that’s a service call, not a technique problem.</p></li></ol><div class='callout'><strong>Never do these three:</strong> pull a sheet backwards out of the fuser, dig at a fragment with metal tools, or keep reprinting into the same jam hoping it clears. Each converts a five-minute fix into a parts order.</div>"}
+});
+function openGuide(key){
+  var a=GUIDES[key]; if(!a) return;
+  document.getElementById('readerTag').textContent=a.tag;
+  document.getElementById('readerTitle').textContent=a.title;
+  document.getElementById('readerMeta').textContent=a.meta+" • How-To Guides — Ink Quest";
+  document.getElementById('readerBody').innerHTML=a.body;
+  var d=document.getElementById('reader'); if(typeof d.showModal==='function'){d.showModal();} else {d.setAttribute('open','');}
+}
+
+// Filtering
+var pills=document.querySelectorAll('.pill');
+function applyFilters(){
+  var active=document.querySelector('.pill.active').dataset.filter;
+  var q=document.getElementById('searchInput').value.trim().toLowerCase();
+  var visible=0;
+  document.querySelectorAll('.article').forEach(function(el){
+    var catOk=(active==='all'||el.dataset.cat===active);
+    var qOk=(!q|| (el.textContent.toLowerCase().includes(q) || (el.dataset.search||'').includes(q)));
+    var show=catOk&&qOk;
+    el.style.display=show?'':'none';
+    if(show) visible++;
+  });
+  document.getElementById('emptyState').style.display=visible===0?'block':'none';
+}
+pills.forEach(function(p){p.addEventListener('click',function(){pills.forEach(function(x){x.classList.remove('active')});p.classList.add('active');  applyFilters();});});
+document.getElementById('searchInput').addEventListener('input',function(){  applyFilters(); });
+// Reorder-point calculator
+function calc(){
+  var daily=parseFloat(document.getElementById('dailySales').value)||0;
+  var onHand=parseFloat(document.getElementById('onHand').value)||0;
+  var lead=parseFloat(document.getElementById('leadTime').value)||0;
+  var safety=parseFloat(document.getElementById('safetyDays').value)||0;
+  var st=document.getElementById('calcStatus');
+  if(daily<=0){
+    document.getElementById('coverOut').textContent='—';
+    document.getElementById('pointOut').textContent='—';
+    document.getElementById('qtyOut').textContent='—';
+    st.className='calc-status show low';
+    st.textContent='Enter an average daily sales figure (units sold in the last 90 days ÷ 90) to run this SKU.';
+    return;
+  }
+  var cover=onHand/daily;
+  var point=Math.ceil(daily*(lead+safety));
+  var qty=Math.max(0, point-onHand);
+  document.getElementById('coverOut').textContent=(Math.round(cover*10)/10)+' days';
+  document.getElementById('pointOut').textContent=point+' units';
+  document.getElementById('qtyOut').textContent=qty+' units';
+  st.className='calc-status show';
+  if(cover<=lead){
+    st.classList.add('now');
+    st.textContent='ORDER NOW — at '+daily+' units/day this shelf empties in about '+Math.round(cover)+' days, inside the '+lead+'-day lead time. Order at least '+qty+' units to get back to the reorder point.';
+  } else if(cover<=30){
+    st.classList.add('low');
+    st.textContent='LOW — about '+Math.round(cover)+' days of cover. Not an emergency, but the reorder belongs on the next order, not the one after.';
+  } else {
+    st.classList.add('ok');
+    st.textContent='HEALTHY — about '+Math.round(cover)+' days of cover against a reorder point of '+point+' units. No order needed; check again at the weekly shelf walk.';
+  }
+}
+['dailySales','onHand','leadTime','safetyDays'].forEach(function(id){document.getElementById(id).addEventListener('input',calc);});
+calc();
+// Start in homepage mode to mirror the ask: show homepage section first
+</script>

@@ -1,0 +1,132 @@
+{% comment %} IQ Professional Blog listing — Poppins + teal brand. Fallback image per blog when a post has no featured image. {% endcomment %}
+{% assign is_fr = false %}
+{% if request.locale.iso_code == 'fr' %}{% assign is_fr = true %}{% endif %}
+{% assign fallback_img = 'iq-blog-' | append: blog.handle | append: '.webp' | file_url %}
+{% paginate blog.articles by 7 %}
+<div class="iq-blog">
+  <div class="iq-blog__head page-width">
+    <nav class="iq-blog__crumbs" aria-label="breadcrumb">
+      <a href="{{ routes.root_url }}">{% if is_fr %}Accueil{% else %}Home{% endif %}</a>
+      <span aria-hidden="true">/</span><span>{{ blog.title }}</span>
+    </nav>
+    <p class="iq-blog__eyebrow">{% if is_fr %}Blogue{% else %}Blog{% endif %}</p>
+    <h1 class="iq-blog__title">{{ blog.title }}</h1>
+    {% if blog.description != blank %}
+      <p class="iq-blog__desc">{{ blog.description }}</p>
+    {% endif %}
+    <p class="iq-blog__count">{{ blog.articles_count }} {% if is_fr %}articles{% else %}articles{% endif %}</p>
+  </div>
+
+  <div class="iq-blog__body page-width">
+    {% if blog.articles_count == 0 %}
+      <div class="iq-blog__empty">
+        <p>{% if is_fr %}Nos premiers articles arrivent bientôt. Revenez nous voir!{% else %}Our first articles are on the way — check back soon!{% endif %}</p>
+      </div>
+    {% else %}
+      {% assign grid_open = false %}
+      {% for article in blog.articles %}
+        {% if forloop.first and paginate.current_page == 1 %}
+          <a class="iq-blog__featured" href="{{ article.url }}">
+            <span class="iq-blog__featured-img">
+              {% if article.image %}
+                {{ article.image | image_url: width: 1200 | image_tag: loading: 'eager', alt: article.title }}
+              {% else %}
+                <img src="{{ fallback_img }}" alt="{{ blog.title | escape }}" loading="eager" width="1200" height="675">
+              {% endif %}
+            </span>
+            <span class="iq-blog__featured-txt">
+              {% if article.tags.size > 0 %}<span class="iq-blog__tag">{{ article.tags.first }}</span>{% endif %}
+              <span class="iq-blog__date">{{ article.published_at | time_tag: format: 'date' }}</span>
+              <span class="iq-blog__featured-title">{{ article.title }}</span>
+              <span class="iq-blog__excerpt">{{ article.excerpt_or_content | strip_html | truncate: 220 }}</span>
+              <span class="iq-blog__more">{% if is_fr %}Lire la suite{% else %}Read more{% endif %} <span aria-hidden="true">&rarr;</span></span>
+            </span>
+          </a>
+        {% else %}
+          {% unless grid_open %}<div class="iq-blog__grid">{% assign grid_open = true %}{% endunless %}
+          <a class="iq-blog__card" href="{{ article.url }}">
+            <span class="iq-blog__card-img">
+              {% if article.image %}
+                {{ article.image | image_url: width: 800 | image_tag: loading: 'lazy', alt: article.title }}
+              {% else %}
+                <img src="{{ fallback_img }}" alt="{{ blog.title | escape }}" loading="lazy" width="800" height="450">
+              {% endif %}
+            </span>
+            <span class="iq-blog__card-txt">
+              <span class="iq-blog__meta">
+                {% if article.tags.size > 0 %}<span class="iq-blog__tag">{{ article.tags.first }}</span>{% endif %}
+                <span class="iq-blog__date">{{ article.published_at | time_tag: format: 'date' }}</span>
+              </span>
+              <span class="iq-blog__card-title">{{ article.title }}</span>
+              <span class="iq-blog__excerpt">{{ article.excerpt_or_content | strip_html | truncate: 140 }}</span>
+              <span class="iq-blog__more">{% if is_fr %}Lire la suite{% else %}Read more{% endif %} <span aria-hidden="true">&rarr;</span></span>
+            </span>
+          </a>
+        {% endif %}
+      {% endfor %}
+      {% if grid_open %}</div>{% endif %}
+
+      {% if paginate.pages > 1 %}
+        <nav class="iq-blog__pages" aria-label="pagination">
+          {% if paginate.previous %}<a class="iq-blog__pagebtn" href="{{ paginate.previous.url }}">&larr; {% if is_fr %}Précédent{% else %}Previous{% endif %}</a>{% endif %}
+          <span class="iq-blog__pagenum">{{ paginate.current_page }} / {{ paginate.pages }}</span>
+          {% if paginate.next %}<a class="iq-blog__pagebtn" href="{{ paginate.next.url }}">{% if is_fr %}Suivant{% else %}Next{% endif %} &rarr;</a>{% endif %}
+        </nav>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+
+<style>
+.iq-blog{font-family:'Poppins',sans-serif;color:#1d1d1b;background:#fff;padding:8px 0 64px}
+.iq-blog .page-width{max-width:1200px;margin:0 auto;padding:0 24px}
+.iq-blog__crumbs{font-size:13px;color:#8a8a8a;margin:18px 0 6px}
+.iq-blog__crumbs a{color:#8a8a8a;text-decoration:none}
+.iq-blog__crumbs a:hover{color:#00404c}
+.iq-blog__crumbs span+span{margin-left:6px}
+.iq-blog__head{text-align:center;padding:26px 24px 10px}
+.iq-blog__eyebrow{display:inline-block;font-size:12px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:#00404c;background:#eef4f4;border-radius:999px;padding:6px 16px;margin:0 0 14px}
+.iq-blog__title{font-size:clamp(30px,4.5vw,46px);font-weight:700;color:#00404c;margin:0 0 10px;line-height:1.15}
+.iq-blog__desc{font-size:16px;color:#555;max-width:640px;margin:0 auto}
+.iq-blog__count{font-size:13px;color:#999;margin:10px 0 0}
+.iq-blog__body{padding-top:30px}
+.iq-blog__empty{text-align:center;background:#f7f7f5;border-radius:16px;padding:60px 24px;color:#666;font-size:17px}
+.iq-blog__featured{display:grid;grid-template-columns:1.15fr 1fr;background:#fff;border:1px solid #ececec;border-radius:18px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 10px 30px rgba(0,64,76,.08);margin-bottom:34px;transition:transform .25s ease,box-shadow .25s ease}
+.iq-blog__featured:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,64,76,.14)}
+.iq-blog__featured-img{display:block;min-height:300px}
+.iq-blog__featured-img img{width:100%;height:100%;object-fit:cover;display:block}
+.iq-blog__featured-txt{display:flex;flex-direction:column;justify-content:center;gap:10px;padding:38px 36px}
+.iq-blog__featured-title{font-size:clamp(22px,2.6vw,30px);font-weight:700;color:#123;line-height:1.25}
+a.iq-blog__featured:hover .iq-blog__featured-title{color:#00404c}
+.iq-blog__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.iq-blog__card{display:flex;flex-direction:column;background:#fff;border:1px solid #ececec;border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 4px 18px rgba(0,0,0,.05);transition:transform .25s ease,box-shadow .25s ease}
+.iq-blog__card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,64,76,.12)}
+.iq-blog__card-img{display:block;aspect-ratio:16/10;overflow:hidden;background:#eef4f4}
+.iq-blog__card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
+.iq-blog__card:hover .iq-blog__card-img img{transform:scale(1.04)}
+.iq-blog__card-txt{display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;flex:1}
+.iq-blog__meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.iq-blog__tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#fff;background:#00404c;border-radius:999px;padding:4px 12px}
+.iq-blog__date{font-size:12.5px;color:#999}
+.iq-blog__card-title{font-size:18px;font-weight:600;color:#123;line-height:1.35}
+a.iq-blog__card:hover .iq-blog__card-title{color:#00404c}
+.iq-blog__excerpt{font-size:14px;color:#666;line-height:1.6;flex:1}
+.iq-blog__more{display:inline-block;margin-top:6px;font-size:14px;font-weight:600;color:#00404c}
+.iq-blog__pages{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:44px}
+.iq-blog__pagebtn{display:inline-block;border:1.5px solid #00404c;color:#00404c;border-radius:999px;padding:9px 22px;font-size:14px;font-weight:600;text-decoration:none}
+.iq-blog__pagebtn:hover{background:#00404c;color:#fff}
+.iq-blog__pagenum{font-size:14px;color:#888}
+.iq-blog__featured-title,.iq-blog__card-title,.iq-blog__excerpt,.iq-blog__more,.iq-blog__tag,.iq-blog__date{display:block}
+a.iq-blog__featured,a.iq-blog__card{cursor:pointer}
+@media(max-width:900px){
+  .iq-blog__featured{grid-template-columns:1fr}
+  .iq-blog__featured-img{min-height:220px}
+  .iq-blog__featured-txt{padding:26px 24px}
+  .iq-blog__grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){.iq-blog__grid{grid-template-columns:1fr}}
+</style>
+{% endpaginate %}
+{% schema %}
+{"name":"IQ Professional Blog","settings":[]}
+{% endschema %}

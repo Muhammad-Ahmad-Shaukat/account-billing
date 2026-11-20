@@ -1,0 +1,75 @@
+{% comment %}
+  IQ Sign in / Register choice page.
+  EN/FR rendered server-side by request.locale, so phone and desktop
+  change together. The Sign in button keeps the dashboard return by
+  default; JS passes through an explicit ?return_to= when present.
+  French helper wording is draft — owner to correct if preferred.
+{% endcomment %}
+{% if request.locale.iso_code == 'fr' %}
+  {% assign ch_heading = 'Se connecter ou S’inscrire' %}
+  {% assign ch_sub = 'Choisissez comment vous souhaitez continuer.' %}
+  {% assign ch_signin = 'Se connecter' %}
+  {% assign ch_signin_help = 'Pour les comptes de revendeur existants.' %}
+  {% assign ch_register = 'S’inscrire' %}
+  {% assign ch_register_help = 'Nouveau chez Ink Quest? Faites une demande de compte revendeur.' %}
+  {% assign ch_dash = '/fr/pages/my-account' %}
+  {% assign ch_register_url = '/fr/pages/become-a-reseller' %}
+{% else %}
+  {% assign ch_heading = 'Sign in or Register' %}
+  {% assign ch_sub = "Choose how you'd like to continue." %}
+  {% assign ch_signin = 'Sign in' %}
+  {% assign ch_signin_help = 'For existing reseller accounts.' %}
+  {% assign ch_register = 'Register' %}
+  {% assign ch_register_help = 'New to Ink Quest? Apply for a reseller account.' %}
+  {% assign ch_dash = '/pages/my-account' %}
+  {% assign ch_register_url = '/pages/become-a-reseller' %}
+{% endif %}
+
+<div class="iq-choice-wrap">
+  <h1 class="iq-choice-heading">{{ ch_heading }}</h1>
+  <p class="iq-choice-sub">{{ ch_sub }}</p>
+  <a id="iq-choice-signin" class="iq-choice-btn iq-choice-btn-primary" href="/customer_authentication/login?return_to={{ ch_dash }}">{{ ch_signin }}</a>
+  <p class="iq-choice-help">{{ ch_signin_help }}</p>
+  <a class="iq-choice-btn iq-choice-btn-outline" href="{{ ch_register_url }}">{{ ch_register }}</a>
+  <p class="iq-choice-help">{{ ch_register_help }}</p>
+</div>
+
+<style>
+  .iq-choice-wrap { max-width: 420px; margin: 0 auto; padding: 40px 24px 56px; text-align: center; }
+  .iq-choice-heading { font-size: 26px; line-height: 1.2; margin: 0 0 8px; }
+  .iq-choice-sub { font-size: 15px; color: #667085; margin: 0 0 24px; }
+  .iq-choice-btn { display: block; width: 100%; padding: 12px 24px; border-radius: 10px; font-size: 16px; font-weight: 600; text-decoration: none; box-sizing: border-box; }
+  .iq-choice-btn-primary { background: #00404c; color: #fff; }
+  .iq-choice-btn-outline { background: #fff; color: #00404c; border: 2px solid #00404c; }
+  .iq-choice-help { font-size: 13px; color: #667085; margin: 8px 0 20px; }
+  @media (max-width: 749px) {
+    .iq-choice-wrap { padding: 24px 36px 40px; }
+    .iq-choice-heading { font-size: 20px; }
+    .iq-choice-sub { font-size: 13px; }
+    .iq-choice-btn { padding: 12px 20px; font-size: 15px; }
+    .iq-choice-help { margin: 8px 0 18px; }
+  }
+</style>
+
+<script>
+  (function () {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var rt = params.get('return_to');
+      if (!rt) return;
+      var btn = document.getElementById('iq-choice-signin');
+      if (!btn) return;
+      var href = btn.getAttribute('href') || '';
+      var base = href.split(/[?&]return_to=/)[0];
+      var sep = base.indexOf('?') === -1 ? '?' : '&';
+      btn.setAttribute('href', base + sep + 'return_to=' + encodeURIComponent(rt));
+    } catch (e) {}
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Sign in / Register choice",
+  "settings": []
+}
+{% endschema %}

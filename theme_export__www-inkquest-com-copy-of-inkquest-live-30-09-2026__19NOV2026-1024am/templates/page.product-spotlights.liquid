@@ -1,0 +1,632 @@
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<style>
+.iq-spotlights-page{
+        --teal: #00404c;
+        --teal-deep: #002e37;
+        --teal-bright: #0e7c86;
+        --accent: #f2a900;
+        --bg: #f4f6f6;
+        --surface: #ffffff;
+        --surface-2: #e9efef;
+        --ink: #1c2b2e;
+        --ink-soft: #4c5f63;
+        --line: #d7e0e1;
+        --chip: #e3eeee;
+        --demo-bg: #fff6e0;
+        --demo-line: #e3c878;
+        --demo-ink: #6b5510;
+        --shadow: 0 10px 30px rgba(0, 46, 55, 0.10);
+        color-scheme: light;
+      }
+@media (prefers-color-scheme: dark){.iq-spotlights-page{
+          --bg: #0d1517;
+          --surface: #162124;
+          --surface-2: #1d2c30;
+          --ink: #e8efef;
+          --ink-soft: #a7babd;
+          --line: #2b3d41;
+          --chip: #22383c;
+          --demo-bg: #2b2410;
+          --demo-line: #6e5c22;
+          --demo-ink: #e8cf8a;
+          --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+          color-scheme: dark;
+        }}
+.iq-spotlights-page, .iq-spotlights-page *{ box-sizing: border-box; }
+.iq-spotlights-page{ scroll-behavior: smooth; }
+.iq-spotlights-page{
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Barlow", system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.55;
+      }
+.iq-spotlights-page h1, .iq-spotlights-page h2, .iq-spotlights-page h3, .iq-spotlights-page .cond{
+        font-family: "Barlow Semi Condensed", "Barlow", sans-serif;
+        letter-spacing: 0.01em;
+        margin: 0;
+      }
+.iq-spotlights-page button{ font: inherit; cursor: pointer; }
+.iq-spotlights-page img{ display: block; max-width: 100%; }
+.iq-spotlights-page .wrap{ max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+.iq-spotlights-page .sec-head{ padding: 40px 0 8px; }
+.iq-spotlights-page .sec-head .kicker{
+        color: var(--teal-bright);
+        font-weight: 700;
+        font-size: 13.6px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        margin: 0 0 6px;
+      }
+.iq-spotlights-page .sec-head h2{ font-size: clamp(30.4px, 4vw, 41.6px); font-weight: 700; color: var(--ink); }
+.iq-spotlights-page .sec-head .sub{ color: var(--ink-soft); max-width: 640px; margin: 8px 0 0; }
+.iq-spotlights-page .hero{
+        background: linear-gradient(135deg, var(--teal-deep), var(--teal) 60%, #00586a);
+        color: #eaf4f5;
+        padding: 52px 0 46px;
+      }
+.iq-spotlights-page .hero h1{ font-size: clamp(35.2px, 5vw, 54.4px); font-weight: 700; line-height: 1.05; color: #fff; }
+.iq-spotlights-page .hero p{ max-width: 620px; color: #c4dde0; margin: 14px 0 0; font-size: 16.8px; }
+.iq-spotlights-page .hero .kicker{
+        color: var(--accent);
+        font-weight: 700;
+        font-size: 13.6px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        margin: 0 0 10px;
+      }
+.iq-spotlights-page .hero-stats{ display: flex; flex-wrap: wrap; gap: 28px; margin-top: 28px; }
+.iq-spotlights-page .hero-stats div strong{ display: block; font-size: 24px; font-family: "Barlow Semi Condensed", sans-serif; color: #fff; }
+.iq-spotlights-page .hero-stats div span{ font-size: 14.1px; color: #a9cdd1; }
+.iq-spotlights-page .grid{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        padding: 26px 0 10px;
+      }
+.iq-spotlights-page .card{
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: var(--shadow);
+      }
+.iq-spotlights-page .card .photo{
+        background: #fff;
+        aspect-ratio: 4 / 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 18px;
+        border-bottom: 1px solid var(--line);
+      }
+.iq-spotlights-page .card .photo img{ max-height: 100%; width: auto; max-width: 100%; object-fit: contain; }
+.iq-spotlights-page .card-body{ padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 9px; flex: 1; }
+.iq-spotlights-page .badges{ display: flex; flex-wrap: wrap; gap: 6px; }
+.iq-spotlights-page .badge{
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        background: var(--chip);
+        color: var(--teal);
+        border-radius: 999px;
+        padding: 3px 9px;
+      }
+@media (prefers-color-scheme: dark){.iq-spotlights-page .badge{ color: #9fd3d8; }}
+.iq-spotlights-page .badge.hot{ background: var(--accent); color: #231a00; }
+.iq-spotlights-page .card h3{ font-size: 20.8px; font-weight: 600; line-height: 1.2; }
+.iq-spotlights-page .card .tagline{ color: var(--ink-soft); font-size: 15.2px; margin: 0; }
+.iq-spotlights-page .specs{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 16px;
+        font-size: 14.1px;
+        color: var(--ink-soft);
+        border-top: 1px dashed var(--line);
+        padding-top: 10px;
+        margin-top: 2px;
+      }
+.iq-spotlights-page .specs strong{ color: var(--ink); font-weight: 600; }
+.iq-spotlights-page .card .open-btn{
+        margin-top: auto;
+        align-self: flex-start;
+        background: var(--teal);
+        color: #fff;
+        border: 0;
+        border-radius: 9px;
+        padding: 9px 16px;
+        font-weight: 600;
+        font-size: 14.7px;
+      }
+.iq-spotlights-page .card .open-btn:hover{ background: var(--teal-bright); }
+.iq-spotlights-page .featured{
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 5fr 6fr;
+      }
+.iq-spotlights-page .featured .photo{ aspect-ratio: auto; border-bottom: 0; border-right: 1px solid var(--line); padding: 26px; }
+.iq-spotlights-page .featured .card-body{ padding: 26px; justify-content: center; }
+.iq-spotlights-page .featured h3{ font-size: 28.8px; }
+.iq-spotlights-page .why-list{ margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.iq-spotlights-page .why-list li{ padding-left: 22px; position: relative; font-size: 15.2px; color: var(--ink-soft); }
+.iq-spotlights-page .why-list li::before{
+        content: "";
+        position: absolute; left: 2px; top: 8px;
+        width: 8px; height: 8px; border-radius: 2px;
+        background: var(--accent);
+      }
+.iq-spotlights-page .view-all-row{ text-align: center; padding: 18px 0 44px; }
+.iq-spotlights-page .view-all{
+        background: transparent;
+        border: 2px solid var(--teal);
+        color: var(--teal);
+        border-radius: 10px;
+        padding: 11px 26px;
+        font-weight: 700;
+      }
+@media (prefers-color-scheme: dark){.iq-spotlights-page .view-all{ color: #9fd3d8; border-color: #9fd3d8; }}
+.iq-spotlights-page .view-all:hover{ background: var(--teal); color: #fff; }
+.iq-spotlights-page .filters{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        padding: 26px 0 4px;
+      }
+.iq-spotlights-page .pill{
+        border: 1px solid var(--line);
+        background: var(--surface);
+        color: var(--ink);
+        border-radius: 999px;
+        padding: 7px 15px;
+        font-weight: 600;
+        font-size: 14.4px;
+      }
+.iq-spotlights-page .pill[aria-pressed="true"]{ background: var(--teal); border-color: var(--teal); color: #fff; }
+.iq-spotlights-page .search-box{
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 7px 14px;
+        flex: 1 1 240px;
+        max-width: 340px;
+      }
+.iq-spotlights-page .search-box input{
+        border: 0; outline: 0; background: transparent; color: var(--ink);
+        font: inherit; font-size: 14.7px; width: 100%;
+      }
+.iq-spotlights-page .no-results{ padding: 40px 0 60px; text-align: center; color: var(--ink-soft); }
+.iq-spotlights-page .strip{
+        background: var(--surface);
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        margin: 34px 0 0;
+      }
+.iq-spotlights-page .strip-in{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        padding: 30px 0;
+      }
+.iq-spotlights-page .strip h3{ font-size: 18.4px; font-weight: 600; margin-bottom: 5px; }
+.iq-spotlights-page .strip p{ margin: 0; color: var(--ink-soft); font-size: 15px; }
+.iq-spotlights-page .strip .num{
+        font-family: "Barlow Semi Condensed", sans-serif;
+        font-size: 30.4px; font-weight: 700; color: var(--accent);
+        line-height: 1;
+      }
+.iq-spotlights-page footer{ padding: 30px 0 46px; color: var(--ink-soft); font-size: 14.4px; }
+.iq-spotlights-page footer .wrap{ display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; }
+.iq-spotlights-page .overlay{
+        position: fixed; inset: 0; z-index: 10000;
+        background: rgba(0, 25, 31, 0.62);
+        display: none;
+        align-items: flex-start;
+        justify-content: center;
+        overflow-y: auto;
+        padding: 28px 14px;
+      }
+      .iq-spotlights-page .overlay:not(.open){ display: none !important; }
+.iq-spotlights-page .overlay.open{ display: flex; }
+.iq-spotlights-page .sheet{
+        background: var(--surface);
+        border-radius: 16px;
+        max-width: 880px;
+        width: 100%;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+       margin-left: auto; margin-right: auto; }
+.iq-spotlights-page .sheet-top{
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+      }
+.iq-spotlights-page .sheet .photo{
+        background: #fff;
+        display: flex; align-items: center; justify-content: center;
+        padding: 24px;
+        border-right: 1px solid var(--line);
+      }
+.iq-spotlights-page .sheet .photo img{ max-height: 320px; width: auto; max-width: 100%; object-fit: contain; }
+.iq-spotlights-page .sheet-head{ padding: 24px 26px; }
+.iq-spotlights-page .sheet-head h2{ font-size: 30.4px; font-weight: 700; line-height: 1.15; margin: 8px 0; }
+.iq-spotlights-page .sheet-head .tagline{ color: var(--ink-soft); margin: 0; }
+.iq-spotlights-page .sheet-close{
+        float: right;
+        background: var(--surface-2);
+        border: 1px solid var(--line);
+        width: 36px; height: 36px;
+        border-radius: 999px;
+        font-size: 16.8px;
+        line-height: 1;
+        color: var(--ink);
+      }
+.iq-spotlights-page .spec-table{
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 16px;
+        font-size: 14.9px;
+      }
+.iq-spotlights-page .spec-table th, .iq-spotlights-page .spec-table td{
+        text-align: left;
+        padding: 7px 8px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+.iq-spotlights-page .spec-table th{ color: var(--ink-soft); font-weight: 600; width: 38%; }
+.iq-spotlights-page .sheet-body{ padding: 6px 26px 28px; }
+.iq-spotlights-page .sheet-body h3{ font-size: 19.2px; font-weight: 600; margin: 20px 0 6px; }
+.iq-spotlights-page .sheet-body p{ color: var(--ink-soft); margin: 0 0 10px; }
+.iq-spotlights-page .variant-chips{ display: flex; flex-wrap: wrap; gap: 8px; }
+.iq-spotlights-page .variant-chips span{
+        border: 1px solid var(--line);
+        background: var(--surface-2);
+        border-radius: 999px;
+        padding: 5px 13px;
+        font-size: 14.1px;
+        font-weight: 600;
+      }
+.iq-spotlights-page .hidden{ display: none !important; }
+@media (max-width: 900px){.iq-spotlights-page .grid{ grid-template-columns: repeat(2, 1fr); }
+.iq-spotlights-page .featured{ grid-template-columns: 1fr; }
+.iq-spotlights-page .featured .photo{ border-right: 0; border-bottom: 1px solid var(--line); aspect-ratio: 4 / 3; }
+.iq-spotlights-page .strip-in{ grid-template-columns: 1fr; }
+.iq-spotlights-page .sheet-top{ grid-template-columns: 1fr; }
+.iq-spotlights-page .sheet .photo{ border-right: 0; border-bottom: 1px solid var(--line); }}
+@media (max-width: 560px){.iq-spotlights-page .grid{ grid-template-columns: 1fr; }
+.iq-spotlights-page .search-box{ margin-left: 0; max-width: none; }}
+</style>
+<div class="iq-spotlights-page">
+<!-- Demo bar -->
+    
+
+    <!-- ============ HOMEPAGE SECTION VIEW ============ -->
+    
+
+    <!-- ============ FULL PAGE VIEW ============ -->
+    <section id="view-full">
+      <div class="hero">
+        <div class="wrap">
+          <p class="kicker">Product Spotlights</p>
+          <h1>Best sellers, up close.</h1>
+          <p>Every spotlight breaks down one proven seller: page yield, the printers it feeds, the versions we stock it in, and the pitch that moves it off your shelf.</p>
+          <div class="hero-stats">
+            <div><strong>6</strong><span>spotlights this round</span></div>
+            <div><strong>5</strong><span>brands covered</span></div>
+            <div><strong>3</strong><span>versions per product — OEM, compatible, remanufactured</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="wrap">
+        <div class="filters" id="brand-filters" role="group" aria-label="Filter by brand"></div>
+        <div class="grid" id="full-grid"></div>
+        <p class="no-results hidden" id="no-results">No spotlights match that search. Try a brand, a model number, or a printer series.</p>
+      </div>
+      <div class="strip">
+        <div class="wrap strip-in">
+          <div>
+            <div class="num">01</div>
+            <h3>Picked from real demand</h3>
+            <p>Spotlights start with the SKUs resellers reorder most — not whatever a supplier is pushing this quarter.</p>
+          </div>
+          <div>
+            <div class="num">02</div>
+            <h3>Specs you can quote</h3>
+            <p>Yield, printer compatibility, and cartridge codes, laid out so your staff can answer at the counter without opening a spec sheet.</p>
+          </div>
+          <div>
+            <div class="num">03</div>
+            <h3>Every version, one place</h3>
+            <p>Most spotlights stock in Original, Compatible, and Remanufactured — so you can offer the same printer three price points.</p>
+          </div>
+        </div>
+      </div>
+      <footer>
+        <div class="wrap">
+          <span>Product Spotlights — Ink Quest reseller resources</span>
+          <span>Prices are account-specific — sign in to the catalog to see yours.</span>
+        </div>
+      </footer>
+    </section>
+
+    <!-- ============ DETAIL OVERLAY ============ -->
+    <div class="overlay" id="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <div class="sheet">
+        <div class="sheet-top">
+          <div class="photo"><img id="sheet-img" alt="" /></div>
+          <div class="sheet-head">
+            <button type="button" class="sheet-close" id="sheet-close" aria-label="Close spotlight">✕</button>
+            <div class="badges" id="sheet-badges"></div>
+            <h2 id="sheet-title"></h2>
+            <p class="tagline" id="sheet-tagline"></p>
+            <table class="spec-table"><tbody id="sheet-specs"></tbody></table>
+          </div>
+        </div>
+        <div class="sheet-body">
+          <h3>Why it sells</h3>
+          <div id="sheet-why"></div>
+          <h3>The reseller angle</h3>
+          <p id="sheet-angle"></p>
+          <h3>Also stocked as</h3>
+          <div class="variant-chips" id="sheet-variants"></div>
+        </div>
+      </div>
+    </div>
+</div>
+<script>
+
+      var PRODUCTS = [
+        {
+          id: "tn760",
+          featured: true,
+          hot: "Top Reorder",
+          brand: "Brother",
+          name: "Brother TN-760 High Yield Toner",
+          model: "TN-760",
+          img: "{{ 'product-spotlights-1.webp' | asset_url }}",
+          alt: "Brother TN-760 high yield black toner cartridge with retail box",
+          tagline: "The mono laser workhorse behind half the small offices in the country — and one of the most reordered SKUs in the catalog.",
+          yield: "≈ 3,000 pages",
+          color: "Black",
+          type: "Toner cartridge",
+          printers: "HL-L2350DW, HL-L2370DW, HL-L2370DW XL, HL-L2390DW, HL-L2395DW, DCP-L2550DN, DCP-L2550DW, MFC-L2690DW, MFC-L2710DW, MFC-L2717DW, MFC-L2730DW, MFC-L2750DW, MFC-L2750DW XL",
+          why: [
+            "The L2300/L2700 printer family is everywhere — dentists, realtors, home offices — so demand never really dips.",
+            "High yield means fewer change-outs, which is the one thing office managers actually ask about.",
+            "Customers ask for it by number: “TN-760” is the search term, the phone call, and the counter request."
+          ],
+          angle: "Stock it in all three versions. The Original for warranty-sensitive accounts, the Compatible for your price ads, and the Remanufactured for the eco pitch — same printer, three price points, and you keep the sale whichever way the customer leans.",
+          variants: ["Original (OEM)", "Compatible", "Remanufactured"]
+        },
+        {
+          id: "hp63xl",
+          brand: "HP",
+          name: "HP 63XL Tri-Color Ink",
+          model: "63XL · F6U63AN",
+          img: "{{ 'product-spotlights-2.webp' | asset_url }}",
+          alt: "HP 63XL tri-color ink cartridge retail box",
+          tagline: "The cartridge inside Canada's best-selling home printers — a steady, predictable seller in every season.",
+          yield: "≈ 330 pages",
+          color: "Tri-color",
+          type: "Ink cartridge",
+          printers: "DeskJet 1112 / 2130 / 3630 series, OfficeJet 3830 / 4650, ENVY 4520 series",
+          why: [
+            "DeskJet and ENVY home printers sold in huge numbers, and every one of them comes back for this cartridge.",
+            "XL format carries the better margin and the better cost-per-page story versus the standard 63.",
+            "Back-to-school and tax season both spike demand — it's a calendar product, not a gamble."
+          ],
+          angle: "Pair it on the shelf with the 63XL Black. Home users rarely buy one without the other, and a two-pack pitch at the counter lifts the basket without any discounting.",
+          variants: ["Original (OEM)", "Compatible", "Remanufactured"]
+        },
+        {
+          id: "canon055",
+          brand: "Canon",
+          name: "Canon 055 Black Toner",
+          model: "055 · 3016C001",
+          img: "{{ 'product-spotlights-3.webp' | asset_url }}",
+          alt: "Canon 055 black toner cartridge retail box",
+          tagline: "Canon's colour workgroup standard — the cartridge behind the imageCLASS MF740C fleets your business customers run.",
+          yield: "≈ 2,300 pages (black); colours ≈ 2,100 pages",
+          color: "Black (also C / M / Y)",
+          type: "Toner cartridge",
+          printers: "Color imageCLASS LBP664Cdw, MF741Cdw, MF743Cdw, MF745Cdw, MF746Cdw",
+          why: [
+            "The MF740C series is a default pick for small law, medical, and accounting offices — installed base keeps growing.",
+            "Four-cartridge colour sets mean one printer sale turns into four recurring toner SKUs.",
+            "Business customers reorder on schedule, not on price — reliability is the pitch."
+          ],
+          angle: "Sell the set, not the single. When a customer's black runs out, their colours are close behind — a standing four-pack arrangement turns one order into a recurring account.",
+          variants: ["Original (OEM)", "Compatible"]
+        },
+        {
+          id: "lexmark601",
+          brand: "Lexmark",
+          name: "Lexmark 601 Return Program Toner",
+          model: "601 · 60F1000",
+          img: "{{ 'product-spotlights-4.webp' | asset_url }}",
+          alt: "Lexmark 601 return program black toner cartridge with retail box",
+          tagline: "The fleet cartridge for Lexmark's MX workhorses — the ones humming away in warehouses, clinics, and back offices.",
+          yield: "≈ 2,500 pages",
+          color: "Black",
+          type: "Toner cartridge",
+          printers: "MX310dn, MX410de, MX510de, MX511de, MX511dhe, MX511dte, MX610de, MX611de, MX611dfe, MX611dhe, MX611dte",
+          why: [
+            "MX series printers were deployed by the thousands into managed fleets — and fleets don't churn.",
+            "Return Program pricing gives genuine Lexmark at a number your customers can actually approve.",
+            "Mono fleet toner is the definition of boring, dependable reorder revenue."
+          ],
+          angle: "If you service Lexmark fleets, this is a contract SKU: predictable volume, predictable timing. Line it up with the 601H high-yield so you can offer a cost-per-page step-down at renewal.",
+          variants: ["Original (OEM)", "Compatible", "Remanufactured"]
+        },
+        {
+          id: "hp410a",
+          brand: "HP",
+          name: "HP 410A Black Toner",
+          model: "410A · CF410A",
+          img: "{{ 'product-spotlights-5.webp' | asset_url }}",
+          alt: "HP 410A black LaserJet toner cartridge retail box",
+          tagline: "Colour LaserJet Pro's staple cartridge — JetIntelligence generation, and still one of HP's most-installed business lines.",
+          yield: "≈ 2,300 pages",
+          color: "Black (also C / M / Y)",
+          type: "Toner cartridge",
+          printers: "Color LaserJet Pro M452, MFP M377dw, MFP M477 series",
+          why: [
+            "M452/M477 printers anchor thousands of small-business colour setups that aren't going anywhere.",
+            "A four-colour family (410A, plus 410X high yield) gives you natural upsell steps.",
+            "JetIntelligence chips mean customers notice — and complain — when a cheap cartridge underperforms. Quality sells itself here."
+          ],
+          angle: "Lead with the 410X conversation: same printers, and the 410X black runs about 6,500 pages — roughly 2.8× the 410A — with the colours at about 5,000 pages. Customers who track cost per page switch once and stay — and your per-order value goes up with them.",
+          variants: ["Original (OEM)", "Compatible", "Remanufactured"]
+        },
+        {
+          id: "epson502",
+          brand: "Epson",
+          name: "Epson 502 Black Ink Bottle",
+          model: "502 · T502120-S",
+          img: "{{ 'product-spotlights-6.webp' | asset_url }}",
+          alt: "Epson 502 black EcoTank ink bottle retail box",
+          tagline: "EcoTank changed the home-office math — and this 127 mL bottle is the refill that keeps those printers printing for years.",
+          yield: "≈ 7,500 pages",
+          color: "Black (also C / M / Y)",
+          type: "Ink bottle, 127 mL",
+          printers: "EcoTank ET-2700, ET-2750, ET-2760, ET-2850, ET-3700, ET-3710, ET-3750, ET-3760, ET-3830, ET-3850, ET-4750, ET-4760, ET-4850, ET-15000, ST-2000, ST-3000, ST-4000",
+          why: [
+            "EcoTank owners print a lot — that's why they bought the printer — so refill volume per customer is high.",
+            "A 7,500-page yield at bottle pricing is the easiest cost-per-page pitch in the store.",
+            "Exclusive EcoFit nozzle design means no third-party confusion at the counter: the right bottle just fits."
+          ],
+          angle: "Tank printers lock customers in for years. Every EcoTank you or your customer places is a multi-year bottle annuity — stock the full colour set and be the store that never sends them elsewhere.",
+          variants: ["Original (OEM)", "Compatible"]
+        }
+      ];
+
+      var BRANDS = ["All", "Brother", "HP", "Canon", "Lexmark", "Epson"];
+      var activeBrand = "All";
+      var query = "";
+
+      function badgesHTML(p) {
+        var h = '<span class="badge">' + p.brand + '</span><span class="badge">' + p.type.split(",")[0] + '</span>';
+        if (p.hot) h += '<span class="badge hot">' + p.hot + '</span>';
+        return h;
+      }
+      function specsHTML(p) {
+        return '<span>Yield <strong>' + p.yield + '</strong></span>' +
+               '<span>Colour <strong>' + p.color + '</strong></span>' +
+               '<span>Model <strong>' + p.model + '</strong></span>';
+      }
+      function cardHTML(p, featured) {
+        var why = "";
+        if (featured) {
+          why = '<ul class="why-list">' + p.why.map(function (w) { return "<li>" + w + "</li>"; }).join("") + "</ul>";
+        }
+        return '<article class="card' + (featured ? " featured" : "") + '">' +
+          '<div class="photo"><img src="' + p.img + '" alt="' + p.alt + '" loading="lazy" /></div>' +
+          '<div class="card-body">' +
+            '<div class="badges">' + badgesHTML(p) + '</div>' +
+            "<h3>" + p.name + "</h3>" +
+            '<p class="tagline">' + p.tagline + "</p>" +
+            why +
+            '<div class="specs">' + specsHTML(p) + "</div>" +
+            '<button type="button" class="open-btn" data-open="' + p.id + '">View spotlight</button>' +
+          "</div></article>";
+      }
+
+      
+      function renderFilters() {
+        var box = document.getElementById("brand-filters");
+        var pills = BRANDS.map(function (b) {
+          return '<button type="button" class="pill" data-brand="' + b + '" aria-pressed="' + (b === activeBrand) + '">' + b + "</button>";
+        }).join("");
+        box.innerHTML = pills +
+          '<label class="search-box"><span aria-hidden="true">⌕</span>' +
+          '<input type="search" id="spot-search" placeholder="Search model, brand, or printer…" value="' + query.replace(/"/g, "&quot;") + '" /></label>';
+        var input = document.getElementById("spot-search");
+        input.addEventListener("input", function () {
+          query = input.value;
+          renderFull();
+          var again = document.getElementById("spot-search");
+          again.focus();
+          again.setSelectionRange(again.value.length, again.value.length);
+        });
+      }
+
+      function renderFull() {
+        var q = query.trim().toLowerCase();
+        var list = PRODUCTS.filter(function (p) {
+          if (activeBrand !== "All" && p.brand !== activeBrand) return false;
+          if (!q) return true;
+          var hay = (p.brand + " " + p.name + " " + p.model + " " + p.printers + " " + p.type).toLowerCase();
+          return hay.indexOf(q) !== -1;
+        });
+        document.getElementById("full-grid").innerHTML =
+          list.map(function (p) { return cardHTML(p, false); }).join("");
+        document.getElementById("no-results").classList.toggle("hidden", list.length > 0);
+      }
+
+      
+      function openSpotlight(id) {
+        var p = null;
+        for (var i = 0; i < PRODUCTS.length; i++) if (PRODUCTS[i].id === id) p = PRODUCTS[i];
+        if (!p) return;
+        document.getElementById("sheet-img").src = p.img;
+        document.getElementById("sheet-img").alt = p.alt;
+        document.getElementById("sheet-badges").innerHTML = badgesHTML(p);
+        document.getElementById("sheet-title").textContent = p.name;
+        document.getElementById("sheet-tagline").textContent = p.tagline;
+        document.getElementById("sheet-specs").innerHTML =
+          "<tr><th>Model</th><td>" + p.model + "</td></tr>" +
+          "<tr><th>Page yield</th><td>" + p.yield + "</td></tr>" +
+          "<tr><th>Colour</th><td>" + p.color + "</td></tr>" +
+          "<tr><th>Type</th><td>" + p.type + "</td></tr>" +
+          "<tr><th>Works with</th><td>" + p.printers + "</td></tr>";
+        document.getElementById("sheet-why").innerHTML =
+          '<ul class="why-list">' + p.why.map(function (w) { return "<li>" + w + "</li>"; }).join("") + "</ul>";
+        document.getElementById("sheet-angle").textContent = p.angle;
+        document.getElementById("sheet-variants").innerHTML =
+          p.variants.map(function (v) { return "<span>" + v + "</span>"; }).join("");
+        document.getElementById("overlay").classList.add("open");
+        document.body.style.overflow = "hidden";
+        document.getElementById("sheet-close").focus();
+      }
+      function closeSpotlight() {
+        document.getElementById("overlay").classList.remove("open");
+        document.body.style.overflow = "";
+      }
+
+      
+      
+      
+      document.getElementById("sheet-close").addEventListener("click", closeSpotlight);
+      document.getElementById("overlay").addEventListener("click", function (e) {
+        if (e.target === this) closeSpotlight();
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeSpotlight();
+      });
+      document.addEventListener("click", function (e) {
+        var btn = e.target.closest ? e.target.closest("[data-open]") : null;
+        if (btn) openSpotlight(btn.getAttribute("data-open"));
+      });
+      document.getElementById("brand-filters").addEventListener("click", function (e) {
+        var btn = e.target.closest ? e.target.closest("[data-brand]") : null;
+        if (!btn) return;
+        activeBrand = btn.getAttribute("data-brand");
+        renderFilters();
+        renderFull();
+      });
+
+      
+      renderFilters();
+      renderFull();
+      document.getElementById("overlay").classList.remove("open");
+    
+</script>

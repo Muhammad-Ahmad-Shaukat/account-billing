@@ -1,0 +1,625 @@
+<div class="page-width">
+  <h1 class="page-title" style="text-align:center; margin-bottom: 24px;">{{ page.title }}</h1>
+<style>
+.iq-guide { max-width: 960px; margin: 0 auto; font-family: var(--font-body-family, Poppins, sans-serif); color: #222; line-height: 1.6; }
+.iq-hero { background: linear-gradient(135deg, #0b3d44 0%, #1a7a6d 100%); color: #fff; padding: 40px 24px; text-align: center; border-radius: 12px; margin-bottom: 24px; }
+.iq-hero h1 { margin: 0 0 8px; color: #fff; font-size: 1.8em; font-family: var(--font-heading-family, Poppins, sans-serif); }
+.iq-hero p { margin: 0; opacity: 0.92; }
+.iq-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+.iq-card { background: #fff; border-radius: 12px; padding: 22px 14px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07); cursor: pointer; border-top: 4px solid #1a7a6d; display: block; text-decoration: none; color: #222; }
+.iq-card.gold { border-top-color: #e6a817; }
+.iq-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+.iq-card .e { font-size: 1.7em; margin-bottom: 6px; }
+.iq-card .t { font-weight: 700; color: #0b3d44; font-family: var(--font-heading-family, Poppins, sans-serif); }
+.iq-card .d { font-size: 0.82em; color: #666; }
+.iq-acc { background: #fff; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
+.iq-acc.gold { border: 2px solid #e6a817; }
+.iq-toggle { display: none; }
+.iq-label { display: block; padding: 18px 22px; font-weight: 700; color: #0b3d44; cursor: pointer; font-size: 1.05em; font-family: var(--font-heading-family, Poppins, sans-serif); }
+.iq-label::after { content: "+"; float: right; color: #1a7a6d; font-size: 1.3em; line-height: 1; }
+.iq-toggle:checked + .iq-label::after { content: "−"; }
+.iq-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+.iq-toggle:checked + .iq-label + .iq-body { max-height: 4000px; }
+.iq-inner { padding: 0 22px 22px; }
+.iq-step { background: #f0f7f5; border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+.iq-tip { background: #fff8e1; border-left: 4px solid #e6a817; padding: 10px 14px; margin: 12px 0; }
+.iq-gray { background: #f7f7f7; border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+.iq-contact { background: #0b3d44; color: #fff; border-radius: 10px; padding: 18px 22px; margin-top: 12px; }
+.iq-contact p { margin: 0 0 8px; color: #fff; }
+@media (max-width: 700px) { .iq-cards { grid-template-columns: 1fr 1fr; } }
+/* ---- Guided tour (pure CSS) ---- */
+.tour-radio { display: none; }
+.tour-start { display: inline-block; margin-top: 16px; background: #e6a817; color: #0b3d44; font-weight: 800; padding: 12px 28px; border-radius: 30px; cursor: pointer; font-size: 1em; }
+.tour-start:hover { background: #f0b92e; }
+.tour-bar { display: none; position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); width: calc(100% - 36px); max-width: 560px; background: #0b3d44; color: #fff; border-radius: 14px; padding: 18px 22px; box-shadow: 0 8px 30px rgba(0,0,0,0.35); z-index: 1000; }
+.tour-bar h4 { margin: 0 0 4px; color: #e6a817; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.08em; }
+.tour-bar .tt { margin: 0 0 6px; font-weight: 700; font-size: 1.1em; color: #fff; font-family: var(--font-heading-family, Poppins, sans-serif); }
+.tour-bar p { margin: 0 0 14px; font-size: 0.9em; opacity: 0.92; color: #fff; }
+.tour-nav { display: flex; justify-content: space-between; align-items: center; }
+.tour-btn { display: inline-block; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 700; font-size: 0.9em; }
+.tour-next { background: #e6a817; color: #0b3d44; }
+.tour-back { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.4); }
+.tour-end { background: transparent; color: rgba(255,255,255,0.7); text-decoration: underline; font-size: 0.85em; cursor: pointer; }
+.tour-dots { text-align: center; font-size: 0.75em; opacity: 0.7; margin-top: 10px; color: #fff; }
+#tour0:checked ~ .tour-bar.t0, #tour1:checked ~ .tour-bar.t1, #tour2:checked ~ .tour-bar.t2, #tour3:checked ~ .tour-bar.t3, #tour4:checked ~ .tour-bar.t4, #tour5:checked ~ .tour-bar.t5 { display: block; }
+#tour0:checked ~ #sec0, #tour1:checked ~ #sec1, #tour2:checked ~ #sec2, #tour3:checked ~ #sec3, #tour4:checked ~ #sec4, #tour5:checked ~ #sec5 { outline: 3px solid #e6a817; outline-offset: 2px; }
+#tour0:checked ~ #sec0 .iq-body, #tour1:checked ~ #sec1 .iq-body, #tour2:checked ~ #sec2 .iq-body, #tour3:checked ~ #sec3 .iq-body, #tour4:checked ~ #sec4 .iq-body, #tour5:checked ~ #sec5 .iq-body { max-height: 4000px; }
+#tour0:checked ~ #sec0 .iq-label::after, #tour1:checked ~ #sec1 .iq-label::after, #tour2:checked ~ #sec2 .iq-label::after, #tour3:checked ~ #sec3 .iq-label::after, #tour4:checked ~ #sec4 .iq-label::after, #tour5:checked ~ #sec5 .iq-label::after { content: "−"; }
+/* tour: close non-active sections */
+#tour0:checked ~ #sec1 .iq-body, #tour0:checked ~ #sec2 .iq-body, #tour0:checked ~ #sec3 .iq-body, #tour0:checked ~ #sec4 .iq-body, #tour0:checked ~ #sec5 .iq-body { max-height: 0; }
+#tour0:checked ~ #sec1 .iq-label::after, #tour0:checked ~ #sec2 .iq-label::after, #tour0:checked ~ #sec3 .iq-label::after, #tour0:checked ~ #sec4 .iq-label::after, #tour0:checked ~ #sec5 .iq-label::after { content: "+"; }
+#tour1:checked ~ #sec0 .iq-body, #tour1:checked ~ #sec2 .iq-body, #tour1:checked ~ #sec3 .iq-body, #tour1:checked ~ #sec4 .iq-body, #tour1:checked ~ #sec5 .iq-body { max-height: 0; }
+#tour1:checked ~ #sec0 .iq-label::after, #tour1:checked ~ #sec2 .iq-label::after, #tour1:checked ~ #sec3 .iq-label::after, #tour1:checked ~ #sec4 .iq-label::after, #tour1:checked ~ #sec5 .iq-label::after { content: "+"; }
+#tour2:checked ~ #sec0 .iq-body, #tour2:checked ~ #sec1 .iq-body, #tour2:checked ~ #sec3 .iq-body, #tour2:checked ~ #sec4 .iq-body, #tour2:checked ~ #sec5 .iq-body { max-height: 0; }
+#tour2:checked ~ #sec0 .iq-label::after, #tour2:checked ~ #sec1 .iq-label::after, #tour2:checked ~ #sec3 .iq-label::after, #tour2:checked ~ #sec4 .iq-label::after, #tour2:checked ~ #sec5 .iq-label::after { content: "+"; }
+#tour3:checked ~ #sec0 .iq-body, #tour3:checked ~ #sec1 .iq-body, #tour3:checked ~ #sec2 .iq-body, #tour3:checked ~ #sec4 .iq-body, #tour3:checked ~ #sec5 .iq-body { max-height: 0; }
+#tour3:checked ~ #sec0 .iq-label::after, #tour3:checked ~ #sec1 .iq-label::after, #tour3:checked ~ #sec2 .iq-label::after, #tour3:checked ~ #sec4 .iq-label::after, #tour3:checked ~ #sec5 .iq-label::after { content: "+"; }
+#tour4:checked ~ #sec0 .iq-body, #tour4:checked ~ #sec1 .iq-body, #tour4:checked ~ #sec2 .iq-body, #tour4:checked ~ #sec3 .iq-body, #tour4:checked ~ #sec5 .iq-body { max-height: 0; }
+#tour4:checked ~ #sec0 .iq-label::after, #tour4:checked ~ #sec1 .iq-label::after, #tour4:checked ~ #sec2 .iq-label::after, #tour4:checked ~ #sec3 .iq-label::after, #tour4:checked ~ #sec5 .iq-label::after { content: "+"; }
+#tour5:checked ~ #sec0 .iq-body, #tour5:checked ~ #sec1 .iq-body, #tour5:checked ~ #sec2 .iq-body, #tour5:checked ~ #sec3 .iq-body, #tour5:checked ~ #sec4 .iq-body { max-height: 0; }
+#tour5:checked ~ #sec0 .iq-label::after, #tour5:checked ~ #sec1 .iq-label::after, #tour5:checked ~ #sec2 .iq-label::after, #tour5:checked ~ #sec3 .iq-label::after, #tour5:checked ~ #sec4 .iq-label::after { content: "+"; }
+</style>
+<div class="iq-guide">
+<input type="radio" name="tour" id="tour-off" class="tour-radio" checked>
+<input type="radio" name="tour" id="tour0" class="tour-radio">
+<input type="radio" name="tour" id="tour1" class="tour-radio">
+<input type="radio" name="tour" id="tour2" class="tour-radio">
+<input type="radio" name="tour" id="tour3" class="tour-radio">
+<input type="radio" name="tour" id="tour4" class="tour-radio">
+<input type="radio" name="tour" id="tour5" class="tour-radio">
+
+<div class="iq-hero">
+<h1>How to Use Our Website</h1>
+<p>Everything you need to order from InkQuest — pick a topic below.</p>
+<label class="tour-start" for="tour0">Take a Tour &#9654;</label>
+</div>
+
+<div class="iq-cards">
+<label class="iq-card" for="iq0"><div class="e">&#128100;</div><div class="t">Get an Account</div><div class="d">Apply, get approved, log in</div></label>
+<label class="iq-card" for="iq1"><div class="e">&#128269;</div><div class="t">Find Products</div><div class="d">Search by SKU, code, or model</div></label>
+<label class="iq-card" for="iq2"><div class="e">&#128722;</div><div class="t">Place an Order</div><div class="d">Cart, PO number, checkout</div></label>
+<label class="iq-card gold" for="iq3"><div class="e">&#128229;</div><div class="t">Upload a PO</div><div class="d">The fastest way to order</div></label>
+<label class="iq-card" for="iq4"><div class="e">&#128202;</div><div class="t">Your Dashboard</div><div class="d">Orders, invoices, wishlist</div></label>
+<label class="iq-card" for="iq5"><div class="e">&#10067;</div><div class="t">Need Help?</div><div class="d">Contact us, FAQ, links</div></label>
+</div>
+
+<div class="iq-acc" id="sec0">
+<input type="radio" name="iq-acc" id="iq0" class="iq-toggle" checked>
+<label class="iq-label" for="iq0">1. Getting Your Account &amp; Logging In</label>
+<div class="iq-body"><div class="iq-inner">
+<div class="iq-step"><strong>Step 1 – Apply:</strong> If you don't have an account yet, click <strong>BECOME A RESELLER</strong> in the top menu, fill out the application form, and send it to us.</div>
+<div class="iq-step"><strong>Step 2 – Approval:</strong> We'll review your application and set up your account. You'll receive a confirmation once it's approved.</div>
+<div class="iq-step"><strong>Step 3 – Log in:</strong> Come back to inkquest.ca, click the account icon (person symbol) at the top-right, and log in using your <strong>registered email address</strong>.</div>
+<div class="iq-step"><strong>Step 4:</strong> Once logged in, you'll see the <strong>Ink Quest – Canada Reseller Portal</strong> dashboard with a greeting and your account summary.</div>
+<div class="iq-tip"><strong>Tip:</strong> Use the <strong>EN / FR</strong> buttons at the top-right to switch between English and French.</div>
+</div></div>
+</div>
+
+<div class="iq-acc" id="sec1">
+<input type="radio" name="iq-acc" id="iq1" class="iq-toggle">
+<label class="iq-label" for="iq1">2. Finding Products</label>
+<div class="iq-body"><div class="iq-inner">
+<p><strong>Top menu:</strong></p>
+<ul>
+<li><strong>WHO WE ARE</strong> – Learn about InkQuest and our story.</li>
+<li><strong>WHAT WE SELL</strong> – Browse products by category (toner, ink, printers, and more).</li>
+<li><strong>WHERE WE ARE</strong> – Our store locations across Canada.</li>
+<li><strong>BECOME A RESELLER</strong> – New here? Fill out the application form on this page to request an account.</li>
+<li><strong>SPECIAL ORDER REQ.</strong> – Request a product you can't find on the website.</li>
+<li><strong>CONTACT US</strong> – Get in touch with our team.</li>
+</ul>
+<p><strong>Search:</strong> Type a product name, SKU, cartridge code (e.g. CF362A), or printer model into the search bar at the top of every page.</p>
+<p><strong>Browse:</strong> Use the <strong>WHAT WE SELL</strong> menu to browse by category.</p>
+<p><strong>Product pages:</strong> Each product page shows cartridge details, compatible printers, and pricing. Click <strong>Add to Cart</strong> to add it to your order.</p>
+<div class="iq-tip"><strong>Tip:</strong> Save items you buy often to your <strong>Wishlist</strong> (star icon) so you can find them quickly next time.</div>
+</div></div>
+</div>
+
+<div class="iq-acc" id="sec2">
+<input type="radio" name="iq-acc" id="iq2" class="iq-toggle">
+<label class="iq-label" for="iq2">3. Placing an Order</label>
+<div class="iq-body"><div class="iq-inner">
+<div class="iq-step"><strong>Step 1:</strong> Add products to your cart from product pages or search results.</div>
+<div class="iq-step"><strong>Step 2:</strong> Click the cart icon (top-right) to review your items. Adjust quantities if needed.</div>
+<div class="iq-step"><strong>Step 3:</strong> If you're ordering against a purchase order, enter your <strong>PO Number</strong> in the Purchase Order Number field on the cart page.</div>
+<div class="iq-step"><strong>Step 4:</strong> Click <strong>Checkout</strong>, enter your shipping and payment details, and place your order.</div>
+</div></div>
+</div>
+
+<div class="iq-acc gold" id="sec3">
+<input type="radio" name="iq-acc" id="iq3" class="iq-toggle">
+<label class="iq-label" for="iq3">4. Uploading a Purchase Order (Fastest Way to Order)</label>
+<div class="iq-body"><div class="iq-inner">
+<p>Instead of adding items one by one, upload your purchase order file and we'll fill your cart automatically — the fastest way to place a large order.</p>
+<div class="iq-step"><strong>Step 1 – Upload:</strong> Go to the <strong>Upload Purchase Order</strong> page. Drag &amp; drop your PO file, or click <strong>Choose file</strong>. Accepted files: <strong>PDF, XLS, XLSX</strong> (max 10 MB).</div>
+<div class="iq-step"><strong>Step 2 – Review:</strong> We read your file and match every line to our catalog. Check the matched items, adjust quantities, and remove anything you don't need. Your <strong>PO number</strong> is detected automatically — you can edit it if needed.</div>
+<div class="iq-step"><strong>Step 3 – Add to cart:</strong> Click <strong>Add matched items to cart</strong>. Everything goes into your cart at once, with your PO number attached.</div>
+<div class="iq-step"><strong>Step 4 – Checkout:</strong> Review your cart and check out as normal. Your PO number is already filled in.</div>
+<div class="iq-tip"><strong>Tip:</strong> Not sure about the format? Click <strong>Download a sample PO</strong> on the upload page to see an example file.</div>
+<div class="iq-gray">
+<strong>Good to know:</strong>
+<ul style="margin: 8px 0;">
+<li>Scanned or photo PDFs can't be read — please use a PDF with selectable text or an Excel file.</li>
+<li>If a product code matches more than one product, we'll ask you to pick the right one.</li>
+<li>Lines we can't match are shown separately and are <strong>not</strong> added to your cart.</li>
+<li>The ship-to address shown on the upload page is for reference — you'll enter the final shipping address at checkout.</li>
+</ul>
+</div>
+</div></div>
+</div>
+
+<div class="iq-acc" id="sec4">
+<input type="radio" name="iq-acc" id="iq4" class="iq-toggle">
+<label class="iq-label" for="iq4">5. Your Reseller Dashboard</label>
+<div class="iq-body"><div class="iq-inner">
+<p>After logging in, your dashboard gives you quick access to everything. The <strong>Overview</strong> shows your account summary at a glance:</p>
+<ul>
+<li><strong>Open Orders</strong> – Orders not yet fulfilled.</li>
+<li><strong>MTD Spend</strong> – Your total spending for the current month.</li>
+<li><strong>Lifetime Spend</strong> – Your all-time total with us.</li>
+</ul>
+<p><strong>Recent Orders</strong> lists your latest orders with these columns:</p>
+<ul>
+<li><strong>Order</strong> – The order number (click to see details).</li>
+<li><strong>Date</strong> – When the order was placed.</li>
+<li><strong>PO Number</strong> – The purchase order number attached to the order.</li>
+<li><strong>Ship To Name</strong> – Where the order is being shipped.</li>
+<li><strong>Total</strong> – The order total.</li>
+<li><strong>Status</strong> – Current status (e.g. pending, fulfilled).</li>
+</ul>
+<p>Click <strong>View all</strong> to see your full order history. The sidebar gives you:</p>
+<ul>
+<li><strong>Overview</strong> – Account summary: open orders, monthly and lifetime spend.</li>
+<li><strong>Orders</strong> – Order history and tracking.</li>
+<li><strong>Quick Re-Order</strong> – Re-order previous items without searching again.</li>
+<li><strong>Upload PO</strong> – Upload a purchase order file to fill your cart automatically.</li>
+<li><strong>Wishlist</strong> – Products you've saved for later.</li>
+<li><strong>New Arrivals</strong> – The latest products added to our catalog.</li>
+<li><strong>Special Order Request</strong> – Request a product you can't find on the website.</li>
+<li><strong>RMA English / RMA French</strong> – Start a return or warranty claim.</li>
+<li><strong>Invoices</strong> – View and download your invoices.</li>
+<li><strong>Profile</strong> – Update your contact details or password.</li>
+<li><strong>Address</strong> – Manage your saved shipping addresses.</li>
+</ul>
+<p><strong>Managing Your Account</strong></p>
+<p><strong>Profile:</strong> Go to <strong>Profile</strong> in the dashboard sidebar to update your contact details or change your password.<br>
+<strong>Addresses:</strong> Go to <strong>Address</strong> to add, edit, or remove shipping addresses. The address you choose at checkout is the one your order ships to.</p>
+</div></div>
+</div>
+
+<div class="iq-acc" id="sec5">
+<input type="radio" name="iq-acc" id="iq5" class="iq-toggle">
+<label class="iq-label" for="iq5">6. Helpful Links &amp; Contact</label>
+<div class="iq-body"><div class="iq-inner">
+<p>At the bottom of every page you'll find quick links:</p>
+<ul>
+<li><strong>Company:</strong> About Us, Contact Us, Brand We Carry, Privacy Policy, Website guide (this page).</li>
+<li><strong>Customer service:</strong> Warranty, RMA/Return, Shipping, Terms &amp; Conditions, Our Catalog, FAQ.</li>
+</ul>
+<p><strong>Join Our Newsletter:</strong> Enter your email in the newsletter box at the bottom of the page and click <strong>Subscribe</strong> to get updates, special offers, and more. You can also follow us on <strong>Facebook, Instagram, and LinkedIn</strong>.</p>
+<div class="iq-contact">
+<p><strong>Edmonton, AB</strong> — 1-800-661-9855<br>
+<strong>Richmond, BC</strong> — 1-800-661-9855<br>
+<strong>St-Eustache, QC</strong> — 1-877-275-5263</p>
+<p style="margin:0;">Or use the <strong>CONTACT US</strong> link in the top menu. For returns and warranty, see <strong>RMA/Return</strong> under Customer Service at the bottom of any page.</p>
+</div>
+</div></div>
+</div>
+
+<div class="tour-bar t0">
+<h4>Website Tour</h4>
+<div class="tt">Step 1: Get an Account</div>
+<p>New here? Click <strong>BECOME A RESELLER</strong> in the top menu and send us your application. Once approved, log in with your registered email.</p>
+<div class="tour-nav">
+<label class="tour-end" for="tour-off">End tour</label>
+<label class="tour-btn tour-next" for="tour1">Next &#9654;</label>
+</div>
+<div class="tour-dots">● ○ ○ ○ ○ ○ &nbsp; 1 of 6</div>
+</div>
+
+<div class="tour-bar t1">
+<h4>Website Tour</h4>
+<div class="tt">Step 2: Find Products</div>
+<p>Search by <strong>SKU, cartridge code, or printer model</strong> — or browse categories under WHAT WE SELL. Star items you buy often to save them to your Wishlist.</p>
+<div class="tour-nav">
+<label class="tour-btn tour-back" for="tour0">&#9664; Back</label>
+<label class="tour-end" for="tour-off">End tour</label>
+<label class="tour-btn tour-next" for="tour2">Next &#9654;</label>
+</div>
+<div class="tour-dots">● ● ○ ○ ○ ○ &nbsp; 2 of 6</div>
+</div>
+
+<div class="tour-bar t2">
+<h4>Website Tour</h4>
+<div class="tt">Step 3: Place an Order</div>
+<p>Add products to your cart, review quantities, enter your <strong>PO Number</strong> on the cart page, then check out.</p>
+<div class="tour-nav">
+<label class="tour-btn tour-back" for="tour1">&#9664; Back</label>
+<label class="tour-end" for="tour-off">End tour</label>
+<label class="tour-btn tour-next" for="tour3">Next &#9654;</label>
+</div>
+<div class="tour-dots">● ● ● ○ ○ ○ &nbsp; 3 of 6</div>
+</div>
+
+<div class="tour-bar t3">
+<h4>Website Tour</h4>
+<div class="tt">Step 4: Upload a PO — the Fastest Way</div>
+<p>Drop your purchase order file (PDF or Excel) on the Upload page. We match every line to our catalog and fill your cart automatically — with your PO number attached.</p>
+<div class="tour-nav">
+<label class="tour-btn tour-back" for="tour2">&#9664; Back</label>
+<label class="tour-end" for="tour-off">End tour</label>
+<label class="tour-btn tour-next" for="tour4">Next &#9654;</label>
+</div>
+<div class="tour-dots">● ● ● ● ○ ○ &nbsp; 4 of 6</div>
+</div>
+
+<div class="tour-bar t4">
+<h4>Website Tour</h4>
+<div class="tt">Step 5: Your Dashboard</div>
+<p>Track <strong>orders, invoices, and spending</strong> from your reseller dashboard. Use Quick Re-Order for repeat items and manage your profile and addresses.</p>
+<div class="tour-nav">
+<label class="tour-btn tour-back" for="tour3">&#9664; Back</label>
+<label class="tour-end" for="tour-off">End tour</label>
+<label class="tour-btn tour-next" for="tour5">Next &#9654;</label>
+</div>
+<div class="tour-dots">● ● ● ● ● ○ &nbsp; 5 of 6</div>
+</div>
+
+<div class="tour-bar t5">
+<h4>Website Tour</h4>
+<div class="tt">Step 6: Need Help?</div>
+<p>Call us at <strong>1-800-661-9855</strong> (AB/BC) or <strong>1-877-275-5263</strong> (QC) — or use CONTACT US in the top menu. You're ready to order!</p>
+<div class="tour-nav">
+<label class="tour-btn tour-back" for="tour4">&#9664; Back</label>
+<label class="tour-btn tour-next" for="tour-off">Finish &#10003;</label>
+</div>
+<div class="tour-dots">● ● ● ● ● ● &nbsp; 6 of 6</div>
+</div>
+
+</div>
+
+</div>
+<script>
+(function() {
+  function scrollToSec(id) {
+    var sec = document.getElementById(id);
+    if (sec) setTimeout(function() { sec.scrollIntoView({behavior: 'smooth', block: 'center'}); }, 60);
+  }
+  document.querySelectorAll('.tour-radio').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      var m = this.id.match(/^tour(\d+)$/);
+      if (m) scrollToSec('sec' + m[1]);
+    });
+  });
+  document.querySelectorAll('.iq-toggle').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      var m = this.id.match(/^iq(\d+)$/);
+      if (m) scrollToSec('sec' + m[1]);
+    });
+  });
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+
+  var GUIDE_UI_LOCALE = {{ request.locale.iso_code | default: 'en' | json }};
+  var GUIDE_IS_FRENCH = String(GUIDE_UI_LOCALE || '').toLowerCase().indexOf('fr') === 0;
+
+  if (!GUIDE_IS_FRENCH) return;
+
+  var GUIDE_FR = {
+    "How to Use Our Website": "Comment utiliser notre site Web",
+    "Everything you need to order from InkQuest — pick a topic below.": "Tout ce qu'il faut pour commander chez InkQuest — choisissez un sujet ci-dessous.",
+    "Take a Tour ▶": "Faire la visite ▶",
+    "Get an Account": "Créer un compte",
+    "Apply, get approved, log in": "Faites une demande, obtenez l'approbation, connectez-vous",
+    "Find Products": "Trouver des produits",
+    "Search by SKU, code, or model": "Rechercher par SKU, code ou modèle",
+    "Place an Order": "Passer une commande",
+    "Cart, PO number, checkout": "Panier, numéro de BC, caisse",
+    "Upload a PO": "Téléverser un BC",
+    "The fastest way to order": "Le moyen le plus rapide de commander",
+    "Your Dashboard": "Votre tableau de bord",
+    "Orders, invoices, wishlist": "Commandes, factures, liste de souhaits",
+    "Need Help?": "Besoin d'aide ?",
+    "Contact us, FAQ, links": "Contactez-nous, FAQ, liens",
+    "1. Getting Your Account & Logging In": "1. Créer votre compte et vous connecter",
+    "Step 1 – Apply:": "Étape 1 – Demande :",
+    "If you don't have an account yet, click": "Si vous n'avez pas encore de compte, cliquez sur",
+    "BECOME A RESELLER": "DEVENEZ REVENDEUR",
+    "in the top menu, fill out the application form, and send it to us.": "dans le menu du haut, remplissez le formulaire de demande et envoyez-le-nous.",
+    "Step 2 – Approval:": "Étape 2 – Approbation :",
+    "We'll review your application and set up your account. You'll receive a confirmation once it's approved.": "Nous examinerons votre demande et configurerons votre compte. Vous recevrez une confirmation une fois qu'il sera approuvé.",
+    "Step 3 – Log in:": "Étape 3 – Connexion :",
+    "Come back to inkquest.ca, click the account icon (person symbol) at the top-right, and log in using your": "Revenez sur inkquest.ca, cliquez sur l'icône de compte (symbole de personne) en haut à droite, et connectez-vous avec votre",
+    "registered email address": "adresse courriel enregistrée",
+    ".": ".",
+    "Step 4:": "Étape 4 :",
+    "Once logged in, you'll see the": "Une fois connecté, vous verrez le",
+    "Ink Quest – Canada Reseller Portal": "Ink Quest – Portail des revendeurs du Canada",
+    "dashboard with a greeting and your account summary.": "tableau de bord avec un message de bienvenue et le résumé de votre compte.",
+    "Tip:": "Astuce :",
+    "EN / FR": "les boutons « EN / FR »",
+    "buttons at the top-right to switch between English and French.": "en haut à droite pour passer de l'anglais au français.",
+    "2. Finding Products": "2. Trouver des produits",
+    "Top menu:": "Menu du haut :",
+    "WHO WE ARE": "QUI SOMMES-NOUS ?",
+    "– Learn about InkQuest and our story.": "– Découvrez InkQuest et notre histoire.",
+    "WHAT WE SELL": "« CE QUE NOUS VENDONS »",
+    "– Browse products by category (toner, ink, printers, and more).": "– Parcourez les produits par catégorie (toner, encre, imprimantes et plus).",
+    "WHERE WE ARE": "OÙ NOUS SOMMES",
+    "– Our store locations across Canada.": "– Nos magasins partout au Canada.",
+    "– New here? Fill out the application form on this page to request an account.": "– Nouveau ici ? Remplissez le formulaire de demande sur cette page pour demander un compte.",
+    "SPECIAL ORDER REQ.": "COMMANDE SPÉCIALE DEM.",
+    "– Request a product you can't find on the website.": "– Demandez un produit introuvable sur le site Web.",
+    "CONTACT US": "« NOUS CONTACTER »",
+    "– Get in touch with our team.": "– Communiquez avec notre équipe.",
+    "Search:": "Recherche :",
+    "Type a product name, SKU, cartridge code (e.g. CF362A), or printer model into the search bar at the top of every page.": "Tapez un nom de produit, un SKU, un code de cartouche (p. ex. CF362A) ou un modèle d'imprimante dans la barre de recherche en haut de chaque page.",
+    "Browse:": "Parcourir :",
+    "menu to browse by category.": "pour parcourir par catégorie.",
+    "Product pages:": "Pages de produits :",
+    "Each product page shows cartridge details, compatible printers, and pricing. Click": "Chaque page de produit affiche les détails de la cartouche, les imprimantes compatibles et les prix. Cliquez sur",
+    "Add to Cart": "Ajouter au panier",
+    "to add it to your order.": "pour l'ajouter à votre commande.",
+    "Save items you buy often to your": "Enregistrez les articles que vous achetez souvent dans votre",
+    "Wishlist": "Liste de souhaits",
+    "(star icon) so you can find them quickly next time.": "(icône d'étoile) pour les retrouver rapidement la prochaine fois.",
+    "3. Placing an Order": "3. Passer une commande",
+    "Step 1:": "Étape 1 :",
+    "Add products to your cart from product pages or search results.": "Ajoutez des produits à votre panier depuis les pages de produits ou les résultats de recherche.",
+    "Step 2:": "Étape 2 :",
+    "Click the cart icon (top-right) to review your items. Adjust quantities if needed.": "Cliquez sur l'icône du panier (en haut à droite) pour vérifier vos articles. Ajustez les quantités au besoin.",
+    "Step 3:": "Étape 3 :",
+    "If you're ordering against a purchase order, enter your": "Si vous commandez avec un bon de commande, entrez votre",
+    "PO Number": "Numéro de bon de commande",
+    "in the Purchase Order Number field on the cart page.": "dans le champ « Numéro de bon de commande » sur la page du panier.",
+    "Click": "Cliquez sur",
+    "Checkout": "Passer à la caisse",
+    ", enter your shipping and payment details, and place your order.": ", entrez vos coordonnées de livraison et de paiement, puis passez votre commande.",
+    "4. Uploading a Purchase Order (Fastest Way to Order)": "4. Téléverser un bon de commande (le plus rapide)",
+    "Instead of adding items one by one, upload your purchase order file and we'll fill your cart automatically — the fastest way to place a large order.": "Au lieu d'ajouter les articles un par un, téléversez votre fichier de bon de commande et nous remplirons votre panier automatiquement — le moyen le plus rapide de passer une grosse commande.",
+    "Step 1 – Upload:": "Étape 1 – Téléversement :",
+    "Go to the": "Allez à la",
+    "Upload Purchase Order": "Télécharger le bon de commande",
+    "page. Drag & drop your PO file, or click": "page. Glissez-déposez votre fichier de bon de commande, ou cliquez sur",
+    "Choose file": "Choisir un fichier",
+    ". Accepted files:": ". Fichiers acceptés :",
+    "PDF, XLS, XLSX": "PDF, XLS, XLSX",
+    "(max 10 MB).": "(max 10 Mo).",
+    "Step 2 – Review:": "Étape 2 – Vérification :",
+    "We read your file and match every line to our catalog. Check the matched items, adjust quantities, and remove anything you don't need. Your": "Nous lisons votre fichier et associons chaque ligne à notre catalogue. Vérifiez les articles associés, ajustez les quantités et retirez ce dont vous n'avez pas besoin. Votre",
+    "PO number": "numéro de bon de commande",
+    "is detected automatically — you can edit it if needed.": "est détecté automatiquement — vous pouvez le modifier au besoin.",
+    "Step 3 – Add to cart:": "Étape 3 – Ajouter au panier :",
+    "Add matched items to cart": "Ajouter les articles associés au panier",
+    ". Everything goes into your cart at once, with your PO number attached.": ". Tout est ajouté à votre panier en une fois, avec votre numéro de bon de commande.",
+    "Step 4 – Checkout:": "Étape 4 – Caisse :",
+    "Review your cart and check out as normal. Your PO number is already filled in.": "Vérifiez votre panier et passez à la caisse comme d'habitude. Votre numéro de bon de commande est déjà rempli.",
+    "Not sure about the format? Click": "Vous n'êtes pas sûr du format ? Cliquez sur",
+    "Download a sample PO": "Télécharger un exemple de bon de commande",
+    "on the upload page to see an example file.": "sur la page de téléversement pour voir un exemple de fichier.",
+    "Good to know:": "Bon à savoir :",
+    "Scanned or photo PDFs can't be read — please use a PDF with selectable text or an Excel file.": "Les PDF numérisés ou photographiés ne peuvent pas être lus — veuillez utiliser un PDF avec du texte sélectionnable ou un fichier Excel.",
+    "If a product code matches more than one product, we'll ask you to pick the right one.": "Si un code de produit correspond à plus d'un produit, nous vous demanderons de choisir le bon.",
+    "Lines we can't match are shown separately and are": "Les lignes que nous ne pouvons pas associer sont affichées séparément et sont",
+    "not": "pas",
+    "added to your cart.": "ajoutées à votre panier.",
+    "The ship-to address shown on the upload page is for reference — you'll enter the final shipping address at checkout.": "L'adresse de livraison affichée sur la page de téléversement est à titre indicatif — vous entrerez l'adresse de livraison finale à la caisse.",
+    "5. Your Reseller Dashboard": "5. Votre tableau de bord de revendeur",
+    "After logging in, your dashboard gives you quick access to everything. The": "Après votre connexion, votre tableau de bord vous donne un accès rapide à tout. L'",
+    "Overview": "Aperçu",
+    "shows your account summary at a glance:": "affiche le résumé de votre compte en un coup d'œil :",
+    "Open Orders": "Commandes ouvertes",
+    "– Orders not yet fulfilled.": "– Commandes non encore traitées.",
+    "MTD Spend": "Dépenses du mois",
+    "– Your total spending for the current month.": "– Vos dépenses totales pour le mois en cours.",
+    "Lifetime Spend": "Dépenses cumulées",
+    "– Your all-time total with us.": "– Votre total de tous les temps chez nous.",
+    "Recent Orders": "Commandes récentes",
+    "lists your latest orders with these columns:": "liste vos dernières commandes avec ces colonnes :",
+    "Order": "Commande",
+    "– The order number (click to see details).": "– Le numéro de commande (cliquez pour voir les détails).",
+    "Date": "Date",
+    "– When the order was placed.": "– La date à laquelle la commande a été passée.",
+    "– The purchase order number attached to the order.": "– Le numéro de bon de commande joint à la commande.",
+    "Ship To Name": "Nom du destinataire",
+    "– Where the order is being shipped.": "– L'adresse d'expédition de la commande.",
+    "Total": "Total",
+    "– The order total.": "– Le total de la commande.",
+    "Status": "Statut",
+    "– Current status (e.g. pending, fulfilled).": "– Statut actuel (p. ex. en attente, traitée).",
+    "View all": "Voir tout",
+    "to see your full order history. The sidebar gives you:": "pour voir tout votre historique de commandes. La barre latérale vous donne :",
+    "– Account summary: open orders, monthly and lifetime spend.": "– Résumé du compte : commandes ouvertes, dépenses mensuelles et totales.",
+    "Orders": "Commandes",
+    "– Order history and tracking.": "– Historique et suivi des commandes.",
+    "Quick Re-Order": "Commande rapide",
+    "– Re-order previous items without searching again.": "– Commandez à nouveau des articles précédents sans chercher à nouveau.",
+    "Upload PO": "Téléverser un BC",
+    "– Upload a purchase order file to fill your cart automatically.": "– Téléversez un fichier de bon de commande pour remplir votre panier automatiquement.",
+    "– Products you've saved for later.": "– Produits que vous avez enregistrés pour plus tard.",
+    "New Arrivals": "Nouveautés",
+    "– The latest products added to our catalog.": "– Les derniers produits ajoutés à notre catalogue.",
+    "Special Order Request": "Demande de commande spéciale",
+    "RMA English / RMA French": "RMA Anglais / RMA Français",
+    "– Start a return or warranty claim.": "– Commencez un retour ou une réclamation de garantie.",
+    "Invoices": "Factures",
+    "– View and download your invoices.": "– Consultez et téléchargez vos factures.",
+    "Profile": "Profil",
+    "– Update your contact details or password.": "– Mettez à jour vos coordonnées ou votre mot de passe.",
+    "Address": "Adresse",
+    "– Manage your saved shipping addresses.": "– Gérez vos adresses de livraison enregistrées.",
+    "Managing Your Account": "Gérer votre compte",
+    "Profile:": "Profil :",
+    "Go to": "Allez à",
+    "in the dashboard sidebar to update your contact details or change your password.": "dans la barre latérale du tableau de bord pour mettre à jour vos coordonnées ou changer votre mot de passe.",
+    "Addresses:": "Adresses :",
+    "to add, edit, or remove shipping addresses. The address you choose at checkout is the one your order ships to.": "pour ajouter, modifier ou supprimer des adresses de livraison. L'adresse que vous choisissez à la caisse est celle à laquelle votre commande est expédiée.",
+    "6. Helpful Links & Contact": "6. Liens utiles et contact",
+    "At the bottom of every page you'll find quick links:": "Au bas de chaque page, vous trouverez des liens rapides :",
+    "Company:": "Entreprise :",
+    "About Us, Contact Us, Brand We Carry, Privacy Policy, Website guide (this page).": "À propos de nous, Contactez-nous, Marques que nous proposons, politique de confidentialité, Guide du site web (cette page).",
+    "Customer service:": "Soutien :",
+    "Warranty, RMA/Return, Shipping, Terms & Conditions, Our Catalog, FAQ.": "Garantie, RMA/Retour, Expédition, Conditions générales, Notre catalogue, FAQ.",
+    "Join Our Newsletter:": "Joignez-vous à notre infolettre :",
+    "Enter your email in the newsletter box at the bottom of the page and click": "Entrez votre courriel dans la boîte d'infolettre au bas de la page et cliquez sur",
+    "Subscribe": "S'abonner",
+    "to get updates, special offers, and more. You can also follow us on": "pour recevoir des nouvelles, des offres spéciales et plus. Vous pouvez aussi nous suivre sur",
+    "Facebook, Instagram, and LinkedIn": "Facebook, Instagram et LinkedIn",
+    "Or use the": "Ou utilisez le lien",
+    "link in the top menu. For returns and warranty, see": "dans le menu du haut. Pour les retours et la garantie, voir",
+    "RMA/Return": "RMA/Retour",
+    "under Customer Service at the bottom of any page.": "sous Soutien au bas de n'importe quelle page.",
+    "Website Tour": "Visite du site Web",
+    "Step 1: Get an Account": "Étape 1 : Créer un compte",
+    "New here? Click": "Nouveau ici ? Cliquez sur",
+    "in the top menu and send us your application. Once approved, log in with your registered email.": "dans le menu du haut et envoyez-nous votre demande. Une fois approuvée, connectez-vous avec votre courriel enregistré.",
+    "End tour": "Terminer la visite",
+    "Next ▶": "Suivant ▶",
+    "Step 2: Find Products": "Étape 2 : Trouver des produits",
+    "Search by": "Recherchez par",
+    "SKU, cartridge code, or printer model": "SKU, code de cartouche ou modèle d'imprimante",
+    "— or browse categories under WHAT WE SELL. Star items you buy often to save them to your Wishlist.": "— ou parcourez les catégories sous « CE QUE NOUS VENDONS ». Mettez une étoile aux articles que vous achetez souvent pour les enregistrer dans votre liste de souhaits.",
+    "◀ Back": "◀ Retour",
+    "Step 3: Place an Order": "Étape 3 : Passer une commande",
+    "Add products to your cart, review quantities, enter your": "Ajoutez des produits à votre panier, vérifiez les quantités, entrez votre",
+    "on the cart page, then check out.": "sur la page du panier, puis passez à la caisse.",
+    "Step 4: Upload a PO — the Fastest Way": "Étape 4 : Téléverser un BC — le plus rapide",
+    "Drop your purchase order file (PDF or Excel) on the Upload page. We match every line to our catalog and fill your cart automatically — with your PO number attached.": "Déposez votre fichier de bon de commande (PDF ou Excel) sur la page de téléversement. Nous associons chaque ligne à notre catalogue et remplissons votre panier automatiquement — avec votre numéro de bon de commande.",
+    "Step 5: Your Dashboard": "Étape 5 : Votre tableau de bord",
+    "Track": "Suivez",
+    "orders, invoices, and spending": "vos commandes, factures et dépenses",
+    "from your reseller dashboard. Use Quick Re-Order for repeat items and manage your profile and addresses.": "depuis votre tableau de bord de revendeur. Utilisez la commande rapide pour les articles récurrents et gérez votre profil et vos adresses.",
+    "Step 6: Need Help?": "Étape 6 : Besoin d'aide ?",
+    "Call us at": "Appelez-nous au",
+    "(AB/BC) or": "(AB/BC) ou",
+    "(QC) — or use CONTACT US in the top menu. You're ready to order!": "(QC) — ou utilisez « NOUS CONTACTER » dans le menu du haut. Vous êtes prêt à commander !",
+    "Finish ✓": "Terminer ✓"
+  };
+
+  var GUIDE_SUBSTRING_FR = [
+    [" of 6", " sur 6"]
+  ];
+
+  function normalize(value) {
+    return String(value || '')
+      .replace(/\u00a0/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  // "Use the" needs a different French article per context:
+  // "Use the EN / FR buttons ..." -> "Utilisez ...", "Use the WHAT WE SELL menu ..." -> "Utilisez le menu ..."
+  function translateUseThe(node) {
+    var nxt = node.nextSibling;
+    var nxtText = nxt ? normalize(nxt.textContent || '') : '';
+    if (nxtText.indexOf('EN / FR') === 0) return 'Utilisez';
+    return 'Utilisez le menu';
+  }
+
+  function translateTextNode(node) {
+    if (node._iqTranslated) return;
+    node._iqTranslated = true;
+    var original = node.nodeValue;
+    if (!original || !/[A-Za-z]/.test(original)) return;
+
+    var normalized = normalize(original);
+    if (!normalized) return;
+
+    if (normalized === 'Use the') {
+      var start = original.search(/\S/);
+      var leading = start > 0 ? original.slice(0, start) : '';
+      node.nodeValue = leading + translateUseThe(node);
+      return;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(GUIDE_FR, normalized)) {
+      var start2 = original.search(/\S/);
+      var end = original.search(/\s*$/);
+      var leading2 = start2 > 0 ? original.slice(0, start2) : '';
+      var trailing = end >= 0 ? original.slice(end) : '';
+      node.nodeValue = leading2 + GUIDE_FR[normalized] + trailing;
+      return;
+    }
+
+    var updated = original;
+    GUIDE_SUBSTRING_FR.forEach(function (pair) {
+      updated = updated.split(pair[0]).join(pair[1]);
+    });
+
+    Object.keys(GUIDE_FR).forEach(function (key) {
+      if (key.length < 3 || key.indexOf(' ') === -1) return;
+      if (updated.indexOf(key) !== -1) {
+        updated = updated.split(key).join(GUIDE_FR[key]);
+      }
+    });
+
+    if (updated !== original) node.nodeValue = updated;
+  }
+
+  function translateAttributes(root) {
+    var elements = root.querySelectorAll ? root.querySelectorAll('input, textarea, select, button, a, iframe, [aria-label], [title], [placeholder]') : [];
+    elements.forEach(function (el) {
+      ['placeholder', 'title', 'aria-label'].forEach(function (attr) {
+        if (!el.hasAttribute(attr)) return;
+        var value = normalize(el.getAttribute(attr));
+        if (Object.prototype.hasOwnProperty.call(GUIDE_FR, value)) {
+          el.setAttribute(attr, GUIDE_FR[value]);
+        }
+      });
+    });
+  }
+
+  function translateRoot(root) {
+    if (!root) return;
+
+    if (root.nodeType === Node.TEXT_NODE) {
+      translateTextNode(root);
+      return;
+    }
+
+    if (root.nodeType !== Node.ELEMENT_NODE) return;
+    if (/^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/i.test(root.tagName)) return;
+
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        var parent = node.parentElement;
+        if (!parent || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/i.test(parent.tagName)) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    var nodes = [];
+    var current;
+    while ((current = walker.nextNode())) nodes.push(current);
+    nodes.forEach(translateTextNode);
+    translateAttributes(root);
+  }
+
+  var guideRoot = document.querySelector('.iq-guide');
+  translateRoot(guideRoot);
+
+  var observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      mutation.addedNodes.forEach(function (node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+          translateTextNode(node);
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          translateRoot(node);
+        }
+      });
+    });
+  });
+
+  if (guideRoot) {
+    observer.observe(guideRoot, {
+      childList: true,
+      subtree: true
+    });
+  }
+})();
+</script>

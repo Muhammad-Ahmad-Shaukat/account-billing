@@ -1,0 +1,293 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+.iq-insights-page{
+  --teal:#00404c; --teal-2:#005a6a; --teal-light:#e6f2f3; --teal-mid:#0e7a8a;
+  --bg:#ffffff; --bg-soft:#f4f7f7; --bg-card:#ffffff; --ink:#101d20; --ink-2:#3d4f54; --ink-3:#6b7d82;
+  --line:#dde8e9; --amber:#e67e22; --amber-bg:#fef3e8; --green:#1a7a4c; --green-bg:#e8f5ee;
+  --radius:16px; --shadow:0 8px 30px rgba(0,64,76,.08);
+}
+@media (prefers-color-scheme: dark){.iq-insights-page{ --bg:#0d1a1d; --bg-soft:#112529; --bg-card:#16292e; --ink:#edf4f5; --ink-2:#b9cdd1; --ink-3:#8aa0a6; --line:#234046; --teal-light:#16373d; --amber-bg:#2f2417; --green-bg:#163326; --shadow:0 8px 30px rgba(0,0,0,.35); }}
+.iq-insights-page, .iq-insights-page *{box-sizing:border-box}
+.iq-insights-page{scroll-behavior:smooth}
+.iq-insights-page{margin:0;font-family:"Plus Jakarta Sans",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+.iq-insights-page a{color:var(--teal-2);text-decoration:none}
+@media(prefers-color-scheme:dark){.iq-insights-page a{color:#7fd1de}}
+.iq-insights-page img{max-width:100%;display:block}
+.iq-insights-page .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.iq-insights-page .view-toggle{display:flex;background:rgba(255,255,255,.14);border-radius:999px;padding:3px}
+.iq-insights-page .view-toggle button{border:0;background:transparent;color:#fff;font:inherit;font-size:13px;font-weight:700;padding:7px 14px;border-radius:999px;cursor:pointer}
+.iq-insights-page .view-toggle button.active{background:#fff;color:var(--teal)}
+.iq-insights-page .section-head{padding:44px 0 8px}
+.iq-insights-page .kicker{font-size:12px;letter-spacing:.16em;font-weight:800;text-transform:uppercase;color:var(--teal-mid);display:flex;align-items:center;gap:10px}
+.iq-insights-page .kicker::before{content:"";width:28px;height:2px;background:var(--amber);display:block}
+.iq-insights-page h1{font-family:"Source Serif 4",serif;font-size:clamp(34px,5vw,52px);line-height:1.05;margin:12px 0 12px;letter-spacing:-.02em}
+.iq-insights-page .lede{font-size:18px;color:var(--ink-2);max-width:720px;margin:0}
+.iq-insights-page .lede strong{color:var(--ink)}
+.iq-insights-page .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:28px 0 22px}
+.iq-insights-page .pills{display:flex;flex-wrap:wrap;gap:8px}
+.iq-insights-page .pill{border:1.5px solid var(--line);background:var(--bg-card);color:var(--ink-2);padding:8px 14px;border-radius:999px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer}
+.iq-insights-page .pill.active{background:var(--teal);border-color:var(--teal);color:#fff}
+.iq-insights-page .search{position:relative;min-width:240px;flex:0 1 300px}
+.iq-insights-page .search input{width:100%;padding:11px 14px 11px 38px;border:1.5px solid var(--line);border-radius:999px;background:var(--bg-card);color:var(--ink);font:inherit;font-size:14px}
+.iq-insights-page .search span{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.6}
+.iq-insights-page .featured{display:grid;grid-template-columns:1.15fr .85fr;background:var(--bg-card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:22px}
+.iq-insights-page .featured img{width:100%;height:100%;object-fit:cover;min-height:320px}
+.iq-insights-page .featured-body{padding:28px 28px 24px;display:flex;flex-direction:column}
+.iq-insights-page .tag{display:inline-flex;align-self:flex-start;font-size:11px;letter-spacing:.12em;font-weight:800;text-transform:uppercase;padding:6px 9px;border-radius:999px;background:var(--teal-light);color:var(--teal)}
+@media(prefers-color-scheme:dark){.iq-insights-page .tag{color:#a8e0e8}}
+.iq-insights-page .tag.amber{background:var(--amber-bg);color:#9a4a0a}
+.iq-insights-page .tag.green{background:var(--green-bg);color:var(--green)}
+@media(prefers-color-scheme:dark){.iq-insights-page .tag.amber{color:#ffb26b}
+.iq-insights-page .tag.green{color:#7be0a8}}
+.iq-insights-page .featured h2{font-size:28px;line-height:1.15;margin:14px 0 10px;letter-spacing:-.02em}
+.iq-insights-page .featured p{color:var(--ink-2);margin:0 0 16px}
+.iq-insights-page .meta{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--ink-3);margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
+.iq-insights-page .read-link{font-weight:800;color:var(--teal);cursor:pointer;background:none;border:0;font:inherit;padding:0;text-align:left}
+@media(prefers-color-scheme:dark){.iq-insights-page .read-link{color:#7fd1de}}
+.iq-insights-page .read-link:hover{text-decoration:underline}
+.iq-insights-page .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.iq-insights-page .card{background:var(--bg-card);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s, box-shadow .15s}
+.iq-insights-page .card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.iq-insights-page .card .thumb{height:178px;overflow:hidden;background:var(--bg-soft)}
+.iq-insights-page .card .thumb img{width:100%;height:100%;object-fit:cover}
+.iq-insights-page .card .thumb.icon-thumb{display:flex;align-items:center;justify-content:center;font-size:52px;background:linear-gradient(135deg,var(--teal-light),var(--bg-soft))}
+.iq-insights-page .card-body{padding:18px;display:flex;flex-direction:column;flex:1}
+.iq-insights-page .card h3{font-size:17.5px;line-height:1.3;margin:10px 0 8px;letter-spacing:-.01em}
+.iq-insights-page .card p{font-size:14.5px;color:var(--ink-2);margin:0 0 14px}
+.iq-insights-page .card .meta{font-size:12.5px}
+.iq-insights-page .btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#fff !important;padding:13px 22px;border-radius:999px;font-weight:800;font-size:14.5px;border:0;cursor:pointer}
+.iq-insights-page .btn.secondary{background:transparent;color:var(--teal) !important;border:1.5px solid var(--line)}
+@media(prefers-color-scheme:dark){.iq-insights-page .btn.secondary{color:#edf4f5 !important}}
+.iq-insights-page .lower{display:grid;grid-template-columns:1.6fr .9fr;gap:18px;margin:26px 0}
+.iq-insights-page .panel{background:var(--bg-soft);border:1px solid var(--line);border-radius:18px;padding:22px}
+.iq-insights-page .panel h3{margin:0 0 6px;font-size:20px}
+.iq-insights-page .panel p.sub{color:var(--ink-2);font-size:14.5px;margin:0 0 16px}
+.iq-insights-page .calc-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.iq-insights-page label{font-size:12.5px;font-weight:700;letter-spacing:.02em;color:var(--ink-2);display:block;margin-bottom:6px}
+.iq-insights-page input[type=number], .iq-insights-page select{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg-card);color:var(--ink);font:inherit}
+.iq-insights-page .calc-result{margin-top:16px;background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:center}
+.iq-insights-page .calc-result b{font-size:22px;display:block;line-height:1}
+.iq-insights-page .calc-result span{font-size:12px;color:var(--ink-3);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.iq-insights-page .calc-note{font-size:12.5px;color:var(--ink-3);margin-top:10px}
+.iq-insights-page .topics{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
+.iq-insights-page .topics li{padding:12px 0;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
+.iq-insights-page .topics li:last-child{border:0}
+.iq-insights-page .topics .num{width:28px;height:28px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;margin-top:2px}
+.iq-insights-page .topics b{font-size:14.5px;line-height:1.35;display:block}
+.iq-insights-page .topics small{color:var(--ink-3)}
+.iq-insights-page .brands{margin:8px 0 26px;border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;background:var(--bg-card)}
+.iq-insights-page .brands strong{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.iq-insights-page .brands span{font-weight:700;font-size:14.5px}
+.iq-insights-page dialog{border:0;padding:0;max-width:760px;width:calc(100% - 28px);max-height:88vh;border-radius:20px;background:var(--bg);color:var(--ink);box-shadow:0 24px 80px rgba(0,0,0,.3)}
+.iq-insights-page dialog::backdrop{background:rgba(0,32,38,.6);backdrop-filter:blur(3px)}
+.iq-insights-page .modal-head{position:sticky;top:0;background:var(--bg);padding:18px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;align-items:flex-start;z-index:2}
+.iq-insights-page .modal-head h2{margin:6px 0 4px;font-size:24px;line-height:1.2}
+.iq-insights-page .close{border:1.5px solid var(--line);background:var(--bg-card);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);flex-shrink:0}
+.iq-insights-page .modal-body{padding:22px 24px 30px;font-size:16px;color:var(--ink-2)}
+.iq-insights-page .modal-body h4{color:var(--ink);margin:22px 0 8px;font-size:17px}
+.iq-insights-page .modal-body ul{padding-left:20px}
+.iq-insights-page .modal-body li{margin:6px 0}
+.iq-insights-page .modal-body table{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0}
+.iq-insights-page .modal-body th, .iq-insights-page .modal-body td{border:1px solid var(--line);padding:9px 10px;text-align:left}
+.iq-insights-page .modal-body th{background:var(--bg-soft)}
+.iq-insights-page .callout{background:var(--teal-light);border-radius:12px;padding:14px 16px;margin:16px 0;font-size:14.5px}
+.iq-insights-page footer{padding:22px 0 36px;color:var(--ink-3);font-size:13.5px;border-top:1px solid var(--line)}
+.iq-insights-page .empty{display:none;text-align:center;padding:36px;border:1px dashed var(--line);border-radius:16px;color:var(--ink-3)}
+@media(max-width:900px){.iq-insights-page .grid{grid-template-columns:1fr 1fr}
+.iq-insights-page .featured, .iq-insights-page .lower{grid-template-columns:1fr}
+.iq-insights-page .featured img{min-height:220px}}
+@media(max-width:560px){.iq-insights-page .grid{grid-template-columns:1fr}
+.iq-insights-page .calc-row, .iq-insights-page .calc-result{grid-template-columns:1fr}
+.iq-insights-page .toolbar{flex-direction:column;align-items:stretch}
+.iq-insights-page .search{flex:1}}
+@media(prefers-reduced-motion:reduce){.iq-insights-page, .iq-insights-page *{transition:none !important;scroll-behavior:auto !important}}
+</style>
+<div class="iq-insights-page">
+<div class="wrap">
+  <!-- SECTION HEADER -->
+  <header class="section-head">
+    <div class="kicker">For Resellers • Ink &amp; Toner Industry</div>
+    <h1>Industry Insights</h1>
+    <p class="lede">Practical, no-fluff guidance for Canadian resellers — <strong>how to sell more cartridges, protect your margins, and answer the questions your customers ask every week.</strong> Written for office-supply stores, printer repair shops, and IT resellers, not end users.</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="pills" id="pills">
+      <button class="pill active" data-filter="all">All Insights</button>
+      <button class="pill" data-filter="market">Market Trends</button>
+      
+      <button class="pill" data-filter="product">Product Knowledge</button>
+      <button class="pill" data-filter="sustainability">Sustainability</button>
+      <button class="pill" data-filter="buying">Buying Guides</button>
+    </div>
+    <div class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Search insights — e.g. firmware, high-yield, margins…" aria-label="Search articles"></div>
+  </div>
+
+  <!-- FEATURED -->
+  <article class="featured article" data-cat="market" data-search="oem compatible remanufactured original conversation margin quality warranty">
+    <img src="{{ 'industry-insights-1.webp' | asset_url }}" alt="Laser printer and stacked high-yield toner cartridge boxes in a modern Canadian office">
+    <div class="featured-body">
+      <span class="tag">Featured • Market Trends</span>
+      <h2>OEM vs. Compatible vs. Remanufactured: How to Have the Conversation in 2026</h2>
+      <p>Your customers don’t actually want the cheapest cartridge — they want no callbacks, no faded pages, and no surprise downtime. Here’s a clear, honest way to explain the three options, when each one makes sense, and how to position compatible and remanufactured as a smart choice, not a compromise.</p>
+      <button class="read-link" onclick="openArticle('oem')">Read the full guide →</button>
+      <div class="meta"><span>Oct 8, 2026</span><span>6 min read</span><span>For: All resellers</span></div>
+    </div>
+  </article>
+
+  
+
+  <!-- GRID -->
+  <section class="grid" id="grid">
+    <article class="card article" data-cat="buying" data-search="high yield cost per page cpp standard yield savings brother hp">
+      <div class="thumb"><img src="{{ 'industry-insights-2.webp' | asset_url }}" alt="Black, cyan, magenta and yellow toner cartridges in a row"></div>
+      <div class="card-body"><span class="tag amber">Buying Guide</span>
+        <h3>High-Yield Wins: The Cost-Per-Page Math Your Customers Actually Care About</h3>
+        <p>A higher shelf price can be the cheaper cartridge. Show customers cost per page — not price per box — and high-yield sells itself.</p>
+        <button class="read-link" onclick="openArticle('cpp')">Read article →</button>
+        <div class="meta"><span>Oct 2, 2026</span><span>4 min read</span></div>
+      </div>
+    </article>
+
+    <article class="card article" data-cat="product" data-search="firmware chip update printer cartridge not recognized hp brother lexmark">
+      <div class="thumb icon-thumb" aria-hidden="true">⚙️</div>
+      <div class="card-body"><span class="tag">Product Knowledge</span>
+        <h3>Firmware Updates &amp; Cartridge Chips: What to Check Before You Sell</h3>
+        <p>A printer update can suddenly make a working cartridge show “not recognized.” What’s really happening, and the 3 checks that prevent returns.</p>
+        <button class="read-link" onclick="openArticle('firmware')">Read article →</button>
+        <div class="meta"><span>Sep 24, 2026</span><span>5 min read</span></div>
+      </div>
+    </article>
+
+    <article class="card article" data-cat="sustainability" data-search="remanufactured eco sustainable recycling empty cartridges environment">
+      <div class="thumb"><img src="{{ 'industry-insights-3.webp' | asset_url }}" alt="Hands placing a used toner cartridge into a recycling collection box"></div>
+      <div class="card-body"><span class="tag green">Sustainability</span>
+        <h3>The Sustainable Shelf: Why Remanufactured &amp; Eco Options Are Moving Faster</h3>
+        <p>More offices now ask what happens to their empties. Resellers who offer a take-back story and a quality remanufactured option win that conversation.</p>
+        <button class="read-link" onclick="openArticle('sustainability')">Read article →</button>
+        <div class="meta"><span>Sep 17, 2026</span><span>4 min read</span></div>
+      </div>
+    </article>
+
+    
+
+    
+
+    <article class="card article only-full" data-cat="product" data-search="counterfeit fake quality returns leaking faded drum cartridge check">
+      <div class="thumb icon-thumb" aria-hidden="true">🔍</div>
+      <div class="card-body"><span class="tag">Product Knowledge</span>
+        <h3>How to Spot Counterfeit &amp; Poor-Quality Cartridges Before They Cost You Returns</h3>
+        <p>Leaks, faded output, and early failures usually trace back to sourcing — not the printer. The packaging, chip, and drum checks experienced buyers use.</p>
+        <button class="read-link" onclick="openArticle('counterfeit')">Read article →</button>
+        <div class="meta"><span>Aug 27, 2026</span><span>5 min read</span></div>
+      </div>
+    </article>
+  </section>
+
+  <div class="empty" id="emptyState">No insights match that search. Try “firmware”, “high-yield”, or “inventory”.</div>
+
+  <!-- LOWER: calculator + trending -->
+  <section class="lower only-full">
+    <div class="panel">
+      <h3>Try it: Cost-Per-Page Calculator</h3>
+      <p class="sub">Use this live in a customer conversation. Enter any two cartridges you sell — the math does the selling.</p>
+      <div class="calc-row">
+        <div><label>Cartridge A — Price ($)</label><input type="number" id="priceA" value="89.99" min="0" step="0.01"></div>
+        <div><label>Cartridge A — Page Yield</label><input type="number" id="yieldA" value="1200" min="1" step="100"></div>
+        <div><label>Cartridge B — Price ($)</label><input type="number" id="priceB" value="129.99" min="0" step="0.01"></div>
+        <div><label>Cartridge B — Page Yield</label><input type="number" id="yieldB" value="3000" min="1" step="100"></div>
+      </div>
+      <div class="calc-result">
+        <div><span>Cartridge A</span><b id="cppA">7.50¢ / page</b></div>
+        <div><span>Cartridge B</span><b id="cppB" style="color:var(--green)">4.33¢ / page</b></div>
+      </div>
+      <p class="calc-note" id="calcNote">In this example, Cartridge B costs more upfront but is 42% cheaper per page — that’s the high-yield conversation from the article above. Yields should be the manufacturer’s stated yield for the exact model.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Trending with Resellers</h3>
+      <p class="sub">The questions coming up most right now — each links to the guide that answers it.</p>
+      <ul class="topics">
+        <li><span class="num">1</span><div><b>“Will a compatible void my printer warranty?”</b><small>Answered in the OEM vs. Compatible guide</small></div></li>
+        <li><span class="num">2</span><div><b>“My printer updated and now rejects the cartridge”</b><small>Answered in Firmware &amp; Chips</small></div></li>
+        <li><span class="num">3</span><div><b>“Should I stock standard or high-yield?”</b><small>Answered in High-Yield Wins + the CPP calculator</small></div></li>
+        <li><span class="num">4</span><div><b>“What do I do with empty cartridges?”</b><small>Answered in The Sustainable Shelf</small></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="brands only-full">
+    <strong>Covering the brands you sell</strong>
+    <span>HP</span><span>Brother</span><span>Canon</span><span>Lexmark</span><span>Epson</span><span>Xerox</span><span>Samsung</span><span>OKI</span><span>Dell</span><span>Konica Minolta</span><span>Ricoh</span><span>Sharp</span>
+  </div>
+
+  
+
+  <footer>
+    
+    <p>Ink Quest • Reseller-only ink &amp; toner • Warehouses in AB, BC &amp; QC • Insights are general business guidance — always confirm compatibility and yield for the exact cartridge model before quoting a customer.</p>
+  </footer>
+</div>
+
+<!-- ARTICLE READER -->
+<dialog id="reader" aria-labelledby="readerTitle">
+  <div class="modal-head">
+    <div><span class="tag" id="readerTag">Guide</span><h2 id="readerTitle"></h2><div style="font-size:13px;color:var(--ink-3)" id="readerMeta"></div></div>
+    <button class="close" onclick="document.getElementById('reader').close()" aria-label="Close article">✕</button>
+  </div>
+  <div class="modal-body" id="readerBody"></div>
+</dialog>
+</div>
+<script>
+
+var ARTICLES = {
+  oem:{tag:"Market Trends",title:"OEM vs. Compatible vs. Remanufactured: How to Have the Conversation in 2026",meta:"Oct 8, 2026 • 6 min read",body:"<p>Every reseller has heard it: <em>“Is the compatible one actually any good?”</em> The honest answer is — it depends which compatible, and that honesty is exactly what sells.</p><h4>The three options, plainly</h4><ul><li><strong>Original (OEM):</strong> Made by the printer brand (HP, Brother, Canon, Lexmark…). Highest price, guaranteed fit, the safe choice for a customer who cannot risk any downtime.</li><li><strong>Compatible:</strong> A new cartridge built by a third party to fit the same printer. Quality varies a lot by maker — a well-made compatible prints indistinguishably from OEM for everyday office documents, at a much lower cost per page.</li><li><strong>Remanufactured:</strong> An original cartridge that has been collected, cleaned, refilled, and tested with worn parts replaced. The most sustainable option, and quality again depends on the remanufacturer’s process.</li></ul><h4>The warranty question</h4><p>Customers often worry a compatible will void their printer warranty. Using a third-party cartridge does not, by itself, void a printer warranty — but if a faulty cartridge damages the printer, that damage may not be covered. That is why your sourcing matters more than your sales pitch: a tested supplier with a clear replacement policy is the real answer to this question.</p><div class='callout'><strong>What to say:</strong> “For your everyday printing, I’ll put you on the compatible I sell to my other offices — same yield, tested, and if you ever get a bad one I replace it. For your colour-critical or warranty-sensitive machine, let’s stay OEM. Let’s look at cost per page for both.”</div><h4>Positioning that works</h4><ul><li>Lead with <strong>cost per page</strong>, not box price.</li><li>Offer a <strong>trial</strong>: one compatible on one printer, compare output side by side.</li><li>Keep <strong>one OEM on the shelf</strong> as a fallback — it builds trust that you’re advising, not pushing.</li><li>Never promise a compatible is “identical” — promise it is <strong>tested, guaranteed, and replaceable</strong>. That promise you can keep.</li></ul>"},
+  cpp:{tag:"Buying Guide",title:"High-Yield Wins: The Cost-Per-Page Math Your Customers Actually Care About",meta:"Oct 2, 2026 • 4 min read",body:"<p>A customer comparing a $90 standard cartridge to a $130 high-yield cartridge sees a $40 difference. A customer comparing <strong>7.5¢ per page to 4.3¢ per page</strong> sees a saving on every single page they print.</p><h4>The only formula you need</h4><p><strong>Cost per page = Cartridge price ÷ Page yield</strong></p><table><tr><th>Cartridge</th><th>Price (example)</th><th>Yield</th><th>Cost / page</th></tr><tr><td>Standard Yield</td><td>$89.99</td><td>1,200 pages</td><td>7.50¢</td></tr><tr><td>High Yield</td><td>$129.99</td><td>3,000 pages</td><td>4.33¢</td></tr><tr><td>Extra High Yield</td><td>$169.99</td><td>6,000 pages</td><td>2.83¢</td></tr></table><p><em>Illustrative example — always use the price and the manufacturer’s stated yield for the exact model you are quoting.</em></p><h4>Why resellers should push high-yield (honestly)</h4><ul><li><strong>Fewer changeovers</strong> for the customer — less downtime, fewer emergency orders.</li><li><strong>Fewer deliveries and invoices</strong> for you — the same revenue with less handling.</li><li><strong>Less packaging waste</strong> per page — a genuine sustainability point.</li></ul><div class='callout'>Try the Cost-Per-Page Calculator on this page with two cartridges from your own shelf. Print or screenshot the result and keep it at the counter — it ends most price objections.</div><p>One caution: high-yield only wins if the customer actually prints enough to use it before the cartridge ages. For a very low-volume home office, standard yield can be the right advice — and giving that advice is what makes them believe you on the next sale.</p>"},
+  firmware:{tag:"Product Knowledge",title:"Firmware Updates & Cartridge Chips: What to Check Before You Sell",meta:"Sep 24, 2026 • 5 min read",body:"<p>The call usually sounds like this: <em>“The cartridge worked yesterday, the printer updated overnight, and now it says ‘not recognized.’”</em> The cartridge didn’t change — the printer’s rules did.</p><h4>What is happening</h4><p>Modern cartridges carry a chip the printer reads to confirm the model, colour, and remaining supply. Printer makers periodically release firmware updates. Some updates change how the printer validates that chip, and a cartridge that was accepted before the update may be questioned after it — even a genuine one can occasionally be flagged until it is reseated.</p><h4>The reseller’s 3 checks</h4><ul><li><strong>Before you sell:</strong> Confirm the cartridge’s chip version is current for that printer family, especially after a widely-reported firmware release.</li><li><strong>At install:</strong> Advise the customer to install with the printer on, remove any protective tape/chip cover, and reseat firmly if a message appears.</li><li><strong>For fleets:</strong> Suggest customers check what an update changes before applying it to every machine at once — staggering updates prevents a whole office stopping on the same morning.</li></ul><div class='callout'><strong>Returns tip:</strong> Before accepting a “defective” return after a firmware update, test the same cartridge in a non-updated printer of the same model if you can. If it works there, the fix is guidance — not a refund — and you have just saved the margin on that sale.</div><p>Keep a simple log: printer model, firmware date, cartridge batch. Patterns show up fast, and that log becomes advice your competitors can’t give.</p>"},
+  sustainability:{tag:"Sustainability",title:"The Sustainable Shelf: Why Remanufactured & Eco Options Are Moving Faster",meta:"Sep 17, 2026 • 4 min read",body:"<p>More offices — especially schools, municipalities, clinics, and larger employers — now have a written preference for recycled or remanufactured supplies. Even customers without a policy ask the question: <em>“What do I do with the empty?”</em></p><h4>Why remanufactured is a real category, not a discount bin</h4><p>A properly remanufactured cartridge reuses the original cartridge shell — the most resource-intensive part — with toner refilled and wear parts (like the drum and wiper blade) inspected or replaced, then print-tested. Every reuse keeps a plastic-and-metal cartridge out of landfill and avoids manufacturing a completely new one.</p><h4>What resellers can do this quarter</h4><ul><li><strong>Stock a clear eco option</strong> alongside OEM and compatible, and label it plainly — customers can’t buy what they can’t identify.</li><li><strong>Offer an empties take-back:</strong> a collection box at the customer’s office, picked up on your next delivery. It costs little and creates a reason to return to you.</li><li><strong>Talk per-page, not per-box:</strong> a remanufactured high-yield cartridge is often both the cheapest per page and the lowest-waste choice — say both.</li></ul><div class='callout'>Be precise with claims. Say “remanufactured from an original cartridge, refilled and print-tested” — not vague “eco-friendly” language. Specifics are what procurement officers can actually put in a file.</div>"},
+  counterfeit:{tag:"Product Knowledge",title:"How to Spot Counterfeit & Poor-Quality Cartridges Before They Cost You Returns",meta:"Aug 27, 2026 • 5 min read",body:"<p>Most “bad cartridge” stories — leaking, faded pages, streaks, early ‘empty’ warnings — start at sourcing, not at the printer. A few checks at receiving protect your margin and your reputation.</p><h4>Check the packaging</h4><ul><li>Blurry printing, misspelled model names, or a box that doesn’t match the brand’s current design.</li><li>Missing or mismatched lot / serial labels between box and cartridge.</li><li>Security seals that are generic tape instead of the maker’s seal.</li></ul><h4>Check the cartridge</h4><ul><li><strong>Chip:</strong> clean contacts, correct colour/model coding, sits flush — a loose or off-centre chip causes recognition errors.</li><li><strong>Drum shutter &amp; seals:</strong> intact pull-seal, no toner dust already in the bag (a sign of a leak or a refill sold as new).</li><li><strong>Weight &amp; finish:</strong> unusually light cartridges or rough moulding often signal thin toner fill or poor parts.</li></ul><h4>Protect the sale</h4><ul><li>Buy through traceable supply — you should be able to name where a batch came from.</li><li>Print-test a sample from a new batch on your own demo printer before selling the rest.</li><li>Log batch + customer + date. If a pattern of failures appears, you can act on the batch, not one argument at a time.</li></ul><div class='callout'>Your replacement policy is part of the product. A clear “if it fails, we replace it” policy — backed by sourcing you trust — is why a customer pays your price instead of gambling on the cheapest listing they can find.</div>"}
+};
+function openArticle(key){
+  var a=ARTICLES[key]; if(!a) return;
+  document.getElementById('readerTag').textContent=a.tag;
+  document.getElementById('readerTitle').textContent=a.title;
+  document.getElementById('readerMeta').textContent=a.meta+" • Industry Insights — Ink Quest";
+  document.getElementById('readerBody').innerHTML=a.body;
+  var d=document.getElementById('reader'); if(typeof d.showModal==='function'){d.showModal();} else {d.setAttribute('open','');}
+}
+// Filtering
+var pills=document.querySelectorAll('.pill');
+function applyFilters(){
+  var active=document.querySelector('.pill.active').dataset.filter;
+  var q=document.getElementById('searchInput').value.trim().toLowerCase();
+  var visible=0;
+  document.querySelectorAll('.article').forEach(function(el){
+    var catOk=(active==='all'||el.dataset.cat===active);
+    var qOk=(!q|| (el.textContent.toLowerCase().includes(q) || (el.dataset.search||'').includes(q)));
+    var show=catOk&&qOk;
+    // In home mode, only-full cards stay hidden regardless — CSS handles it, but count only visible in DOM flow
+    el.style.display=show?'':'none';
+    if(show) visible++;
+  });
+  document.getElementById('emptyState').style.display=visible===0?'block':'none';
+}
+pills.forEach(function(p){p.addEventListener('click',function(){pills.forEach(function(x){x.classList.remove('active')});p.classList.add('active'); applyFilters();});});
+document.getElementById('searchInput').addEventListener('input',function(){ applyFilters(); });
+// Calculator
+function calc(){
+  var pA=parseFloat(document.getElementById('priceA').value)||0, yA=parseFloat(document.getElementById('yieldA').value)||1;
+  var pB=parseFloat(document.getElementById('priceB').value)||0, yB=parseFloat(document.getElementById('yieldB').value)||1;
+  var a=pA/yA*100, b=pB/yB*100;
+  document.getElementById('cppA').textContent=a.toFixed(2)+'¢ / page';
+  document.getElementById('cppB').textContent=b.toFixed(2)+'¢ / page';
+  var cheaper = a<b ? 'A' : 'B'; var diff = Math.abs(a-b)/Math.max(a,b)*100;
+  document.getElementById('cppA').style.color = cheaper==='A' ? 'var(--green)' : 'var(--ink)';
+  document.getElementById('cppB').style.color = cheaper==='B' ? 'var(--green)' : 'var(--ink)';
+  document.getElementById('calcNote').textContent='Cartridge '+cheaper+' is '+diff.toFixed(0)+'% cheaper per page in this comparison. Yields should be the manufacturer’s stated yield for the exact model.';
+}
+['priceA','yieldA','priceB','yieldB'].forEach(function(id){document.getElementById(id).addEventListener('input',calc);});
+calc();
+
+</script>

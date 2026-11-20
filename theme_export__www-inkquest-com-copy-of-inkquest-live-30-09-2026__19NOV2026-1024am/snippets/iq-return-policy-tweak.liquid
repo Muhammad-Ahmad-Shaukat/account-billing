@@ -1,0 +1,18 @@
+{% comment %} Return policy step-1 rewrite: point customers to the dashboard RMA form instead of the PDF links. {% endcomment %}
+<script>
+(function () {
+  if (window.location.pathname.indexOf('return-policy') === -1) return;
+  var ols = document.querySelectorAll('ol');
+  for (var i = 0; i < ols.length; i++) {
+    var ol = ols[i];
+    if (ol.querySelector('a[href*="RMA_Form"]')) {
+      var firstLi = ol.querySelector('li');
+      if (firstLi) {
+        firstLi.innerHTML = 'Fill out the RMA form from the <a href="/pages/my-account">Dashboard</a>';
+      }
+      var ul = ol.querySelector('ul');
+      if (ul) ul.remove();
+    }
+  }
+})();
+</script>

@@ -1,0 +1,98 @@
+{% doc %}
+  @prompt
+    The cart page's quantity selector (+/- stepper buttons) for line items is unclickable/not working — customers cannot increase or decrease item quantity on the cart page. Investigate the cart template and its quantity selector component/JS (click handlers, event bindings, any overlay or z-index issue blocking clicks) and fix it so the increase and decrease buttons work correctly and update the line item quantity as expected.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-cart-quantity-repair-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    min-height: 1px;
+  }
+
+  .ai-cart-quantity-repair-{{ ai_gen_id }} .quantity__button,
+  .ai-cart-quantity-repair-{{ ai_gen_id }} quantity-input button {
+    position: relative;
+    z-index: 2;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+{% endstyle %}
+
+<cart-quantity-repair-{{ ai_gen_id }} class="ai-cart-quantity-repair-{{ ai_gen_id }}" {{ block.shopify_attributes }}></cart-quantity-repair-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    if (customElements.get('cart-quantity-repair-{{ ai_gen_id }}')) return;
+
+    class CartQuantityRepair{{ ai_gen_id }} extends HTMLElement {
+      connectedCallback() {
+        if (this.bound) return;
+        this.bound = true;
+        this.onClick = this.handleClick.bind(this);
+        document.addEventListener('click', this.onClick, true);
+      }
+
+      disconnectedCallback() {
+        document.removeEventListener('click', this.onClick, true);
+      }
+
+      handleClick(event) {
+        const button = event.target.closest('.quantity__button, quantity-input button');
+        if (!button || button.disabled || !this.isCartContext(button)) return;
+        const container = button.closest('quantity-input, .quantity');
+        if (!container) return;
+        const input = container.querySelector('input[name="updates[]"], input[name^="updates["], input.quantity__input, input[type="number"]');
+        if (!input || input.disabled) return;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const current = Number(input.value) || 0;
+        const step = Math.max(1, Number(input.step) || 1);
+        const minimum = input.hasAttribute('min') ? Number(input.min) : 0;
+        const maximum = input.hasAttribute('max') && input.max !== '' ? Number(input.max) : Infinity;
+        let next = button.name === 'plus' || button.getAttribute('name') === 'plus' ? current + step : current - step;
+        next = Math.min(maximum, Math.max(minimum, next));
+        if (next === current) return;
+
+        input.value = String(next);
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      isCartContext(element) {
+        return Boolean(element.closest('cart-items, #main-cart-items, .cart__items, form[action^="/cart"]'));
+      }
+    }
+
+    customElements.define('cart-quantity-repair-{{ ai_gen_id }}', CartQuantityRepair{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Cart quantity repair",
+  "settings": [
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cart quantity repair"
+    }
+  ],
+  "tag": null,
+  "class": "cart-quantity-repair"
+}
+{% endschema %}

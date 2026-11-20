@@ -45,6 +45,7 @@ router.post("/ingest", ingestAuth, async (req, res) => {
     console.error("[invoices-ingest]", err);
     return res.status(status).json({
       success: false,
+      ...(status === 409 ? { exists: true } : {}),
       error: err.message || "Failed to ingest invoice",
     });
   }
@@ -64,7 +65,8 @@ router.get("/exists", ingestAuth, async (req, res) => {
     const result = await invoiceExists(
       req.ingestShop,
       shopify_customer_id,
-      invoice_number
+      invoice_number,
+      req.query.document_type
     );
 
     return res.status(200).json({

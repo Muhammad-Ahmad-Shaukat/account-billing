@@ -1,0 +1,307 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+.iq-growth-page{
+  --teal:#00404c; --teal-2:#005a6a; --teal-light:#e6f2f3; --teal-mid:#0e7a8a;
+  --bg:#ffffff; --bg-soft:#f4f7f7; --bg-card:#ffffff; --ink:#101d20; --ink-2:#3d4f54; --ink-3:#6b7d82;
+  --line:#dde8e9; --amber:#e67e22; --amber-bg:#fef3e8; --green:#1a7a4c; --green-bg:#e8f5ee;
+  --radius:16px; --shadow:0 8px 30px rgba(0,64,76,.08);
+}
+@media (prefers-color-scheme: dark){.iq-growth-page{ --bg:#0d1a1d; --bg-soft:#112529; --bg-card:#16292e; --ink:#edf4f5; --ink-2:#b9cdd1; --ink-3:#8aa0a6; --line:#234046; --teal-light:#16373d; --amber-bg:#2f2417; --green-bg:#163326; --shadow:0 8px 30px rgba(0,0,0,.35); }}
+.iq-growth-page *{box-sizing:border-box}
+.iq-growth-page{scroll-behavior:smooth}
+.iq-growth-page{margin:0;font-family:"Plus Jakarta Sans",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+.iq-growth-page a{color:var(--teal-2);text-decoration:none}
+@media(prefers-color-scheme:dark){.iq-growth-page a{color:#7fd1de}}
+.iq-growth-page img{max-width:100%;display:block}
+.iq-growth-page .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.iq-growth-page .section-head{padding:44px 0 8px}
+.iq-growth-page .kicker{font-size:12px;letter-spacing:.16em;font-weight:800;text-transform:uppercase;color:var(--teal-mid);display:flex;align-items:center;gap:10px}
+.iq-growth-page .kicker::before{content:"";width:28px;height:2px;background:var(--amber);display:block}
+.iq-growth-page h1{font-family:"Source Serif 4",serif;font-size:clamp(34px,5vw,52px);line-height:1.05;margin:12px 0 12px;letter-spacing:-.02em}
+.iq-growth-page .lede{font-size:18px;color:var(--ink-2);max-width:720px;margin:0}
+.iq-growth-page .lede strong{color:var(--ink)}
+.iq-growth-page .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:28px 0 22px}
+.iq-growth-page .pills{display:flex;flex-wrap:wrap;gap:8px}
+.iq-growth-page .pill{border:1.5px solid var(--line);background:var(--bg-card);color:var(--ink-2);padding:8px 14px;border-radius:999px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer}
+.iq-growth-page .pill.active{background:var(--teal);border-color:var(--teal);color:#fff}
+.iq-growth-page .search{position:relative;min-width:240px;flex:0 1 300px}
+.iq-growth-page .search input{width:100%;padding:11px 14px 11px 38px;border:1.5px solid var(--line);border-radius:999px;background:var(--bg-card);color:var(--ink);font:inherit;font-size:14px}
+.iq-growth-page .search span{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.6}
+.iq-growth-page .featured{display:grid;grid-template-columns:1.15fr .85fr;background:var(--bg-card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:22px}
+.iq-growth-page .featured img{width:100%;height:100%;object-fit:cover;min-height:320px}
+.iq-growth-page .featured-body{padding:28px 28px 24px;display:flex;flex-direction:column}
+.iq-growth-page .tag{display:inline-flex;align-self:flex-start;font-size:11px;letter-spacing:.12em;font-weight:800;text-transform:uppercase;padding:6px 9px;border-radius:999px;background:var(--teal-light);color:var(--teal)}
+@media(prefers-color-scheme:dark){.iq-growth-page .tag{color:#a8e0e8}}
+.iq-growth-page .tag.amber{background:var(--amber-bg);color:#9a4a0a}
+.iq-growth-page .tag.green{background:var(--green-bg);color:var(--green)}
+@media(prefers-color-scheme:dark){.iq-growth-page .tag.amber{color:#ffb26b}
+.iq-growth-page .tag.green{color:#7be0a8}}
+.iq-growth-page .featured h2{font-size:28px;line-height:1.15;margin:14px 0 10px;letter-spacing:-.02em}
+.iq-growth-page .featured p{color:var(--ink-2);margin:0 0 16px}
+.iq-growth-page .meta{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--ink-3);margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
+.iq-growth-page .read-link{font-weight:800;color:var(--teal);cursor:pointer;background:none;border:0;font:inherit;padding:0;text-align:left}
+@media(prefers-color-scheme:dark){.iq-growth-page .read-link{color:#7fd1de}}
+.iq-growth-page .read-link:hover{text-decoration:underline}
+.iq-growth-page .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.iq-growth-page .card{background:var(--bg-card);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s, box-shadow .15s}
+.iq-growth-page .card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.iq-growth-page .card .thumb{height:178px;overflow:hidden;background:var(--bg-soft)}
+.iq-growth-page .card .thumb img{width:100%;height:100%;object-fit:cover}
+.iq-growth-page .card .thumb.icon-thumb{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--teal-light),var(--bg-soft))}
+.iq-growth-page .card .thumb.icon-thumb svg{width:56px;height:56px;stroke:var(--teal-mid);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.iq-growth-page .card-body{padding:18px;display:flex;flex-direction:column;flex:1}
+.iq-growth-page .card h3{font-size:17.5px;line-height:1.3;margin:10px 0 8px;letter-spacing:-.01em}
+.iq-growth-page .card p{font-size:14.5px;color:var(--ink-2);margin:0 0 14px}
+.iq-growth-page .card .meta{font-size:12.5px}
+.iq-growth-page .btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#fff !important;padding:13px 22px;border-radius:999px;font-weight:800;font-size:14.5px;border:0;cursor:pointer}
+.iq-growth-page .btn.secondary{background:transparent;color:var(--teal) !important;border:1.5px solid var(--line)}
+@media(prefers-color-scheme:dark){.iq-growth-page .btn.secondary{color:#edf4f5 !important}}
+.iq-growth-page .lower{display:grid;grid-template-columns:1.6fr .9fr;gap:18px;margin:26px 0}
+.iq-growth-page .panel{background:var(--bg-soft);border:1px solid var(--line);border-radius:18px;padding:22px}
+.iq-growth-page .panel h3{margin:0 0 6px;font-size:20px}
+.iq-growth-page .panel p.sub{color:var(--ink-2);font-size:14.5px;margin:0 0 16px}
+.iq-growth-page .calc-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.iq-growth-page label{font-size:12.5px;font-weight:700;letter-spacing:.02em;color:var(--ink-2);display:block;margin-bottom:6px}
+.iq-growth-page input[type=number], .iq-growth-page select{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg-card);color:var(--ink);font:inherit}
+.iq-growth-page .calc-result{margin-top:16px;background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:center}
+.iq-growth-page .calc-result b{font-size:22px;display:block;line-height:1.1}
+.iq-growth-page .calc-result span{font-size:12px;color:var(--ink-3);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.iq-growth-page .calc-note{font-size:12.5px;color:var(--ink-3);margin-top:10px}
+.iq-growth-page .topics{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
+.iq-growth-page .topics li{padding:12px 0;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
+.iq-growth-page .topics li:last-child{border:0}
+.iq-growth-page .topics .num{width:28px;height:28px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;margin-top:2px}
+.iq-growth-page .topics b{font-size:14.5px;line-height:1.35;display:block}
+.iq-growth-page .topics small{color:var(--ink-3)}
+.iq-growth-page .plays{margin:8px 0 26px;border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;background:var(--bg-card)}
+.iq-growth-page .plays strong{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.iq-growth-page .plays span{font-weight:700;font-size:14.5px}
+.iq-growth-page dialog{border:0;padding:0;max-width:760px;width:calc(100% - 28px);max-height:88vh;border-radius:20px;background:var(--bg);color:var(--ink);box-shadow:0 24px 80px rgba(0,0,0,.3)}
+.iq-growth-page dialog::backdrop{background:rgba(0,32,38,.6);backdrop-filter:blur(3px)}
+.iq-growth-page .modal-head{position:sticky;top:0;background:var(--bg);padding:18px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;align-items:flex-start;z-index:2}
+.iq-growth-page .modal-head h2{margin:6px 0 4px;font-size:24px;line-height:1.2}
+.iq-growth-page .close{border:1.5px solid var(--line);background:var(--bg-card);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);flex-shrink:0}
+.iq-growth-page .modal-body{padding:22px 24px 30px;font-size:16px;color:var(--ink-2)}
+.iq-growth-page .modal-body h4{color:var(--ink);margin:22px 0 8px;font-size:17px}
+.iq-growth-page .modal-body ul{padding-left:20px}
+.iq-growth-page .modal-body li{margin:6px 0}
+.iq-growth-page .modal-body table{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0}
+.iq-growth-page .modal-body th, .iq-growth-page .modal-body td{border:1px solid var(--line);padding:9px 10px;text-align:left}
+.iq-growth-page .modal-body th{background:var(--bg-soft)}
+.iq-growth-page .callout{background:var(--teal-light);border-radius:12px;padding:14px 16px;margin:16px 0;font-size:14.5px}
+.iq-growth-page footer{padding:22px 0 36px;color:var(--ink-3);font-size:13.5px;border-top:1px solid var(--line)}
+.iq-growth-page .empty{display:none;text-align:center;padding:36px;border:1px dashed var(--line);border-radius:16px;color:var(--ink-3)}
+@media(max-width:900px){.iq-growth-page .grid{grid-template-columns:1fr 1fr}
+.iq-growth-page .featured, .iq-growth-page .lower{grid-template-columns:1fr}
+.iq-growth-page .featured img{min-height:220px}}
+@media(max-width:560px){.iq-growth-page .grid{grid-template-columns:1fr}
+.iq-growth-page .calc-row, .iq-growth-page .calc-result{grid-template-columns:1fr}
+.iq-growth-page .toolbar{flex-direction:column;align-items:stretch}
+.iq-growth-page .search{flex:1}}
+@media(prefers-reduced-motion:reduce){.iq-growth-page *{transition:none !important;scroll-behavior:auto !important}}
+</style>
+<div class="iq-growth-page">
+<main class="wrap">
+  <!-- SECTION HEADER -->
+  <header class="section-head">
+    <div class="kicker">For Resellers • Grow the Business</div>
+    <h1>Reseller Growth Tips</h1>
+    <p class="lede">You already know cartridges. This page is about the business around them — <strong>winning accounts, keeping them, and turning one-off orders into revenue that repeats.</strong> Short, practical plays for office-supply stores, printer repair shops, and IT resellers. No theory, nothing you can’t start this week.</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="pills" id="pills">
+      <button class="pill active" data-filter="all">All Tips</button>
+      <button class="pill" data-filter="recurring">Recurring Revenue</button>
+      <button class="pill" data-filter="sales">Sales &amp; Accounts</button>
+      <button class="pill" data-filter="margin">Pricing &amp; Margin</button>
+      <button class="pill" data-filter="inventory">Inventory</button>
+      <button class="pill" data-filter="retention">Retention &amp; Referrals</button>
+    </div>
+    <div class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Search tips — e.g. auto-replenishment, follow-up, discount…" aria-label="Search articles"></div>
+  </div>
+
+  <!-- FEATURED -->
+  <article class="featured article" data-cat="recurring" data-search="managed print mps auto replenishment recurring revenue service contract standing order par level">
+    <img src="{{ 'reseller-growth-tips-1.webp' | asset_url }}" alt="Laser printer and stacked high-yield toner cartridge boxes in a modern Canadian office">
+    <div class="featured-body">
+      <span class="tag">Featured • Recurring Revenue</span>
+      <h2>From One-Off Sales to Recurring Revenue: Auto-Replenishment &amp; Managed Print</h2>
+      <p>You don’t need to be a large MPS provider to offer “we’ll watch your toner for you.” A lightweight version any small reseller can start this month — and the single biggest change you can make to how predictable your revenue is.</p>
+      <button class="read-link" onclick="openArticle('mps')">Read the full guide →</button>
+      <div class="meta"><span>Oct 9, 2026</span><span>5 min read</span><span>For: All resellers</span></div>
+    </div>
+  </article>
+
+  
+
+  <!-- GRID -->
+  <section class="grid" id="grid">
+    <article class="card article" data-cat="inventory" data-search="inventory stock fast movers dead stock reorder warehouse tn760 hp 63 velocity cover">
+      <div class="thumb"><img src="{{ 'reseller-growth-tips-2.webp' | asset_url }}" alt="Warehouse aisle stocked with printer toner and ink boxes, worker checking inventory on a tablet"></div>
+      <div class="card-body"><span class="tag">Inventory</span>
+        <h3>Stock Smart: Fast Movers, Slow Movers &amp; Avoiding Dead Inventory</h3>
+        <p>Your profit is sitting on the shelf — or stuck there. A simple velocity method to stock what turns, cut what doesn’t, and never run out of your top sellers.</p>
+        <button class="read-link" onclick="openArticle('stock')">Read article →</button>
+        <div class="meta"><span>Oct 5, 2026</span><span>6 min read</span></div>
+      </div>
+    </article>
+
+    <article class="card article" data-cat="sales" data-search="expand account departments branches whole building fleet map more printers per customer wallet share">
+      <div class="thumb icon-thumb" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-5 7 5v13"/><path d="M9 21v-4h6v4"/><path d="M9 11h.01M15 11h.01M12 14h.01"/></svg></div>
+      <div class="card-body"><span class="tag amber">Sales &amp; Accounts</span>
+        <h3>Win the Whole Building: Expanding One Happy Account Into Every Department</h3>
+        <p>Most accounts buy for one printer and order the rest somewhere else. Map the fleet you already serve, and the easiest growth you’ll ever get is already on your invoice list.</p>
+        <button class="read-link" onclick="openArticle('building')">Read article →</button>
+        <div class="meta"><span>Sep 28, 2026</span><span>5 min read</span></div>
+      </div>
+    </article>
+
+    <article class="card article" data-cat="sales" data-search="quote follow up speed response time win orders email phone competitor fast reply">
+      <div class="thumb icon-thumb" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L9.5 22 19 10h-6.5L13 2z"/></svg></div>
+      <div class="card-body"><span class="tag amber">Sales &amp; Accounts</span>
+        <h3>Quote Fast, Follow Up Twice: The Response-Time Habits That Win Orders</h3>
+        <p>The first complete quote usually wins — not the cheapest one. A simple same-day quoting routine and a two-touch follow-up that closes orders your competitors leave sitting.</p>
+        <button class="read-link" onclick="openArticle('quote')">Read article →</button>
+        <div class="meta"><span>Sep 21, 2026</span><span>4 min read</span></div>
+      </div>
+    </article>
+
+    <article class="card article only-full" data-cat="margin" data-search="discount margin pricing profit protect bundle trade value walk away negotiation">
+      <div class="thumb"><img src="{{ 'reseller-growth-tips-3.webp' | asset_url }}" alt="Black, cyan, magenta and yellow toner cartridges in a row"></div>
+      <div class="card-body"><span class="tag">Pricing &amp; Margin</span>
+        <h3>Protect the Margin: Discount With a Reason, Never by Habit</h3>
+        <p>Every “sure, I can knock a bit off” teaches customers to ask again. When a discount is justified, how to trade it instead of giving it, and when the right answer is a polite no.</p>
+        <button class="read-link" onclick="openArticle('margin')">Read article →</button>
+        <div class="meta"><span>Sep 14, 2026</span><span>5 min read</span></div>
+      </div>
+    </article>
+
+    <article class="card article only-full" data-cat="retention" data-search="retention check in monthly review keep accounts churn loyalty call visit relationship">
+      <div class="thumb icon-thumb" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 16l2 2 4-4"/></svg></div>
+      <div class="card-body"><span class="tag green">Retention &amp; Referrals</span>
+        <h3>The 15-Minute Monthly Check-In That Keeps Accounts From Drifting</h3>
+        <p>Accounts rarely leave over one bad cartridge — they drift away quietly, then order elsewhere. A short monthly touch that catches problems early and keeps you the default call.</p>
+        <button class="read-link" onclick="openArticle('checkin')">Read article →</button>
+        <div class="meta"><span>Sep 7, 2026</span><span>4 min read</span></div>
+      </div>
+    </article>
+
+    <article class="card article only-full" data-cat="retention" data-search="referrals reviews local marketing google offices nearby new customers word of mouth get found">
+      <div class="thumb icon-thumb" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></div>
+      <div class="card-body"><span class="tag green">Retention &amp; Referrals</span>
+        <h3>Get Found by Offices Near You: Referrals, Reviews &amp; Local Visibility</h3>
+        <p>Your next ten accounts probably sit within a short drive of your current ones. The low-cost local habits — asked-for referrals, reviews, and showing up where offices already look.</p>
+        <button class="read-link" onclick="openArticle('local')">Read article →</button>
+        <div class="meta"><span>Aug 31, 2026</span><span>5 min read</span></div>
+      </div>
+    </article>
+  </section>
+
+  <div class="empty" id="emptyState">No tips match that search. Try “replenishment”, “follow-up”, or “discount”.</div>
+
+  <!-- LOWER: estimator + plays -->
+  <section class="lower only-full">
+    <div class="panel">
+      <h3>Try it: Recurring Revenue Estimator</h3>
+      <p class="sub">See what your current order book is worth each month — and what it becomes as more accounts move onto auto-replenishment instead of ordering when they remember.</p>
+      <div class="calc-row">
+        <div><label>Active accounts</label><input type="number" id="accounts" value="40" min="0" step="1"></div>
+        <div><label>Avg. orders per account / month</label><input type="number" id="ordersPer" value="1.2" min="0" step="0.1"></div>
+        <div><label>Avg. order value ($)</label><input type="number" id="orderValue" value="180" min="0" step="5"></div>
+        <div><label>Accounts on auto-replenishment (%)</label><input type="number" id="autoPct" value="25" min="0" max="100" step="5"></div>
+      </div>
+      <div class="calc-result">
+        <div><span>Est. monthly revenue</span><b id="revOut">$8,640</b></div>
+        <div><span>Secured by auto-replenishment</span><b id="autoOut" style="color:var(--green)">$2,160 / mo</b></div>
+      </div>
+      <p class="calc-note" id="calcNote">Revenue on auto-replenishment is the part that arrives whether or not the customer remembers to call. Moving the slider to 50% doubles the secured share — that’s the featured guide above, in numbers. Estimates only — use your own account averages.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Start Here: The First Four Plays</h3>
+      <p class="sub">If you do nothing else this month, do these — in this order. Each one links to the guide that explains it.</p>
+      <ul class="topics">
+        <li><span class="num">1</span><div><b>Put your top 5 accounts on a par-level agreement</b><small>From the Auto-Replenishment guide</small></div></li>
+        <li><span class="num">2</span><div><b>Map every printer at your 10 best accounts</b><small>From Win the Whole Building</small></div></li>
+        <li><span class="num">3</span><div><b>Clear anything with zero sales in 90 days</b><small>From Stock Smart</small></div></li>
+        <li><span class="num">4</span><div><b>Ask three happy customers for one referral each</b><small>From Get Found by Offices Near You</small></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="plays only-full">
+    <strong>The growth levers</strong>
+    <span>Recurring revenue</span><span>More printers per account</span><span>Faster quotes</span><span>Protected margin</span><span>Stock that turns</span><span>Accounts that stay</span>
+  </div>
+
+  <footer>
+    
+    <p>Ink Quest • Reseller-only ink &amp; toner • Warehouses in AB, BC &amp; QC • Tips are general business guidance based on common reseller practice — adapt the numbers and timelines to your own accounts before acting on them.</p>
+  </footer>
+</main>
+
+<!-- ARTICLE READER -->
+<dialog id="reader" aria-labelledby="readerTitle">
+  <div class="modal-head">
+    <div><span class="tag" id="readerTag">Guide</span><h2 id="readerTitle"></h2><div style="font-size:13px;color:var(--ink-3)" id="readerMeta"></div></div>
+    <button class="close" onclick="document.getElementById('reader').close()" aria-label="Close article">✕</button>
+  </div>
+  <div class="modal-body" id="readerBody"></div>
+</dialog>
+</div>
+<script>
+var ARTICLES = {
+  mps:{tag:"Recurring Revenue",title:"From One-Off Sales to Recurring Revenue: Auto-Replenishment & Managed Print",meta:"Oct 9, 2026 • 5 min read",body:"<p>You don’t need enterprise software to stop selling cartridge-by-cartridge. A lightweight replenishment offer turns “call us when you run out” into “we already shipped it.”</p><h4>The starter version any reseller can offer</h4><ul><li><strong>Par-level agreement:</strong> Agree a minimum stock per printer (e.g. one in the machine + one on the shelf). The customer sends a photo or a quick count monthly — or you check on a scheduled visit.</li><li><strong>Standing order by model:</strong> Record each customer’s printer models and cartridge codes once. Reordering becomes one confirmation, not a new search every time.</li><li><strong>Quarterly cost-per-page review:</strong> Show the customer their print spend per page and where a high-yield switch would save money. This 15-minute review is what justifies staying with you over a cheaper one-off seller.</li></ul><h4>Why it matters</h4><p>Recurring customers order more predictably, complain less about single-box price (because you report on total cost), and rarely shop around — you have made reordering effortless. Start with your five best customers, one printer each. Prove it, then expand.</p><div class='callout'>Keep it honest and simple: no long lock-in needed. “We’ll watch your toner, you can cancel anytime” outsells a complicated contract for most small offices.</div>"},
+  stock:{tag:"Inventory",title:"Stock Smart: Fast Movers, Slow Movers & Avoiding Dead Inventory",meta:"Oct 5, 2026 • 6 min read",body:"<p>Two shelves tell the whole story of a reseller’s cash flow: the shelf that empties every week, and the shelf that hasn’t moved since last year. The goal isn’t more stock — it’s the <em>right</em> stock.</p><h4>A simple velocity method</h4><ul><li><strong>Look at the last 90 days of sales</strong> for every SKU. Average daily sales = units sold ÷ 90.</li><li><strong>Days of cover = Stock on hand ÷ Average daily sales.</strong> This tells you how long your current shelf lasts.</li><li><strong>Reorder point = Average daily sales × (lead time + safety days).</strong> When cover falls to your lead time, you are already late.</li></ul><table><tr><th>Signal</th><th>Meaning</th><th>Action</th></tr><tr><td>Cover ≤ lead time</td><td>You will run out before new stock arrives</td><td>Order now</td></tr><tr><td>Cover ≤ 30 days</td><td>Healthy but thinning</td><td>Plan the reorder</td></tr><tr><td>No sales in 90 days</td><td>Dead or seasonal stock</td><td>Stop reordering; clear deliberately</td></tr></table><h4>Know your families</h4><p>Fast movers cluster by installed printer base — high-volume Brother and HP laser families, for example, turn far more reliably than a niche model. Use a printer-compatibility / Ink &amp; Toner Finder approach: if many printers in your customers’ offices share a cartridge family, that family deserves depth; one-off models deserve one unit, or order-on-demand.</p><div class='callout'><strong>Rule of thumb:</strong> Depth on your top 20% of SKUs, breadth of one on the long tail, and a hard stop on anything with zero sales in 90 days until you know why.</div>"},
+  building:{tag:"Sales & Accounts",title:"Win the Whole Building: Expanding One Happy Account Into Every Department",meta:"Sep 28, 2026 • 5 min read",body:"<p>Ask most resellers who their best customer is and they’ll name a company. Ask how many printers that company actually runs, and the answer is usually a guess. That gap — between the printers you supply and the printers in the building — is the cheapest growth available to you, because there is no acquisition cost: the trust is already there.</p><h4>Step 1: Build the fleet map</h4><ul><li>For each of your top 10 accounts, list every printer you know of: model, location in the building, and which cartridge it takes.</li><li>Fill the gaps on your next delivery or service visit — walk the floor, note the models by the photocopier, in admin, in the back office.</li><li>Record it once, properly. A customer whose printers you have mapped is a customer a competitor has to work much harder to take.</li></ul><h4>Step 2: Ask the expansion question</h4><p>Don’t pitch — ask: <em>“We look after the two printers in reception. Who supplies the ones upstairs? If it’s easier, we can put them all on the same order.”</em> You are offering convenience, not asking for charity. Most offices split suppliers by accident, not by decision — different people ordered at different times. Consolidation is a favour to them: one invoice, one delivery, one phone call.</p><h4>Step 3: Make the second printer effortless</h4><ul><li>Add the new models to the account’s standing list so reordering is one confirmation.</li><li>Offer a par-level (one in the machine, one on the shelf) for the highest-volume new printer first.</li><li>Report back after a quarter: pages supplied, cost per page, stock-outs avoided. That short report is what turns “the toner person” into “our print supplier.”</li></ul><div class='callout'><strong>The math that motivates:</strong> an account supplying 2 of its 6 printers is giving you a third of its print spend. Winning two more printers can grow that account by half — without a single cold call.</div>"},
+  quote:{tag:"Sales & Accounts",title:"Quote Fast, Follow Up Twice: The Response-Time Habits That Win Orders",meta:"Sep 21, 2026 • 4 min read",body:"<p>When an office asks three suppliers for a price, the order usually goes to whoever replies first with a complete, confident quote — even when they are not the cheapest. The buyer has a printer blinking at them and a job to get back to. Speed is a feature of your service, and it costs you nothing but routine.</p><h4>The same-day quote routine</h4><ul><li><strong>Acknowledge within the hour,</strong> even if the full quote needs checking: “Got it — pricing the TN-760 and the drum for you, back to you by 3.” An acknowledged request stops the customer shopping further while they wait.</li><li><strong>Quote complete:</strong> cartridge, yield, cost per page, stock status, and delivery timing in one message. A quote that triggers three follow-up questions loses to one that answers them.</li><li><strong>Quote the pair:</strong> if they asked for toner, add the drum or the high-yield option as a one-line alternative. You are not upselling — you are saving them a second order.</li></ul><h4>The two-touch follow-up</h4><ul><li><strong>Touch one (next business day):</strong> short and useful — confirm stock is still held, restate delivery day. No pressure language.</li><li><strong>Touch two (three to four days later):</strong> add something new — a high-yield comparison, a compatible option at a lower cost per page, or a note that the printer’s drum is near its rated life too. A follow-up that only asks “any update?” teaches them to ignore you; one that adds information teaches them to open your emails.</li></ul><div class='callout'>Track it simply: date asked, date quoted, date followed up, won or lost. After a month you will see your real pattern — most resellers find the losses cluster where the first reply took more than a day.</div>"},
+  margin:{tag:"Pricing & Margin",title:"Protect the Margin: Discount With a Reason, Never by Habit",meta:"Sep 14, 2026 • 5 min read",body:"<p>A discount given for no reason is not generosity — it is training. The customer learns that your first price is negotiable, asks every time, and your margin quietly becomes whatever survives the conversation. Protecting margin isn’t about being rigid; it’s about making every concession earn something back.</p><h4>When a discount is justified</h4><ul><li><strong>Volume that changes your cost picture:</strong> a genuinely larger or more predictable order — a standing monthly quantity, a full fleet on one invoice.</li><li><strong>Commitment:</strong> an account moving all its printers to you, or onto auto-replenishment, is worth more than one order at full price.</li><li><strong>A real competitive situation:</strong> a documented quote from a comparable supplier on a comparable product — not “somewhere online was cheaper.”</li></ul><h4>Trade, don’t give</h4><p>Every concession should swap for something: a lower price in exchange for the whole building’s printers; a discount for payment on order instead of terms; a better unit price when they take the high-yield version that costs you less to handle per page. The customer still wins — and so do you, which is why the arrangement lasts.</p><h4>The honest alternatives to a discount</h4><ul><li><strong>Offer the compatible or remanufactured option</strong> at its real, lower cost per page — a genuine saving, not a margin cut.</li><li><strong>Offer the high-yield version:</strong> more upfront, less per page. Many “price” objections are really cost-per-page objections wearing a disguise.</li><li><strong>Say no, politely, with the reason:</strong> “At that price I’d have to cut the replacement guarantee — and that guarantee is why your last three orders were worry-free.” Customers respect a floor that is explained; they test floors that are silent.</li></ul><div class='callout'><strong>Do the annual math once:</strong> a habitual 5% off across an account’s year of orders often costs more than the profit on their two biggest orders combined. Small percentages, applied everywhere, are how margins actually disappear.</div>"},
+  checkin:{tag:"Retention & Referrals",title:"The 15-Minute Monthly Check-In That Keeps Accounts From Drifting",meta:"Sep 7, 2026 • 4 min read",body:"<p>Resellers rarely lose an account in a single dramatic moment. They lose it in silence: a new office manager arrives, a competitor’s rep happens to call on the week a cartridge failed, an order goes to whoever answered first — and one day the regular order simply doesn’t come. Accounts don’t usually leave you; they drift. The check-in is how you notice the drift while it’s still cheap to fix.</p><h4>What the 15 minutes covers</h4><ul><li><strong>Stock:</strong> “How are levels looking — anything close to empty?” You are preventing the emergency order that goes to whoever is fastest that day.</li><li><strong>Problems:</strong> “Any print quality grumbles since last month?” A streaky page mentioned casually in a check-in is a saved account; the same problem unmentioned becomes a reason to try someone else.</li><li><strong>Changes:</strong> new staff, a new printer, a busier season coming. Every change is either a risk or an order — the check-in is how you find out which.</li><li><strong>One useful thing:</strong> a firmware heads-up, a high-yield saving for their busiest printer, a reminder their drum is near rated life. Arrive as information, not interruption.</li></ul><h4>Make it a system, not a mood</h4><p>Put every active account on a monthly rotation — the same week each month, a short call or email, logged in one line: date, anything flagged, follow-up done. Fifteen minutes per account sounds like a lot until you compare it with the cost of winning the account back, or replacing it. New accounts are the most expensive revenue there is; keeping one is the cheapest.</p><div class='callout'>The check-in also protects your recurring revenue: par-level and standing-order accounts stay on the programme when they feel looked after — and quietly cancel when contact stops.</div>"},
+  local:{tag:"Retention & Referrals",title:"Get Found by Offices Near You: Referrals, Reviews & Local Visibility",meta:"Aug 31, 2026 • 5 min read",body:"<p>Print supplies are a local business wearing an online disguise. Offices want a supplier who can answer the phone, deliver fast, and take a problem cartridge back without a ticket number. Your advantage over a distant listing is proximity — this guide is about making sure the offices near you actually know it.</p><h4>Referrals: the ask is the whole strategy</h4><ul><li>Happy customers rarely refer unprompted — not from ingratitude, but because it never crosses their mind. Ask, specifically: <em>“Do you know another office nearby that deals with the toner headache? Happy to help them the same way.”</em></li><li>Ask right after a save — the emergency delivery, the warranty swap handled without fuss. That is the moment your value is most obvious to them.</li><li>Make it easy to pass along: a named contact, a direct number, one line about what you do. Then thank the referrer when the account orders — every time.</li></ul><h4>Reviews &amp; local presence</h4><ul><li>Keep your Google Business Profile complete and current — hours, service area, photos of the shop or warehouse, and the categories offices actually search for.</li><li>Ask satisfied accounts for a review in the same conversation as the referral ask: “A short review helps other offices find us.” A handful of specific, recent reviews (“delivered same day when our printer died”) outweighs a wall of generic five stars.</li><li>Be visible where offices already gather: the local business association, the printer-repair shop that doesn’t sell supplies (and vice versa), the IT freelancer who gets asked “who does your toner?” once a month.</li></ul><h4>One page that does the work</h4><p>If your website has one page aimed at new offices, make it answer the three questions they actually ask: Do you stock for my printer? How fast can I get it? What happens if a cartridge fails? A page that answers those plainly — like the Finder approach of starting from the printer model — converts proximity into orders.</p><div class='callout'><strong>Sequence it:</strong> one referral ask per happy delivery this month beats a marketing campaign you’ll start “someday.” Local growth compounds quietly, the same way drift does — the only question is which direction.</div>"}
+};
+function openArticle(key){
+  var a=ARTICLES[key]; if(!a) return;
+  document.getElementById('readerTag').textContent=a.tag;
+  document.getElementById('readerTitle').textContent=a.title;
+  document.getElementById('readerMeta').textContent=a.meta+" • Reseller Growth Tips — Ink Quest";
+  document.getElementById('readerBody').innerHTML=a.body;
+  var d=document.getElementById('reader'); if(typeof d.showModal==='function'){d.showModal();} else {d.setAttribute('open','');}
+}
+
+// Filtering
+var pills=document.querySelectorAll('.pill');
+function applyFilters(){
+  var active=document.querySelector('.pill.active').dataset.filter;
+  var q=document.getElementById('searchInput').value.trim().toLowerCase();
+  var visible=0;
+  document.querySelectorAll('.article').forEach(function(el){
+    var catOk=(active==='all'||el.dataset.cat===active);
+    var qOk=(!q|| (el.textContent.toLowerCase().includes(q) || (el.dataset.search||'').includes(q)));
+    var show=catOk&&qOk;
+    el.style.display=show?'':'none';
+    if(show) visible++;
+  });
+  document.getElementById('emptyState').style.display=visible===0?'block':'none';
+}
+pills.forEach(function(p){p.addEventListener('click',function(){pills.forEach(function(x){x.classList.remove('active')});p.classList.add('active');  applyFilters();});});
+document.getElementById('searchInput').addEventListener('input',function(){  applyFilters(); });
+// Recurring revenue estimator
+function money(n){ return '$'+Math.round(n).toLocaleString('en-CA'); }
+function estimate(){
+  var acc=parseFloat(document.getElementById('accounts').value)||0;
+  var ord=parseFloat(document.getElementById('ordersPer').value)||0;
+  var val=parseFloat(document.getElementById('orderValue').value)||0;
+  var pct=Math.min(100,Math.max(0,parseFloat(document.getElementById('autoPct').value)||0));
+  var monthly=acc*ord*val;
+  var secured=monthly*pct/100;
+  document.getElementById('revOut').textContent=money(monthly);
+  document.getElementById('autoOut').textContent=money(secured)+' / mo';
+  document.getElementById('calcNote').textContent='At '+pct+'% on auto-replenishment, '+money(secured)+' of your estimated '+money(monthly)+' monthly revenue arrives whether or not the customer remembers to call. Raise the share of accounts on the programme and the secured number grows — that’s the featured guide above, in numbers. Estimates only — use your own account averages.';
+}
+['accounts','ordersPer','orderValue','autoPct'].forEach(function(id){document.getElementById(id).addEventListener('input',estimate);});
+estimate();
+// Start in homepage mode to mirror the ask: show homepage section first
+</script>

@@ -1,0 +1,416 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+#rmawrap {
+    --teal:#0e7c7b; --teal-dark:#0a5f5e; --ink:#1e293b; --muted:#64748b;
+    --line:#e2e8f0; --bg:#f8fafc; --card:#ffffff; --danger:#dc2626; --amber:#92400e;
+  }
+#rmawrap * {box-sizing:border-box; margin:0; padding:0;}
+#rmawrap {font-family:'Poppins',-apple-system,'Segoe UI',Roboto,Arial,sans-serif; background:var(--bg); color:var(--ink); line-height:1.5; padding:24px 16px;}
+#rmawrap .wrap {max-width:880px; margin:0 auto;}
+#rmawrap header.brand {text-align:center; margin-bottom:6px;}
+#rmawrap header.brand .logo {font-size:32px; font-weight:700; color:var(--teal); letter-spacing:.5px;}
+#rmawrap header.brand .logo span {color:var(--ink);}
+#rmawrap h1 {font-size:23px; text-align:center; margin:6px 0 2px;}
+#rmawrap p.sub {text-align:center; color:var(--muted); font-size:13.5px; margin-bottom:18px; font-style:italic;}
+#rmawrap .ship-note {background:#fff8e6; border:2px solid #f0c53d; border-radius:10px; padding:12px 16px; margin:14px 0; font-size:14px; text-align:center;}
+#rmawrap .ship-note .hint {font-size:12.5px;}
+#rmawrap .rma-writein {font-size:20px; font-weight:700; margin:6px 0 14px; display:flex; align-items:center; gap:12px;}
+#rmawrap .rma-writein .rma-box {flex:1; border:2px solid var(--ink); border-radius:8px; min-height:44px;}
+#rmawrap .how b {color:var(--teal-dark);}
+#rmawrap .how span {white-space:nowrap;}
+#rmawrap .card {background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin-bottom:18px; box-shadow:0 1px 3px rgba(0,0,0,.04);}
+#rmawrap .card h2 {font-size:16px; margin-bottom:14px; padding-bottom:8px; border-bottom:2px solid var(--teal); display:flex; align-items:center; gap:8px;}
+#rmawrap .card h2 .n {background:var(--teal); color:#fff; width:24px; height:24px; border-radius:50%; font-size:13px; display:inline-flex; align-items:center; justify-content:center; flex:none;}
+#rmawrap .grid {display:grid; grid-template-columns:1fr 1fr; gap:12px 16px;}
+#rmawrap .grid3 {display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px 16px;}
+#rmawrap .field {display:flex; flex-direction:column; gap:4px;}
+#rmawrap .field.full {grid-column:1/-1;}
+#rmawrap label {font-size:13px; font-weight:600;}
+#rmawrap label .req {color:var(--danger);}
+#rmawrap .opt {font-weight:400; color:var(--muted); font-size:12px;}
+#rmawrap input[type=text], #rmawrap input[type=tel], #rmawrap input[type=email], #rmawrap input[type=number], #rmawrap input[type=date], #rmawrap select, #rmawrap textarea {
+    font-family:inherit; font-size:14px; padding:9px 11px; border:1px solid var(--line);
+    border-radius:8px; background:#fff; width:100%;
+  }
+#rmawrap input:focus, #rmawrap select:focus, #rmawrap textarea:focus {outline:2px solid var(--teal); border-color:var(--teal);}
+#rmawrap textarea {resize:vertical; min-height:60px;}
+#rmawrap .hint {font-size:12px; color:var(--muted);}
+#rmawrap .warehouses {display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:6px;}
+#rmawrap .wh {border:1px solid var(--line); border-radius:10px; padding:12px; font-size:12.5px; background:#fbfdff;}
+#rmawrap .wh b {font-size:13.5px; color:var(--teal-dark);}
+#rmawrap .wh div {margin-top:4px; line-height:1.6;}
+#rmawrap table.prod {width:100%; border-collapse:collapse; font-size:13px;}
+#rmawrap table.prod th {background:#f1f5f9; text-align:left; padding:8px; font-size:12px; border:1px solid var(--line); white-space:nowrap;}
+#rmawrap table.prod td {border:1px solid var(--line); padding:5px; vertical-align:top;}
+#rmawrap table.prod input, #rmawrap table.prod textarea {border:none; padding:6px 4px; font-size:13px; border-radius:0;}
+#rmawrap table.prod input:focus, #rmawrap table.prod textarea:focus {outline:1px solid var(--teal);}
+#rmawrap .rowbtns {display:flex; gap:8px; margin-top:10px;}
+#rmawrap .btn {font-family:inherit; font-size:14px; font-weight:600; padding:10px 20px; border-radius:8px; border:none; cursor:pointer;}
+#rmawrap .btn-add {background:#eef6f6; color:var(--teal-dark); border:1px solid var(--teal);}
+#rmawrap .btn-del {background:#fef2f2; color:var(--danger); border:1px solid #fecaca; padding:6px 10px; font-size:12px;}
+#rmawrap .btn-submit {background:var(--teal); color:#fff; width:100%; font-size:16px; padding:14px;}
+#rmawrap .btn-submit:hover {background:var(--teal-dark);}
+#rmawrap .btn-ghost {background:#fff; color:var(--ink); border:1px solid var(--line);}
+#rmawrap .radio-list {display:flex; flex-direction:column; gap:10px;}
+#rmawrap .radio-card {display:flex; gap:10px; align-items:flex-start; border:1px solid var(--line); border-radius:10px; padding:12px; cursor:pointer;}
+#rmawrap .radio-card:hover {border-color:var(--teal);}
+#rmawrap .radio-card input {margin-top:4px; flex:none;}
+#rmawrap .radio-card.sel {border-color:var(--teal); background:#f0faf9;}
+#rmawrap .radio-card .addr {font-size:12.5px; color:var(--muted); margin-top:2px;}
+#rmawrap .radio-card .tag {display:inline-block; font-size:11px; background:#fef3c7; color:var(--amber); border-radius:6px; padding:1px 8px; margin-left:6px; font-weight:600;}
+#rmawrap .checks {display:flex; flex-direction:column; gap:10px; font-size:13.5px;}
+#rmawrap .checks label {display:flex; gap:10px; align-items:flex-start; font-weight:400; cursor:pointer;}
+#rmawrap .checks input {margin-top:4px; flex:none; width:16px; height:16px; accent-color:var(--teal);}
+#rmawrap .warn {background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:12px 14px; font-size:13px; margin-bottom:14px;}
+#rmawrap .warn b {color:var(--amber);}
+#rmawrap .policy {background:#f8fafc; border:1px solid var(--line); border-radius:10px; padding:12px 14px; font-size:12.5px; color:var(--muted); margin-top:12px;}
+#rmawrap .policy b {color:var(--ink);}
+#rmawrap .err {color:var(--danger); font-size:12.5px; display:none; margin-top:6px;}
+#rmawrap .filelist {font-size:12.5px; color:var(--muted); margin-top:6px;}
+#rmawrap .filelist div {padding:3px 0;}
+#rmawrap #confirm {display:none;}
+#rmawrap #confirm .ref {font-size:15px; background:#f0faf9; border:1px dashed var(--teal); border-radius:10px; padding:14px; text-align:center; margin-bottom:16px;}
+#rmawrap #confirm .ref b {color:var(--teal-dark); font-size:19px;}
+#rmawrap .sumrow {display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-bottom:1px solid var(--line); font-size:13.5px;}
+#rmawrap .sumrow span:first-child {color:var(--muted); flex:none;}
+#rmawrap .actions {display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;}
+#rmawrap .actions .btn {flex:1; min-width:180px;}
+#rmawrap .rma-note {font-size:12.5px; color:var(--muted); background:#f8fafc; border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-top:14px;}
+#rmawrap .internal {margin-top:14px; border:1px dashed #cbd5e1; border-radius:10px; padding:12px 14px; font-size:12.5px; color:var(--muted);}
+#rmawrap .internal b {color:var(--ink);}
+#rmawrap @media(max-width:640px) { .grid,.grid3}
+#rmawrap grid-template-columns:1fr; .warehouses {grid-template-columns:1fr;}
+#rmawrap table.prod {display:block; overflow-x:auto;}
+@media print{
+#rmawrap {background:#fff; padding:0;}
+#rmawrap .no-print {display:none !important;}
+#rmawrap .card {box-shadow:none; break-inside:avoid;}
+#rmawrap #confirm {display:block !important;}
+}
+@media print{
+  .pfx-header-wrapper, .footer, .announcement-bar, #shopify-section-announcement-bar{display:none !important;}
+  body{background:#fff !important;}
+}
+</style>
+<div id="rmawrap">
+
+<div class="wrap">
+
+  <h1>Return Materials Authorization (RMA) Request</h1>
+  <p class="sub">For speedy processing of your return, please fill out this form in full.</p>
+
+  <!-- HOW IT WORKS (info only, not form steps) -->
+  <div class="how no-print">
+    <b>How the RMA process works:</b>
+    <span>Submit this request</span> → <span>We review (1–2 business days)</span> → <span>RMA# emailed to you</span> → <span>You ship with RMA# on the box</span> → <span>Inspection &amp; credit</span>
+  </div>
+
+  <form id="rmaForm" novalidate>
+
+    <!-- 1 CUSTOMER -->
+    <div class="card">
+      <h2><span class="n">1</span> Customer Information</h2>
+      <div class="grid">
+        <div class="field"><label>Company Name <span class="req">*</span></label><input type="text" name="company" required autocomplete="organization"><div class="err" id="companyErr">Please enter your company name.</div></div>
+        <div class="field"><label>Account # <span class="opt">(if known)</span></label><input type="text" name="account"></div>
+        <div class="field"><label>Contact Name <span class="req">*</span></label><input type="text" name="contact" required autocomplete="name"><div class="err" id="contactErr">Please enter the contact name.</div></div>
+        <div class="field"><label>Phone <span class="req">*</span></label><input type="tel" name="phone" required autocomplete="tel"><div class="err" id="phoneErr">Please enter your phone number.</div></div>
+        <div class="field full"><label>Email <span class="req">*</span></label><input type="email" name="email" required autocomplete="email"><span class="hint">Your RMA# will be sent to this address.</span><div class="err" id="emailErr">Please enter a valid email address.</div></div>
+      </div>
+      <div class="rma-note"><b>RMA#:</b> assigned by InkQuest after approval. It must be clearly marked on the outside of the shipping container. <b>All RMA#s are void after 30 days.</b></div>
+    </div>
+
+    <!-- 2 PRODUCTS -->
+    <div class="card">
+      <h2><span class="n">2</span> Products to Return</h2>
+      <table class="prod" id="prodTable">
+        <thead><tr>
+          <th style="width:22%">Product <span class="req">*</span></th>
+          <th style="width:14%">Invoice or Order# <span class="req">*</span></th>
+          <th style="width:12%">Serial Number</th>
+          <th style="width:7%">Qty <span class="req">*</span></th>
+          <th style="width:10%">Price</th>
+          <th>Problem — please be specific <span class="req">*</span></th>
+          <th style="width:40px"></th>
+        </tr></thead>
+        <tbody id="prodBody"></tbody>
+      </table>
+      <div class="rowbtns no-print"><button type="button" class="btn btn-add" id="addRow">+ Add product</button></div>
+      <div class="err" id="prodErr">Please add at least one product and fill in all required fields.</div>
+      <div class="field" style="margin-top:14px;">
+        <label>Photos of defect / print sample <span class="opt">(recommended for defective goods)</span></label>
+        <input type="file" id="photos" accept="image/*,.pdf" multiple>
+        <span class="hint">Defective products must be accompanied by a print sample. Select photos here — attach them to the email in the next step.</span>
+        <div class="filelist" id="fileList"></div>
+        <div class="err" id="photosErr">Total file size exceeds 10MB — please remove some files or use smaller photos.</div>
+      </div>
+    </div>
+
+    <!-- 3 REASON -->
+    <div class="card">
+      <h2><span class="n">3</span> Reason for Return</h2>
+      <div class="radio-list" id="reasonList">
+        <label class="radio-card"><input type="radio" name="reason" value="InkQuest Error"><span><b>InkQuest Error</b><span class="tag">report within 5 days</span><div class="addr">Wrong item shipped, short shipment, billing error.</div></span></label>
+        <label class="radio-card"><input type="radio" name="reason" value="Defective Goods"><span><b>Defective Goods</b><span class="tag">report within 90 days</span><div class="addr">Product does not work as expected. Must be in original packaging with a print sample.</div></span></label>
+        <label class="radio-card"><input type="radio" name="reason" value="Other"><span><b>Other</b><div class="addr"><input type="text" name="reason_other" placeholder="Please specify" style="margin-top:4px; max-width:320px;"></div></span></label>
+      </div>
+      <div class="err" id="reasonErr">Please select a reason for the return.</div>
+    </div>
+
+    <!-- 4 SHIP TO -->
+    <div class="card">
+      <h2><span class="n">4</span> Request Your Return To</h2>
+      <div class="radio-list" id="shipToList">
+        <label class="radio-card"><input type="radio" name="shipto" value="Edmonton AB"><span><b>InkQuest — Edmonton, AB</b><div class="addr">14617 134 Ave NW, Edmonton, AB T5L 4S9<br>Tél: (780) 454-4321 · Fax: (780) 452-5405 · sales@inkquest.com</div></span></label>
+        <label class="radio-card"><input type="radio" name="shipto" value="Richmond BC"><span><b>InkQuest — Richmond, BC</b><div class="addr">Unit #5, 13520 Crestwood Place, Richmond, BC V6V 2G3<br>Tél: (604) 273-1013 · Fax: (604) 273-1593 · csrbc@inkquest.com</div></span></label>
+        <label class="radio-card"><input type="radio" name="shipto" value="St-Eustache QC"><span><b>InkQuest — St-Eustache, QC</b><div class="addr">330 Industrial Blvd, Suite 7, St-Eustache, QC J7R 5R4<br>Tél: (450) 491-5050 · Fax: (450) 472-0678 · csr@jcmd.ca</div></span></label>
+      </div>
+      <div class="err" id="shipToErr">Please select where you will ship the return.</div>
+    </div>
+
+    <!-- 5 CONDITIONS -->
+    <div class="card">
+      <h2><span class="n">5</span> Return Conditions</h2>
+      <div class="warn"><b>Please read:</b> any deviation from these instructions may result in delay or refusal of credit.</div>
+      <div class="checks">
+        <label><input type="checkbox" name="ack1"><span>Defective products are in <b>original packaging</b> and a <b>print sample</b> is included.</span></label>
+        <label><input type="checkbox" name="ack2"><span>Non-defective returns are in original packaging, without labels or stickers, and in <b>resellable condition</b>.</span></label>
+        <label><input type="checkbox" name="ack3"><span>I understand a <b>20% restocking fee</b> may apply, unauthorized collect shipments will be refused, and the RMA# is <b>void after 30 days</b>.</span></label>
+      </div>
+      <div class="err" id="ackErr">Please confirm all return conditions.</div>
+      <div class="policy">
+        <b>Return windows:</b> InkQuest errors — report within <b>5 days</b> · Defective goods — report within <b>90 days</b> · All RMA#s void after <b>30 days</b> from issue.
+      </div>
+    </div>
+
+    <!-- 6 SIGNATURE -->
+    <div class="card">
+      <h2><span class="n">6</span> Signature</h2>
+      <div class="grid">
+        <div class="field"><label>Print Name <span class="req">*</span></label><input type="text" name="sign_name" required><div class="err" id="signNameErr">Please enter your name.</div></div>
+        <div class="field"><label>Title / Position <span class="opt">(optional)</span></label><input type="text" name="sign_title"></div>
+        <div class="field"><label>Date <span class="req">*</span></label><input type="text" name="sign_date" id="signDate" required readonly></div>
+        <div class="field"><label>Signature (type full name) <span class="req">*</span></label><input type="text" name="sign_sig" required placeholder="Type your full name as signature"><div class="err" id="signSigErr">Please type your name as signature.</div></div>
+      </div>
+      <p class="hint" style="margin-top:8px;">By submitting, you confirm the information above is accurate and agree to the return conditions.</p>
+    </div>
+
+    <div class="no-print"><button type="submit" class="btn btn-submit">Submit RMA Request</button></div>
+  </form>
+
+  <!-- CONFIRMATION -->
+  <div id="confirm">
+    <div class="card">
+      <h2>Request Received</h2>
+      <div class="ref">Your RMA request reference:<br><b id="refNum"></b><br><span class="hint" id="sendStatus">Sending your request…</span><br><span class="hint">InkQuest will review within 1–2 business days and email your official RMA#.<br>Your print dialog will open — save or print your copy, then write the RMA# on it and place it on the box.</span></div>
+      <div class="ship-note">📦 <b>Print this form and put it in the box with your return product.</b><br><span class="hint">When your RMA# arrives by email, write it below before shipping.</span></div>
+      <div class="rma-writein">RMA# <span class="rma-box"></span></div>
+      <div id="summary"></div>
+      <div class="internal">
+        <b>For InkQuest / JCMD internal use:</b> RMA# ____________ &nbsp;·&nbsp; Approved by ____________ &nbsp;·&nbsp; Date ____________ &nbsp;·&nbsp; Credit / Replacement issued: ☐ Yes ☐ No
+      </div>
+      <div class="actions no-print">
+        <button class="btn btn-submit" id="emailBtn" style="width:auto;">Email Request to Warehouse</button>
+        <button class="btn btn-ghost" id="printBtn">Print / Save PDF</button>
+        <button class="btn btn-ghost" id="newBtn">New Request</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+</div>
+<script>
+
+(function(){
+  var prodBody = document.getElementById('prodBody');
+  var WH_EMAIL = {'Edmonton AB':'sales@inkquest.com','Richmond BC':'csrbc@inkquest.com','St-Eustache QC':'csr@jcmd.ca'};
+  var photoNames = [];
+  var photoFiles = [];
+
+  document.getElementById('signDate').value = new Date().toISOString().slice(0,10);
+
+  function addRow(){
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><input type="text" name="p_product" required placeholder="e.g. Compatible Brother TN760"></td>'+
+      '<td><input type="text" name="p_invoice" required placeholder="Invoice or Order#"></td>'+
+      '<td><input type="text" name="p_serial" placeholder="Serial #"></td>'+
+      '<td><input type="number" name="p_qty" required min="1" value="1" style="width:64px"></td>'+
+      '<td><input type="text" name="p_price" placeholder="$"></td>'+
+      '<td><textarea name="p_problem" required rows="1" placeholder="Describe the problem in detail"></textarea></td>'+
+      '<td><button type="button" class="btn btn-del">✕</button></td>';
+    tr.querySelector('.btn-del').onclick = function(){ if(prodBody.rows.length>1) tr.remove(); };
+    prodBody.appendChild(tr);
+  }
+  document.getElementById('addRow').onclick = addRow;
+  addRow();
+
+  document.getElementById('photos').addEventListener('change', function(){
+    photoNames = Array.prototype.map.call(this.files, function(f){ return f.name; });
+    photoFiles = Array.prototype.slice.call(this.files);
+    var totalMB = photoFiles.reduce(function(s,f){ return s+f.size; }, 0) / 1048576;
+    document.getElementById('fileList').innerHTML = photoNames.map(function(n){ return '<div>📎 '+n+'</div>'; }).join('') ||
+      '<span class="hint">No files selected.</span>';
+    show('photosErr', totalMB > 10);
+  });
+
+  document.querySelectorAll('.radio-list, .grid3').forEach(function(list){
+    list.addEventListener('change', function(){
+      list.querySelectorAll('.radio-card').forEach(function(c){ c.classList.remove('sel'); });
+      var checked = list.querySelector('input:checked');
+      if(checked && checked.closest('.radio-card')) checked.closest('.radio-card').classList.add('sel');
+    });
+  });
+
+  function val(name){ var el = document.querySelector('[name="'+name+'"]'); return el ? el.value.trim() : ''; }
+  function show(id, bad){ document.getElementById(id).style.display = bad ? 'block' : 'none'; return !bad; }
+  function mark(el, bad){ if(el) el.style.borderColor = bad ? 'var(--danger)' : ''; }
+
+  document.getElementById('rmaForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var ok = true, firstBad = null;
+
+    var reqFields = [['company','companyErr'],['contact','contactErr'],['phone','phoneErr'],['sign_name','signNameErr'],['sign_sig','signSigErr']];
+    reqFields.forEach(function(pair){
+      var n = pair[0], el = document.querySelector('[name="'+n+'"]'), bad = !el.value.trim();
+      mark(el, bad); show(pair[1], bad); if(bad){ ok = false; firstBad = firstBad || el; }
+    });
+    var em = document.querySelector('[name=email]');
+    var emBad = !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em.value.trim());
+    mark(em, emBad); show('emailErr', emBad); if(emBad){ ok = false; firstBad = firstBad || em; }
+
+    var rows = prodBody.querySelectorAll('tr'), pdata = [], pok = rows.length > 0;
+    rows.forEach(function(tr){
+      var r = {
+        product: tr.querySelector('[name=p_product]').value.trim(),
+        invoice: tr.querySelector('[name=p_invoice]').value.trim(),
+        serial: tr.querySelector('[name=p_serial]').value.trim(),
+        qty: tr.querySelector('[name=p_qty]').value.trim(),
+        price: tr.querySelector('[name=p_price]').value.trim(),
+        problem: tr.querySelector('[name=p_problem]').value.trim()
+      };
+      ['p_product','p_invoice','p_qty','p_problem'].forEach(function(fn){
+        mark(tr.querySelector('[name='+fn+']'), !tr.querySelector('[name='+fn+']').value.trim());
+      });
+      if(!r.product || !r.invoice || !r.qty || !r.problem) pok = false;
+      pdata.push(r);
+    });
+    ok = show('prodErr', !pok) && ok;
+
+    var reason = document.querySelector('[name=reason]:checked');
+    var reasonTxt = '';
+    if(reason){
+      reasonTxt = reason.value;
+      if(reason.value === 'Other'){
+        var o = val('reason_other');
+        if(!o){ ok = false; mark(document.querySelector('[name=reason_other]'), true); }
+        else reasonTxt += ' — ' + o;
+      }
+    }
+    ok = show('reasonErr', !reason) && ok;
+    var shipto = document.querySelector('[name=shipto]:checked');
+    ok = show('shipToErr', !shipto) && ok;
+
+    var acks = ['ack1','ack2','ack3'].every(function(n){ return document.querySelector('[name='+n+']').checked; });
+    ok = show('ackErr', !acks) && ok;
+
+    if(!ok){ (firstBad || document.querySelector('.err[style*="block"]') || document.body).scrollIntoView({behavior:'smooth', block:'center'}); return; }
+
+    var data = {
+      ref: 'RMA-REQ-' + Date.now().toString(36).toUpperCase(),
+      company: val('company'), account: val('account'), contact: val('contact'),
+      phone: val('phone'), email: val('email'),
+      products: pdata, reason: reasonTxt,
+      shipto: shipto.value,
+      photos: photoNames.slice(),
+      sign: val('sign_name'), title: val('sign_title'), sig: val('sign_sig'), date: val('sign_date')
+    };
+
+    var h = '';
+    function row(k,v){ h += '<div class="sumrow"><span>'+k+'</span><span style="text-align:right"><b>'+v+'</b></span></div>'; }
+    row('Reference', data.ref);
+    row('Company', data.company + (data.account ? ' · Acct '+data.account : ''));
+    row('Contact', data.contact + ' · ' + data.phone + '<br>' + data.email);
+    row('Reason', data.reason);
+    row('Ship return to', data.shipto);
+    if(data.photos.length) row('Photos selected', data.photos.join('<br>'));
+    data.products.forEach(function(p,i){
+      row('Product '+(i+1), p.product+' — Inv/Order '+p.invoice+(p.serial?' — Serial '+p.serial:'')+' — Qty '+p.qty+(p.price?' — '+p.price:'')+'<br><span class="hint">'+p.problem+'</span>');
+    });
+    row('Signed', data.sig + (data.title ? ' ('+data.title+')' : '') + ' · ' + data.date);
+    document.getElementById('summary').innerHTML = h;
+    document.getElementById('refNum').textContent = data.ref;
+
+    // Build the email body (used for direct send AND as mailto fallback)
+    var to = WH_EMAIL[data.shipto] || 'sales@inkquest.com';
+    var subject = 'RMA Request '+data.ref+' — '+data.company;
+    var lines = [
+      'RMA REQUEST '+data.ref, '',
+      'Company: '+data.company+(data.account?' | Account #: '+data.account:''),
+      'Contact: '+data.contact+' | Phone: '+data.phone+' | Email: '+data.email, '',
+      'PRODUCTS:'
+    ];
+    data.products.forEach(function(p,i){
+      lines.push((i+1)+'. '+p.product+' | Invoice/Order: '+p.invoice+(p.serial?' | Serial: '+p.serial:'')+' | Qty: '+p.qty+(p.price?' | Price: '+p.price:''));
+      lines.push('   Problem: '+p.problem);
+    });
+    lines.push('', 'Reason: '+data.reason, 'Ship return to: '+data.shipto);
+    if(data.photos.length) lines.push('Photos selected by customer: '+data.photos.join(', ')+' (please attach to this email before sending)');
+    lines.push('', 'Signed: '+data.sig+(data.title?' ('+data.title+')':'')+' — '+data.date, '', 'Return conditions confirmed by customer.');
+    var bodyText = lines.join('\n');
+
+    // Manual fallback: opens the customer's own email app prefilled
+    document.getElementById('emailBtn').onclick = function(){
+      window.location.href = 'mailto:'+to+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(bodyText);
+    };
+    document.getElementById('printBtn').onclick = function(){ window.print(); };
+    document.getElementById('newBtn').onclick = function(){ location.reload(); };
+
+    document.getElementById('rmaForm').style.display = 'none';
+    document.getElementById('confirm').style.display = 'block';
+    window.scrollTo({top:0, behavior:'smooth'});
+
+    // Block submit if photos exceed FormSubmit's 10MB attachment limit
+    var totalMB = photoFiles.reduce(function(s,f){ return s+f.size; }, 0) / 1048576;
+    if(totalMB > 10){ show('photosErr', true); document.getElementById('photosErr').scrollIntoView({behavior:'smooth', block:'center'}); return; }
+
+    // Direct send: post the request + photos straight to the warehouse inbox
+    var statusEl = document.getElementById('sendStatus');
+    var emailBtn = document.getElementById('emailBtn');
+    emailBtn.style.display = 'none'; // hidden unless the direct send fails
+    var fd = new FormData();
+    fd.append('_subject', subject);
+    fd.append('_replyto', data.email);
+    fd.append('_template', 'table');
+    fd.append('Reference', data.ref);
+    fd.append('Company', data.company + (data.account ? ' (Acct '+data.account+')' : ''));
+    fd.append('Contact', data.contact);
+    fd.append('Phone', data.phone);
+    fd.append('Email', data.email);
+    fd.append('Products', data.products.map(function(p,i){
+      return (i+1)+'. '+p.product+' | Invoice/Order: '+p.invoice+(p.serial?' | Serial: '+p.serial:'')+' | Qty: '+p.qty+(p.price?' | Price: '+p.price:'')+' | Problem: '+p.problem;
+    }).join('\n'));
+    fd.append('Reason', data.reason);
+    fd.append('Return to', data.shipto);
+    fd.append('Signature', data.sig + (data.title ? ' ('+data.title+')' : '') + ' — ' + data.date);
+    photoFiles.forEach(function(f){ fd.append('attachment', f, f.name); });
+    statusEl.textContent = 'Sending your request'+(photoFiles.length ? ' and '+photoFiles.length+' photo(s)' : '')+'…';
+    fetch('https://formsubmit.co/ajax/'+encodeURIComponent(to), {
+      method: 'POST',
+      headers: {'Accept': 'application/json'},
+      body: fd
+    }).then(function(r){ return r.json(); }).then(function(){
+      statusEl.textContent = 'Sent directly to '+to+(photoFiles.length ? ' with your photos attached.' : '.');
+      setTimeout(function(){ window.print(); }, 800);
+    }).catch(function(){
+      statusEl.textContent = 'Automatic send failed — please click "Email Request to Warehouse" below to send it yourself.';
+      emailBtn.style.display = '';
+    });
+  });
+})();
+
+</script>

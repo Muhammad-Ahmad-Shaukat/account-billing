@@ -28,7 +28,12 @@ router.get("/customer/invoices", async (req, res) => {
       date_from: req.query.date_from,
       date_to: req.query.date_to,
       balance: req.query.balance,
+      document_type: req.query.document_type,
     });
+
+    if (req.query.document_type === "credit_note") {
+      return res.set("Cache-Control", "private, no-store").json(list);
+    }
 
     const outstanding = await resolveOutstandingForCustomer(shop, customerId);
     const data = attachOutstandingToInvoices(list.data);
@@ -47,17 +52,17 @@ router.get("/customer/invoices", async (req, res) => {
       });
   } catch (err) {
     console.error("[customer-invoices list]", err);
-    return res.status(500).json({ error: "Failed to load invoices" });
+    return res.status(err.status || 500).json({ error: err.status === 400 ? err.message : "Failed to load invoices" });
   }
 });
 
 router.get("/customer/invoices/statement", async (req, res) => {
   try {
-    const invoices = await getUnpaidStatement(
+    const statement = await getUnpaidStatement(
       req.proxyShop, normalizeShopifyId(req.loggedInCustomerId)
     );
     return res.set("Cache-Control", "private, no-store").json({
-      data: { invoices, company: getCompanyBlock(), generated_at: new Date().toISOString() },
+      data: { ...statement, company: getCompanyBlock(), generated_at: new Date().toISOString() },
     });
   } catch (err) {
     console.error("[customer-invoices statement]", err);

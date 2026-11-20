@@ -87,3 +87,14 @@ CREATE UNIQUE INDEX IF NOT EXISTS outstanding_invoice_uq
 
 CREATE INDEX IF NOT EXISTS outstanding_customer_idx
   ON outstanding_balances (shop, shopify_customer_id, scope);
+
+-- Add classification without rewriting or deleting invoice records.
+ALTER TABLE invoices
+  ADD COLUMN IF NOT EXISTS document_type TEXT NOT NULL DEFAULT 'invoice'
+    CHECK (document_type IN ('invoice', 'credit_note')),
+  ADD COLUMN IF NOT EXISTS related_invoice_number TEXT;
+
+CREATE UNIQUE INDEX IF NOT EXISTS invoices_document_revision_uq
+  ON invoices (shop, document_type, invoice_number, revision);
+
+ALTER TABLE invoices DROP CONSTRAINT IF EXISTS invoices_shop_invoice_number_revision_key;

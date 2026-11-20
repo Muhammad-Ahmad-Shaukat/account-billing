@@ -1,0 +1,56 @@
+{% comment %} Hamburger header A — Minimal (demo on copy theme only) {% endcomment %}
+<style>
+.hha-bar{display:flex;align-items:center;gap:28px;padding:0 48px;height:88px;background:#fff;border-bottom:1px solid #e3e3e3;position:sticky;top:0;z-index:40}
+.hha-burger{width:30px;cursor:pointer;flex:none;background:none;border:0;padding:0}
+.hha-burger span{display:block;height:3px;background:#00404c;margin:6px 0;border-radius:2px}
+.hha-logo img{height:44px;width:auto;display:block}
+.hha-search{flex:1;max-width:560px;margin:0 auto}
+.hha-search form{display:flex;align-items:center;background:#f4f4f4;border-radius:30px;padding:0 18px;height:46px}
+.hha-search input{border:0;outline:0;background:transparent;flex:1;font-size:15px;font-family:inherit}
+.hha-icons{display:flex;gap:26px;margin-left:auto;font-size:14px;font-weight:500;align-items:center}
+.hha-icons a{color:#00404c;text-decoration:none;text-align:center;font-size:14px}
+.hha-lang{font-size:13px;font-weight:600;letter-spacing:1px}
+.hha-lang a{font-size:13px}
+.hha-icons svg{display:block;margin:0 auto 2px}
+.hha-scrim{position:fixed;inset:0;background:rgba(0,40,45,.45);z-index:60;display:none}
+.hha-drawer{position:fixed;top:0;left:0;bottom:0;width:400px;max-width:92vw;background:#fff;z-index:61;padding:28px 32px;overflow:auto;transform:translateX(-105%);transition:transform .3s ease}
+.hha-open .hha-scrim{display:block}
+.hha-open .hha-drawer{transform:none}
+.hha-drawer-head{display:flex;justify-content:space-between;align-items:center;font-weight:600;letter-spacing:2px;color:#00404c}
+.hha-drawer-head button{background:none;border:0;font-size:30px;cursor:pointer;color:#00404c}
+.hha-drawer a.dlink{display:block;text-decoration:none;color:#00404c;font-size:17px;font-weight:600;padding:14px 0;border-bottom:1px solid #eee}
+.hha-drawer .sub a{font-size:15px;font-weight:500;padding:8px 0 8px 16px;border:0}
+.hha-help{background:#f2f7f7;border-left:4px solid #e6a817;padding:14px 18px;margin-top:16px}
+.hha-help h4{font-size:13px;letter-spacing:2px;color:#00404c;margin-bottom:6px}
+.hha-foot{margin-top:22px;display:flex;gap:12px}
+.hha-foot a{flex:1;text-align:center;padding:12px;border-radius:6px;font-weight:600;font-size:14px;text-decoration:none}
+.hha-foot .solid{background:#00404c;color:#fff}
+.hha-foot .line{border:2px solid #00404c;color:#00404c}
+@media(max-width:990px){.hha-bar{padding:0 20px;gap:16px}.hha-search{display:none}}
+</style>
+<div class="hha-wrap" id="hha-wrap">
+  <div class="hha-bar">
+    <button class="hha-burger" aria-label="Open menu" onclick="document.getElementById('hha-wrap').classList.add('hha-open')"><span></span><span></span><span></span></button>
+    <a class="hha-logo" href="{{ routes.root_url }}">{% if section.settings.logo %}{{ section.settings.logo | image_url: width: 290 | image_tag: alt: shop.name }}{% else %}INKQUEST{% endif %}</a>
+    <div class="hha-search">
+      <form action="{{ routes.search_url }}" method="get"><input type="hidden" name="type" value="product"><input type="search" name="q" placeholder="Search products…" aria-label="Search products"></form>
+    </div>
+    <div class="hha-icons">
+      <div class="hha-lang">{% for locale in shop.published_locales %}<a href="{{ locale.root_url }}">{{ locale.iso_code | upcase }}</a>{% unless forloop.last %} | {% endunless %}{% endfor %}</div>
+      <a href="{{ routes.account_url }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00404c" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>Account</a>
+      <a href="{{ routes.cart_url }}" id="pfx-cart-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00404c" stroke-width="2"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>Cart (<span data-pfx-cart-count>{{ cart.item_count }}</span>)</a>
+    </div>
+  </div>
+  <div class="hha-scrim" onclick="document.getElementById('hha-wrap').classList.remove('hha-open')"></div>
+  <div class="hha-drawer">
+    <div class="hha-drawer-head"><span>MENU</span><button aria-label="Close menu" onclick="document.getElementById('hha-wrap').classList.remove('hha-open')">×</button></div>
+    {% for link in linklists['main-menu-2'].links %}
+      <a class="dlink" href="{{ link.url }}">{{ link.title }}</a>
+      {% if link.links.size > 0 %}<div class="sub">{% for sub in link.links %}<a class="dlink" href="{{ sub.url }}">{{ sub.title }}</a>{% endfor %}</div>{% endif %}
+    {% endfor %}
+    <div class="hha-foot"><a class="solid" href="{{ routes.account_login_url }}">Sign In</a><a class="line" href="{{ routes.account_register_url }}">Register</a></div>
+  </div>
+</div>
+{% schema %}
+{"name": "Hamburger header A","settings": [{"type": "image_picker","id": "logo","label": "Logo"}]}
+{% endschema %}

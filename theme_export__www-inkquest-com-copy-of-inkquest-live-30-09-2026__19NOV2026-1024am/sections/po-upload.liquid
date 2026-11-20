@@ -1,0 +1,350 @@
+{{ 'po-upload.css' | asset_url | stylesheet_tag }}
+
+<div class="po-upload" id="po-upload-{{ section.id }}"
+     data-index-url="{{ 'po-catalog-index.json' | asset_url }}"
+     data-alias-url="{{ 'po-aliases.json' | asset_url }}"
+     data-xlsx-url="{{ 'po-xlsx.full.min.js' | asset_url }}"
+     data-pdfjs-url="{{ 'po-pdf.min.js' | asset_url }}"
+     data-pdfjs-worker-url="{{ 'po-pdf.worker.min.js' | asset_url }}"
+     data-tesseract-url="{{ 'po-tesseract.min.js' | asset_url }}"
+     data-tesseract-worker-url="{{ 'po-tesseract-worker.min.js' | asset_url }}"
+     data-tesseract-core-file-url="{{ 'tesseract-core-simd-lstm.wasm.js' | asset_url }}"
+     data-tesseract-lang-file-url="{{ 'eng.traineddata.gz' | asset_url }}">
+  <p class="po-upload__kicker">Purchase order</p>
+  <h2 class="po-upload__heading">{{ section.settings.heading }}</h2>
+  <div class="po-upload__intro">{{ section.settings.intro }}</div>
+
+  <div class="po-upload__steps-card">
+    <ol class="po-upload__steps">
+      <li>
+        <div><strong>Upload your PO</strong>
+        <span>Drop in your PDF or Excel PO. We read the items, quantities, PO number and ship-to automatically.</span></div>
+      </li>
+      <li>
+        <div><strong>Review matched items</strong>
+        <span>Each line is matched to our catalog. Adjust quantities and remove anything you don't need.</span></div>
+      </li>
+      <li>
+        <div><strong>Add to cart</strong>
+        <span>One click adds everything to your cart, with your PO number attached.</span></div>
+      </li>
+      <li>
+        <div><strong>Checkout</strong>
+        <span>Your PO number fills the cart's Purchase Order Number field automatically.</span></div>
+      </li>
+    </ol>
+  </div>
+
+  <div class="po-upload__form-card">
+    <div class="po-upload__dropzone" data-po-dropzone>
+      <p class="po-upload__drop-text">Drag &amp; drop your PO file here, or</p>
+      <label class="po-upload__browse">
+        Choose file
+        <input type="file" data-po-input hidden
+               accept=".pdf,.xls,.xlsx">
+      </label>
+      <p class="po-upload__hint">Accepted: PDF, XLS, XLSX &mdash; max 10&nbsp;MB</p>
+      <p class="po-upload__sample">
+        <a href="{{ 'po-sample-po.xlsx' | asset_url }}" download>Download a sample PO</a>
+        to see the expected format.
+      </p>
+    </div>
+
+    <div class="po-upload__status" data-po-status hidden></div>
+
+    <div class="po-upload__results" data-po-results hidden>
+      <div class="po-upload__details" data-po-details hidden>
+        <label class="po-upload__po-row">
+          <span>PO Number</span>
+          <input type="text" data-po-number aria-label="Purchase order number">
+        </label>
+        <div class="po-upload__po-row" data-po-shipto-row>
+          <span>Ship to</span>
+          <span data-po-shipto></span>
+        </div>
+      </div>
+      <h3>Matched items</h3>
+      <p class="po-upload__note po-upload__note--info">Please review the items and quantities below. If any item is incorrect, remove it here &mdash; you can add it manually from the store after the remaining items are in your cart.</p>
+      <table class="po-upload__table">
+        <thead><tr><th>Code</th><th>Product</th><th>Qty</th><th></th></tr></thead>
+        <tbody data-po-matched></tbody>
+      </table>
+
+      <div data-po-ambiguous-wrap hidden>
+        <h3>Which product did you mean?</h3>
+        <p class="po-upload__note">These codes match more than one product &mdash; pick the right one, or remove the line with &times;.</p>
+        <table class="po-upload__table">
+          <thead><tr><th>Code</th><th>Product</th><th>Qty</th><th></th></tr></thead>
+          <tbody data-po-ambiguous></tbody>
+        </table>
+      </div>
+
+      <div data-po-review-wrap hidden>
+        <h3>Needs review</h3>
+        <p class="po-upload__note">We found close matches for these lines — pick the right product for each.</p>
+        <div data-po-review></div>
+      </div>
+
+      <button type="button" class="po-upload__toggle" data-po-unmatched-toggle hidden>
+        <span data-po-unmatched-show>Show unmatched lines</span><span data-po-unmatched-hide hidden>Hide unmatched lines</span>
+        <span data-po-unmatched-count></span>
+      </button>
+      <div data-po-unmatched-wrap hidden>
+        <h3>Could not match</h3>
+        <p class="po-upload__note">These lines were <strong>not</strong> added. Add them manually from the store if needed.</p>
+        <table class="po-upload__table po-upload__table--unmatched">
+          <thead><tr><th>Line</th><th>Reason</th></tr></thead>
+          <tbody data-po-unmatched></tbody>
+        </table>
+      </div>
+
+      <button type="button" class="po-upload__add button" data-po-add>
+        Add matched items to cart
+      </button>
+      <p class="po-upload__cart-note" data-po-cart-note hidden></p>
+    </div>
+  </div>
+
+  <div class="po-upload__info-card">
+    <h3>Good to know</h3>
+    <ul>
+      <li>Accepted files: PDF or Excel (.xls / .xlsx), up to 10&nbsp;MB.</li>
+      <li>Scanned or photo PDFs can't be read &mdash; please use a PDF with selectable text.</li>
+      <li>Your PO number fills the cart's Purchase Order Number field automatically.</li>
+      <li><strong>The ship-to address shown is for reference &mdash; the final shipping address will be asked at checkout.</strong></li>
+    </ul>
+  </div>
+</div>
+
+<script src="{{ 'po-match.js' | asset_url }}" defer></script>
+<script src="{{ 'po-match-ai.js' | asset_url }}" defer></script>
+<script src="{{ 'po-upload.js' | asset_url }}" defer></script>
+
+<script>
+(function () {
+  'use strict';
+
+  var PO_UI_LOCALE = {{ request.locale.iso_code | default: 'en' | json }};
+  var PO_IS_FRENCH = String(PO_UI_LOCALE || '').toLowerCase().indexOf('fr') === 0;
+
+  if (!PO_IS_FRENCH) return;
+
+  var PO_FR = {
+    'Purchase order': 'Bon de commande',
+    'Upload your purchase order': 'Téléversez votre bon de commande',
+    'Send us your purchase order and skip the manual line-by-line entry. We match every item to our catalog and fill your cart in seconds.': 'Envoyez-nous votre bon de commande et évitez la saisie manuelle ligne par ligne. Nous associons chaque article à notre catalogue et remplissons votre panier en quelques secondes.',
+    'Upload your PO': 'Téléversez votre bon de commande',
+    'Drop in your PDF or Excel PO. We read the items, quantities, PO number and ship-to automatically.': "Déposez votre bon de commande PDF ou Excel. Nous lisons automatiquement les articles, les quantités, le numéro de bon de commande et l'adresse de livraison.",
+    'Review matched items': 'Vérifiez les articles associés',
+    'Each line is matched to our catalog. Adjust quantities and remove anything you don\'t need.': "Chaque ligne est associée à notre catalogue. Ajustez les quantités et retirez ce dont vous n'avez pas besoin.",
+    'Add to cart': 'Ajouter au panier',
+    'One click adds everything to your cart, with your PO number attached.': 'En un clic, tout est ajouté à votre panier, avec votre numéro de bon de commande.',
+    'Checkout': 'Passer à la caisse',
+    'Your PO number fills the cart\'s Purchase Order Number field automatically.': 'Votre numéro de bon de commande remplit automatiquement le champ « Numéro de bon de commande » du panier.',
+    'Drag & drop your PO file here, or': 'Glissez-déposez votre fichier de bon de commande ici, ou',
+    'Choose file': 'Choisir un fichier',
+    'Accepted: PDF, XLS, XLSX — max 10 MB': 'Acceptés : PDF, XLS, XLSX — max 10 Mo',
+    'Download a sample PO': 'Télécharger un exemple de bon de commande',
+    'to see the expected format.': 'pour voir le format attendu.',
+    'PO Number': 'Numéro de bon de commande',
+    'Purchase order number': 'Numéro de bon de commande',
+    'Ship to': 'Livrer à',
+    'Matched items': 'Articles associés',
+    'Please review the items and quantities below. If any item is incorrect, remove it here — you can add it manually from the store after the remaining items are in your cart.': 'Veuillez vérifier les articles et les quantités ci-dessous. Si un article est incorrect, retirez-le ici — vous pourrez l\'ajouter manuellement depuis la boutique une fois les autres articles dans votre panier.',
+    'Code': 'Code',
+    'Product': 'Produit',
+    'Qty': 'Qté',
+    'Quantity': 'Quantité',
+    'Remove': 'Retirer',
+    'qty assumed': 'qté présumée',
+    'Quantity was not shown on your PO, assumed 1': "La quantité n'était pas indiquée sur votre bon de commande, présumée 1",
+    'Which product did you mean?': 'Quel produit vouliez-vous dire ?',
+    'These codes match more than one product — pick the right one, or remove the line with ×.': "Ces codes correspondent à plus d'un produit — choisissez le bon, ou retirez la ligne avec ×.",
+    'Could not match': 'Non associés',
+    'These lines were not added. Add them manually from the store if needed.': "Ces lignes n'ont pas été ajoutées. Ajoutez-les manuellement depuis la boutique au besoin.",
+    'Line': 'Ligne',
+    'Reason': 'Raison',
+    'Add matched items to cart': 'Ajouter les articles associés au panier',
+    'Good to know': 'Bon à savoir',
+    'Accepted files: PDF or Excel (.xls / .xlsx), up to 10 MB.': 'Fichiers acceptés : PDF ou Excel (.xls / .xlsx), jusqu\'à 10 Mo.',
+    'Scanned or photo PDFs can\'t be read — please use a PDF with selectable text.': 'Les PDF numérisés ou photographiés ne peuvent pas être lus — veuillez utiliser un PDF avec du texte sélectionnable.',
+    'The ship-to address shown is for reference — the final shipping address will be asked at checkout.': "L'adresse de livraison affichée est à titre indicatif — l'adresse de livraison finale vous sera demandée à la caisse.",
+    'The PO upload scripts did not load. Please refresh the page.': 'Les scripts de téléversement du bon de commande ne se sont pas chargés. Veuillez actualiser la page.',
+    'The product catalog for PO upload is missing. Please contact the store.': 'Le catalogue de produits pour le téléversement du bon de commande est manquant. Veuillez contacter la boutique.',
+    'Could not load the': 'Impossible de charger le',
+    'spreadsheet reader': 'lecteur de tableur',
+    'PDF reader': 'lecteur PDF',
+    'photo reader': 'lecteur de photo',
+    'Check your connection and try again.': 'Vérifiez votre connexion et réessayez.',
+    'Could not read the file.': 'Impossible de lire le fichier.',
+    'Reading the photo — this can take up to a minute…': "Lecture de la photo — cela peut prendre jusqu'à une minute…",
+    'Loading product catalog…': 'Chargement du catalogue de produits…',
+    'Could not load the product catalog. Please refresh the page.': 'Impossible de charger le catalogue de produits. Veuillez actualiser la page.',
+    'That file type is not accepted. Please upload a PDF or Excel (.xls/.xlsx) file.': "Ce type de fichier n'est pas accepté. Veuillez téléverser un fichier PDF ou Excel (.xls/.xlsx).",
+    'That file is larger than 10 MB. Please upload a smaller file.': 'Ce fichier dépasse 10 Mo. Veuillez téléverser un fichier plus petit.',
+    'The catalog is still loading — please wait a moment.': 'Le catalogue est encore en cours de chargement — veuillez patienter un moment.',
+    'Reading your PO, please wait…': 'Lecture de votre bon de commande, veuillez patienter…',
+    'Could not read that file.': 'Impossible de lire ce fichier.',
+    'No products found in this file. If it\'s a scanned PDF, please use a PDF with selectable text or an Excel file.': "Aucun produit trouvé dans ce fichier. S'il s'agit d'un PDF numérisé, veuillez utiliser un PDF avec du texte sélectionnable ou un fichier Excel.",
+    'Some items are out of stock': 'Certains articles sont en rupture de stock',
+    'These items are not in stock right now. Tick the ones you still want to add as': 'Ces articles ne sont pas en stock pour le moment. Cochez ceux que vous souhaitez tout de même ajouter en',
+    'backorder': 'commande différée',
+    'items.': 'articles.',
+    'Skip these items': 'Ignorer ces articles',
+    'Nothing to add.': 'Rien à ajouter.',
+    'Checking items on the store…': 'Vérification des articles sur la boutique…',
+    'None of the items could be added.': "Aucun article n'a pu être ajouté.",
+    'Adding items to your cart…': 'Ajout des articles à votre panier…',
+    'Could not add items to the cart. Please try again.': 'Impossible d\'ajouter les articles au panier. Veuillez réessayer.',
+    'Not available on the store right now.': 'Non disponible sur la boutique pour le moment.',
+    'no product code found on this line': 'aucun code de produit trouvé sur cette ligne',
+    'no product code found on this row': 'aucun code de produit trouvé sur cette ligne',
+    'code not found in catalog': 'code introuvable dans le catalogue',
+    'Needs review': 'À vérifier',
+    'We found close matches for these lines — pick the right product for each.': 'Nous avons trouvé des correspondances proches pour ces lignes — choisissez le bon produit pour chacune.',
+    'We found close matches for some lines — please review them below.': 'Nous avons trouvé des correspondances proches pour certaines lignes — veuillez les vérifier ci-dessous.',
+    'Likely match': 'Correspondance probable',
+    'Possible match': 'Correspondance possible',
+    'None of these — leave unmatched': 'Aucun de ceux-ci — laisser non associé',
+    'Use selected': 'Utiliser la sélection',
+    'Show unmatched lines': 'Afficher les lignes non associées',
+    'Hide unmatched lines': 'Masquer les lignes non associées',
+    'left unmatched after review': 'laissé non associé après vérification',
+  };
+
+  var PO_SUBSTRING_FR = [
+    ['(qty ', '(qté '],
+    ['code matches ', 'ce code correspond à '],
+    [' products -- please pick one', ' produits — veuillez en choisir un'],
+    [' products but none are ', ' produits, mais aucun n’est ']
+  ];
+
+  function normalize(value) {
+    return String(value || '')
+      .replace(/ /g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function translateTextNode(node) {
+    var original = node.nodeValue;
+    if (!original || !/[A-Za-z]/.test(original)) return;
+
+    var normalized = normalize(original);
+    if (!normalized) return;
+
+    if (Object.prototype.hasOwnProperty.call(PO_FR, normalized)) {
+      var start = original.search(/\S/);
+      var end = original.search(/\s*$/);
+      var leading = start > 0 ? original.slice(0, start) : '';
+      var trailing = end >= 0 ? original.slice(end) : '';
+      node.nodeValue = leading + PO_FR[normalized] + trailing;
+      return;
+    }
+
+    var updated = original;
+    PO_SUBSTRING_FR.forEach(function (pair) {
+      updated = updated.split(pair[0]).join(pair[1]);
+    });
+
+    Object.keys(PO_FR).forEach(function (key) {
+      if (key.length < 3 || key.indexOf(' ') === -1) return;
+      if (updated.indexOf(key) !== -1) {
+        updated = updated.split(key).join(PO_FR[key]);
+      }
+    });
+
+    if (updated !== original) node.nodeValue = updated;
+  }
+
+  function translateAttributes(root) {
+    var elements = root.querySelectorAll ? root.querySelectorAll('input, textarea, select, button, a, iframe, [aria-label], [title], [placeholder]') : [];
+    elements.forEach(function (el) {
+      ['placeholder', 'title', 'aria-label'].forEach(function (attr) {
+        if (!el.hasAttribute(attr)) return;
+        var value = normalize(el.getAttribute(attr));
+        if (Object.prototype.hasOwnProperty.call(PO_FR, value)) {
+          el.setAttribute(attr, PO_FR[value]);
+        }
+      });
+    });
+  }
+
+  function translateRoot(root) {
+    if (!root) return;
+
+    if (root.nodeType === Node.TEXT_NODE) {
+      translateTextNode(root);
+      return;
+    }
+
+    if (root.nodeType !== Node.ELEMENT_NODE) return;
+    if (/^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/i.test(root.tagName)) return;
+
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        var parent = node.parentElement;
+        if (!parent || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/i.test(parent.tagName)) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    var nodes = [];
+    var current;
+    while ((current = walker.nextNode())) nodes.push(current);
+    nodes.forEach(translateTextNode);
+    translateAttributes(root);
+  }
+
+  function applyTranslations(root) {
+    translateRoot(root);
+  }
+
+  var poRoot = document.getElementById('po-upload-{{ section.id }}');
+  applyTranslations(poRoot);
+
+  var observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      mutation.addedNodes.forEach(function (node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+          translateTextNode(node);
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          applyTranslations(node);
+        }
+      });
+    });
+  });
+
+  if (poRoot) {
+    observer.observe(poRoot, {
+      childList: true,
+      subtree: true
+    });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "PO Upload",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Upload your purchase order"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro text",
+      "default": "<p>Send us your purchase order and skip the manual line-by-line entry. We match every item to our catalog and fill your cart in seconds.</p>"
+    }
+  ],
+  "presets": [
+    { "name": "PO Upload" }
+  ]
+}
+{% endschema %}

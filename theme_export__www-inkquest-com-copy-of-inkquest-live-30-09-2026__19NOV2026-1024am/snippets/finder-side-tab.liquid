@@ -1,0 +1,254 @@
+{% comment %}
+  Ink & Toner Finder — side tab + slide-out 3-step finder (Brand → Family → Model).
+  Data: built LIVE from the store's public product feed (/products.json) by parsing
+  each product's "Compatible Printer List" — brand/family/model groups come straight
+  from the product descriptions. Result is cached 24h in localStorage and refreshed
+  in the background, so newly added products appear automatically (no rebuild).
+  Selecting a model goes to /search?q="<model>" (exact phrase).
+  Brand list is restricted to an allowlist (see ALLOWED_BRANDS below).
+{% endcomment %}
+{% if customer %}
+<style>
+  #itf-tab{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:9990;
+    background:#00404c;color:#fff;border:0;cursor:pointer;
+    writing-mode:vertical-rl;text-orientation:mixed;
+    font:600 13px/1 Poppins,Arial,Helvetica,sans-serif;letter-spacing:2.5px;
+    padding:20px 11px;border-radius:8px 0 0 8px;box-shadow:-2px 0 12px rgba(0,0,0,.22)}
+  #itf-tab:hover{background:#00323b}
+  #itf-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:9991;
+    opacity:0;pointer-events:none;transition:opacity .25s}
+  #itf-overlay.show{opacity:1;pointer-events:auto}
+  #itf-panel{position:fixed;top:0;right:0;height:100%;width:300px;max-width:92vw;z-index:9992;
+    background:#ffffff;border-left:1px solid #e5e7eb;transform:translateX(105%);transition:transform .3s ease;
+    box-shadow:-4px 0 18px rgba(0,0,0,.25);padding:26px 22px;overflow-y:auto;
+    font-family:Poppins,Arial,Helvetica,sans-serif}
+  #itf-panel.open{transform:translateX(0)}
+  #itf-panel h3{color:#00404c;font-size:23px;font-weight:700;margin:0 0 20px 34px;line-height:1.2}
+  #itf-close{position:absolute;top:12px;left:14px;background:none;border:0;color:#00404c;
+    font-size:24px;line-height:1;cursor:pointer;opacity:.85}
+  #itf-close:hover{opacity:1}
+  .itf-row{display:flex;align-items:center;background:#f3f3f3;border-radius:3px;
+    margin:0 0 14px;padding:0 12px;height:52px;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  .itf-row.itf-disabled{opacity:.55}
+  .itf-num{color:#00404c;font-weight:700;font-size:16px;white-space:nowrap;margin-right:8px}
+  .itf-row select{flex:1;border:0;outline:0;background:transparent;appearance:none;-webkit-appearance:none;
+    color:#00404c;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;
+    padding:14px 4px;min-width:0;text-overflow:ellipsis}
+  .itf-row select:disabled{cursor:default}
+  .itf-chev{color:#00404c;font-size:16px;margin-left:6px;pointer-events:none}
+  .itf-note{color:#6b7280;font-size:12px;margin-top:6px;line-height:1.5}
+  @media (max-width:480px){
+    #itf-panel{width:86vw}
+    #itf-tab{padding:16px 9px;font-size:12px}
+  }
+</style>
+<button id="itf-tab" aria-label="{% if request.locale.iso_code == 'fr' %}Ouvrir la recherche d’encre et de toner{% else %}Open Ink and Toner Finder{% endif %}">
+  <span>{% if request.locale.iso_code == 'fr' %}ENCRE ET TONER{% else %}INK &amp; TONER FINDER{% endif %}</span>
+</button>
+<div id="itf-overlay"></div>
+<aside id="itf-panel" aria-hidden="true" aria-label="{% if request.locale.iso_code == 'fr' %}Recherche d’encre et de toner{% else %}Ink and Toner Finder{% endif %}">
+  <button id="itf-close" aria-label="{% if request.locale.iso_code == 'fr' %}Fermer{% else %}Close finder{% endif %}">×</button>
+  <h3>{% if request.locale.iso_code == 'fr' %}Recherche d’encre et de toner{% else %}Ink &amp; Toner Finder{% endif %}</h3>
+  <label class="itf-row" id="itf-row-brand">
+    <span class="itf-num">1 |</span>
+    <select id="itf-brand" aria-label="{% if request.locale.iso_code == 'fr' %}Sélectionnez une marque d’imprimante{% else %}Select a Printer Brand{% endif %}">
+      <option value="">{% if request.locale.iso_code == 'fr' %}Sélectionnez une marque d’imprimante{% else %}Select a Printer Brand{% endif %}</option>
+    </select>
+    <span class="itf-chev">▾</span>
+  </label>
+  <label class="itf-row itf-disabled" id="itf-row-family">
+    <span class="itf-num">2 |</span>
+    <select id="itf-family" aria-label="{% if request.locale.iso_code == 'fr' %}Sélectionnez une famille d’imprimantes{% else %}Select a Printer Family{% endif %}" disabled>
+      <option value="">{% if request.locale.iso_code == 'fr' %}Sélectionnez une famille d’imprimantes{% else %}Select a Printer Family{% endif %}</option>
+    </select>
+    <span class="itf-chev">▾</span>
+  </label>
+  <label class="itf-row itf-disabled" id="itf-row-model">
+    <span class="itf-num">3 |</span>
+    <select id="itf-model" aria-label="{% if request.locale.iso_code == 'fr' %}Sélectionnez un modèle d’imprimante{% else %}Select a Printer Model{% endif %}" disabled>
+      <option value="">{% if request.locale.iso_code == 'fr' %}Sélectionnez un modèle d’imprimante{% else %}Select a Printer Model{% endif %}</option>
+    </select>
+    <span class="itf-chev">▾</span>
+  </label>
+  <p class="itf-note">{% if request.locale.iso_code == 'fr' %}Choisissez votre modèle d’imprimante et nous afficherons toutes les cartouches compatibles.{% else %}Pick your printer model and we'll show every cartridge that fits it.{% endif %}</p>
+</aside>
+<script>
+(function(){
+  var tab=document.getElementById('itf-tab'),
+      panel=document.getElementById('itf-panel'),
+      overlay=document.getElementById('itf-overlay'),
+      brandSel=document.getElementById('itf-brand'),
+      famSel=document.getElementById('itf-family'),
+      modelSel=document.getElementById('itf-model'),
+      rowFam=document.getElementById('itf-row-family'),
+      rowModel=document.getElementById('itf-row-model'),
+      data=null, brand=null, loading=false, loadFailed=false;
+  var CACHE_KEY='itf_printer_data_v3', CACHE_TTL=24*3600*1000;
+  var ITF_IS_FR = {{ request.locale.iso_code | default: 'en' | json }} === 'fr';
+  var ITF_STR = ITF_IS_FR ? {
+    brand: "S\u00e9lectionnez une marque d\u2019imprimante",
+    family: "S\u00e9lectionnez une famille d\u2019imprimantes",
+    model: "S\u00e9lectionnez un mod\u00e8le d\u2019imprimante",
+    loading: "Chargement des imprimantes\u2026",
+    failed: "Chargement impossible \u2014 rouvrez pour r\u00e9essayer"
+  } : {
+    brand: "Select a Printer Brand",
+    family: "Select a Printer Family",
+    model: "Select a Printer Model",
+    loading: "Loading printers\u2026",
+    failed: "Could not load \u2014 reopen to retry"
+  };
+
+  function normBrand(b){ b=String(b||'').trim(); if(/^okidata$/i.test(b)) return 'OKI'; if(/^konica$/i.test(b)) return 'Konica Minolta'; return b; }
+  function normFam(f){ return String(f||'').trim().replace(/ Series Series/g,' Series').replace(/^-\s*/,''); }
+  function nat(a,b){ return String(a).localeCompare(String(b), undefined, {numeric:true}); }
+
+  /* Only these printer brands appear in the finder. */
+  var ALLOWED_BRANDS=['brother','canon','dell','epson','hp','konica minolta','lexmark','oki','panasonic','pantum','ricoh','samsung','sharp','star micronics','xerox'];
+  /* Build brand -> family -> [models] straight from product descriptions. */
+  function parseProducts(products){
+    var out={}, HDR=/^(.+?)\s+-\s+(.+?)\s*$/;
+    for(var pi=0; pi<products.length; pi++){
+      var body=products[pi].body_html||'';
+      var chunks=[], re=/<p>(.*?)<\/p>/gi, m;
+      while((m=re.exec(body))){
+        var t=m[1].replace(/<[^>]+>/g,'').trim();
+        if(t) chunks.push(t);
+      }
+      for(var i=0;i<chunks.length;i++){
+        var h=HDR.exec(chunks[i]);
+        if(h && /Series$/.test(h[2].trim()) && i+1<chunks.length){
+          var br=normBrand(h[1]), fam=normFam(h[2]);
+          if(br==='Ribbon'||br==='Unknown'){
+            var base=fam.replace(/\s+Series$/,'').trim();
+            if(base) br=base;
+          }
+          if(ALLOWED_BRANDS.indexOf(String(br).toLowerCase())===-1){ i++; continue; }
+          var models=chunks[i+1].split(','), bf=out[br]||(out[br]={}), arr=bf[fam]||(bf[fam]=[]);
+          for(var k=0;k<models.length;k++){
+            var md=models[k].trim();
+            if(md && arr.indexOf(md)===-1) arr.push(md);
+          }
+          i++;
+        }
+      }
+    }
+    Object.keys(out).forEach(function(b){
+      Object.keys(out[b]).forEach(function(f){ out[b][f].sort(nat); });
+    });
+    return out;
+  }
+
+  function readCache(){
+    try{ var c=JSON.parse(localStorage.getItem(CACHE_KEY)); if(c&&c.data) return c; }catch(e){}
+    return null;
+  }
+  function writeCache(d){
+    try{ localStorage.setItem(CACHE_KEY, JSON.stringify({ts:Date.now(), data:d})); }catch(e){}
+  }
+  function fetchAll(){
+    var all=[], page=1;
+    function next(){
+      return fetch('/products.json?limit=250&page='+page).then(function(r){
+        if(!r.ok) throw new Error('HTTP '+r.status);
+        return r.json();
+      }).then(function(j){
+        var prods=j.products||[];
+        all=all.concat(prods);
+        if(prods.length===250){ page++; return next(); }
+        return all;
+      });
+    }
+    return next();
+  }
+  function fill(sel, items, placeholder){
+    sel.innerHTML='';
+    var o=document.createElement('option'); o.value=''; o.textContent=placeholder; sel.appendChild(o);
+    items.forEach(function(it){
+      var op=document.createElement('option'); op.value=it; op.textContent=it; sel.appendChild(op);
+    });
+  }
+  function setRow(row, sel, enabled){
+    sel.disabled=!enabled;
+    row.classList.toggle('itf-disabled', !enabled);
+  }
+  function applyData(d, refill){
+    data=d;
+    if(refill!==false) fill(brandSel, Object.keys(d).sort(nat), ITF_STR.brand);
+    loadFailed=false;
+  }
+  function load(manual){
+    if(loading) return;
+    loading=true;
+    if(manual) fill(brandSel,[],ITF_STR.loading);
+    fetchAll().then(function(prods){
+      loading=false;
+      var d=parseProducts(prods);
+      if(!d || Object.keys(d).length===0) throw new Error('empty');
+      applyData(d, manual || !brandSel.value);
+      writeCache(d);
+    }).catch(function(){
+      loading=false; loadFailed=true;
+      if(manual) fill(brandSel,[],ITF_STR.failed);
+    });
+  }
+  function openPanel(){
+    panel.classList.add('open'); overlay.classList.add('show');
+    panel.setAttribute('aria-hidden','false');
+    if(!data && !loading){
+      var c=readCache();
+      if(c && c.data && Object.keys(c.data).length){
+        applyData(c.data);
+        if(!c.ts || (Date.now()-c.ts)>CACHE_TTL) load(false);
+      } else {
+        load(true);
+      }
+    } else if(loadFailed && !loading){
+      load(true);
+    }
+  }
+  function closePanel(){
+    panel.classList.remove('open'); overlay.classList.remove('show');
+    panel.setAttribute('aria-hidden','true');
+  }
+  tab.addEventListener('click', function(){
+    panel.classList.contains('open') ? closePanel() : openPanel();
+  });
+  document.getElementById('itf-close').addEventListener('click', closePanel);
+  overlay.addEventListener('click', closePanel);
+  document.addEventListener('click', function(e){
+    if(!panel.classList.contains('open')) return;
+    if(panel.contains(e.target)||tab.contains(e.target)) return;
+    closePanel();
+  });
+  brandSel.addEventListener('change', function(){
+    brand=brandSel.value;
+    fill(famSel,[],ITF_STR.family);
+    fill(modelSel,[],ITF_STR.model);
+    setRow(rowModel, modelSel, false);
+    if(brand && data && data[brand]){
+      fill(famSel, Object.keys(data[brand]).sort(nat), ITF_STR.family);
+      setRow(rowFam, famSel, true);
+    } else {
+      setRow(rowFam, famSel, false);
+    }
+  });
+  famSel.addEventListener('change', function(){
+    var fam=famSel.value;
+    fill(modelSel,[],ITF_STR.model);
+    if(brand && fam && data && data[brand] && data[brand][fam]){
+      fill(modelSel, data[brand][fam], ITF_STR.model);
+      setRow(rowModel, modelSel, true);
+    } else {
+      setRow(rowModel, modelSel, false);
+    }
+  });
+  modelSel.addEventListener('change', function(){
+    var m=modelSel.value;
+    if(m && brand){
+      window.location.href='/search?q='+encodeURIComponent('"'+m+'"');
+    }
+  });
+})();
+</script>
+{% endif %}

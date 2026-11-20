@@ -1,0 +1,94 @@
+{%- comment -%}
+  "Add to Quick Re-Order List" button for the product page.
+  Saves the product to localStorage; the account dashboard merges it
+  into the Quick Re-Order tab. Usage:
+  {%- render 'rj-quick-reorder-btn', product: product, section_id: section.id -%}
+{%- endcomment -%}
+{%- if request.locale.iso_code == 'fr' -%}
+  {%- assign rj_qro_add = 'Ajouter à la commande rapide' -%}
+  {%- assign rj_qro_added = 'Ajouté à la commande rapide ✓' -%}
+{%- else -%}
+  {%- assign rj_qro_add = 'Add to Quick Re-Order List' -%}
+  {%- assign rj_qro_added = 'Added to Quick Re-Order List ✓' -%}
+{%- endif -%}
+<div class="rj-qro-btn-wrap">
+  <button
+    type="button"
+    class="button button--secondary rj-qro-btn"
+    data-handle="{{ product.handle | escape }}"
+    data-product-id="{{ product.id }}"
+    data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+    data-form-id="product-form-{{ section_id }}"
+    data-label-add="{{ rj_qro_add | escape }}"
+    data-label-added="{{ rj_qro_added | escape }}"
+  >
+    <span class="rj-qro-btn-label">{{ rj_qro_add }}</span>
+  </button>
+</div>
+<style>
+  .rj-qro-btn-wrap { margin: 12px 0 0; }
+  .rj-qro-btn { width: 100%; min-height: 48px; }
+  .rj-qro-btn.is-added { opacity: 0.85; }
+</style>
+<script>
+(function () {
+  var KEY = 'iq_quick_reorder';
+  function getList() {
+    try {
+      var v = JSON.parse(localStorage.getItem(KEY));
+      return Array.isArray(v) ? v : [];
+    } catch (e) { return []; }
+  }
+  function setList(l) {
+    try { localStorage.setItem(KEY, JSON.stringify(l)); } catch (e) {}
+  }
+  document.querySelectorAll('.rj-qro-btn').forEach(function (btn) {
+    if (btn.dataset.rjQroBound) return;
+    btn.dataset.rjQroBound = '1';
+    var label = btn.querySelector('.rj-qro-btn-label');
+    var original = label ? label.textContent : '';
+    var addedText = btn.getAttribute('data-label-added') || 'Added ✓';
+    var revertTimer = null;
+
+    function flashAdded() {
+      if (label) label.textContent = addedText;
+      btn.classList.add('is-added');
+      if (revertTimer) clearTimeout(revertTimer);
+      revertTimer = setTimeout(function () {
+        if (label) label.textContent = original;
+        btn.classList.remove('is-added');
+      }, 2200);
+    }
+
+    // If already saved, show the added state on load
+    try {
+      var vid0 = btn.getAttribute('data-variant-id');
+      var already = getList().some(function (i) { return String(i.variant_id) === String(vid0); });
+      if (already && label) label.textContent = addedText;
+    } catch (e) {}
+
+    btn.addEventListener('click', function () {
+      var vid = btn.getAttribute('data-variant-id');
+      var formId = btn.getAttribute('data-form-id');
+      if (formId) {
+        var form = document.getElementById(formId);
+        if (form) {
+          var idInput = form.querySelector('input[name="id"]');
+          if (idInput && idInput.value) vid = idInput.value;
+        }
+      }
+      var list = getList();
+      var exists = list.some(function (i) { return String(i.variant_id) === String(vid); });
+      if (!exists) {
+        list.push({
+          handle: btn.getAttribute('data-handle'),
+          product_id: btn.getAttribute('data-product-id'),
+          variant_id: vid
+        });
+        setList(list);
+      }
+      flashAdded();
+    });
+  });
+})();
+</script>
