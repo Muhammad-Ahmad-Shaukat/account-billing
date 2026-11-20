@@ -146,7 +146,9 @@ async function replaceInvoiceChildren(client, invoiceId, lines, taxLines) {
   }
 }
 
-export function parseDocumentType(value = "invoice") {
+export function parseDocumentType(value) {
+  // Absent (undefined / null / "") means invoice so existing ERP pushes keep working (SOW 5.1).
+  if (value === undefined || value === null || value === "") return "invoice";
   if (value === "invoice" || value === "credit_note") return value;
   throw Object.assign(new Error("document_type must be invoice or credit_note"), { status: 400 });
 }
@@ -217,7 +219,10 @@ export async function upsertInvoiceRevision(shop, payload) {
       [shop, invoiceNumber, revision, documentType]
     );
 
-    if (existing.rowCount && payload.document_type !== undefined) {
+    // Legacy pushes (no document_type) keep today's update-in-place behaviour;
+    // typed pushes reject a duplicate revision with 409 (SOW 5.3).
+    const typedPush = payload.document_type !== undefined && payload.document_type !== null && payload.document_type !== "";
+    if (existing.rowCount && typedPush) {
       throw Object.assign(new Error("Document revision already exists"), { status: 409 });
     }
     if (existing.rowCount) {

@@ -2678,7 +2678,7 @@ data-search="
       <p id="rdStatementStatus" role="status" style="margin:0 0 16px;"></p>
       <script>
         window.RD_INVOICES = {
-          proxyBase: '/apps/account-billing/customer/invoices',
+          proxyBase: {{ request.origin | append: '/apps/account-billing/customer/invoices' | json }},
           locale: {{ request.locale.iso_code | json }},
           loggedIn: true,
           pageSize: 20,
@@ -2695,6 +2695,7 @@ data-search="
         #rd-invoices [hidden] { display:none !important; }
         #rdBillingTabs [aria-pressed="true"] { background:#00404c;color:white; }
         #rd-invoices, #rd-invoices .rd-invoice-wrap { min-width:0;max-width:100%; }
+        #rd-invoices .rd-invoice-toolbar, #rd-invoices .rd-invoice-toolbar * { box-sizing:border-box;max-width:100%; }
         @media(max-width:749px) {
           #rd-invoices.is-credit table { min-width:0; }
           #rd-invoices.is-credit table, #rd-invoices.is-credit tbody, #rd-invoices.is-credit tr { display:block;width:100%; }
@@ -6859,7 +6860,8 @@ display:block!important;
 <script>
 (function(){
   function openInvoiceTab(){
-    if (window.location.hash !== '#rd-invoices' && new URLSearchParams(location.search).get('tab') !== 'credit-notes') return;
+    var billingTab = new URLSearchParams(location.search).get('tab');
+    if (window.location.hash !== '#rd-invoices' && billingTab !== 'credit-notes' && billingTab !== 'invoices') return;
     var button = document.querySelector('.rd-nav-btn[data-target="rd-invoices"]');
     if (button) button.click();
   }

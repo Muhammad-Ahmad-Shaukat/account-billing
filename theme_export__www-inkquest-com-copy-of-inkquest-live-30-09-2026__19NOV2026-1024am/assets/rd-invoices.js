@@ -27,6 +27,48 @@
     cfg.locale || document.documentElement.lang || "en",
   );
   if (!tbody) return;
+
+  // ---- Billing tabs (CR01 §4.2) ----
+  const TAB_INVOICES = "invoices";
+  const TAB_CREDIT = "credit-notes";
+  const sectionEl = document.getElementById("rd-invoices");
+  const tabsEl = document.getElementById("rdBillingTabs");
+  const creditStatsEl = document.getElementById("rdCreditStats");
+  const creditMessageEl = document.getElementById("rdCreditMessage");
+  const toolbarEl = sectionEl && sectionEl.querySelector(".rd-invoice-toolbar");
+  const tableCardEl = sectionEl && sectionEl.querySelector(".rd-invoice-table-card");
+  const theadRow = sectionEl && sectionEl.querySelector("table.rd-invoice-table thead tr");
+  const invoiceTheadHtml = theadRow ? theadRow.innerHTML : "";
+  const invoiceSearchPlaceholder = searchInput ? searchInput.placeholder : "";
+  const invoiceBalanceOptions = balanceSelect ? balanceSelect.innerHTML : "";
+
+  function t(en, fr) {
+    return isFrench ? fr : en;
+  }
+
+  function initialTab() {
+    try {
+      return new URLSearchParams(window.location.search).get("tab") === TAB_CREDIT
+        ? TAB_CREDIT
+        : TAB_INVOICES;
+    } catch (e) {
+      return TAB_INVOICES;
+    }
+  }
+
+  let activeTab = initialTab();
+  let loadSeq = 0;
+  const tabCounts = {};
+  tabCounts[TAB_INVOICES] = null;
+  tabCounts[TAB_CREDIT] = null;
+  const savedFilters = {};
+  savedFilters[TAB_INVOICES] = { q: "", dateFrom: "", dateTo: "", balance: "" };
+  savedFilters[TAB_CREDIT] = { q: "", dateFrom: "", dateTo: "", balance: "" };
+
+  function isCreditTab() {
+    return activeTab === TAB_CREDIT;
+  }
+
   let page = 1;
   const pageSize = cfg.pageSize || 20;
   let totalPages = 1;
@@ -47,14 +89,19 @@
     };
   }
 
-  function buildListUrl(nextPage) {
-    const filters = getFilters();
+  function buildListUrl(nextPage, options) {
+    options = options || {};
+    const filters = options.noFilters
+      ? { q: "", dateFrom: "", dateTo: "", balance: "" }
+      : getFilters();
+    const tab = options.tab || activeTab;
     let url =
       cfg.proxyBase +
       "?page=" +
       encodeURIComponent(nextPage) +
       "&page_size=" +
-      encodeURIComponent(pageSize);
+      encodeURIComponent(options.pageSize || pageSize);
+    if (tab === TAB_CREDIT) url += "&document_type=credit_note";
     if (filters.q) url += "&q=" + encodeURIComponent(filters.q);
     if (filters.dateFrom)
       url += "&date_from=" + encodeURIComponent(filters.dateFrom);
@@ -144,6 +191,10 @@
   function qty(value) {
     if (value === null || value === undefined || value === "") return "";
     return escapeHtml(value);
+  }
+
+  function isCreditDoc(doc) {
+    return !!doc && doc.document_type === "credit_note";
   }
 
   function resolveCompany(invoice) {
@@ -278,10 +329,17 @@
           (pageNo - 1) +
           "</div>"
         : "") +
-      '<div class="t">INVOICE</div>' +
+      '<div class="t">' +
+      (isCreditDoc(invoice) ? "CREDIT NOTE" : "INVOICE") +
+      "</div>" +
       "<h1>" +
       escapeHtml(invoice.invoice_number || "") +
       "</h1>" +
+      (isCreditDoc(invoice) && invoice.related_invoice_number
+        ? '<div class="iq-contfrom">Related invoice: ' +
+          escapeHtml(invoice.related_invoice_number) +
+          "</div>"
+        : "") +
       (compact
         ? ""
         : '<div class="iq-dpt">' +
@@ -403,10 +461,14 @@
       '<div class="iq-trow"><span>Total amount</span><span>' +
       money(invoice.total_amount, currency) +
       "</span></div>" +
-      '<div class="iq-trow"><span>Less payment</span><span>' +
+      '<div class="iq-trow"><span>' +
+      (isCreditDoc(invoice) ? "Credit applied" : "Less payment") +
+      "</span><span>" +
       money(invoice.less_payment, currency) +
       "</span></div>" +
-      '<div class="iq-due"><span>Amount due</span><span>' +
+      '<div class="iq-due"><span>' +
+      (isCreditDoc(invoice) ? "Remaining credit" : "Amount due") +
+      "</span><span>" +
       money(invoice.amount_due, currency) +
       "</span></div>" +
       "</div>" +
@@ -445,7 +507,8 @@
         ? ", " + escapeHtml(company.street_address2)
         : "") +
       "</span>" +
-      "<span>Invoice " +
+      "<span>" +
+      (isCreditDoc(invoice) ? "Credit note " : "Invoice ") +
       escapeHtml(invoice.invoice_number || "") +
       " &nbsp;&bull;&nbsp; Page " +
       escapeHtml(pageLabel) +
@@ -549,6 +612,7 @@
   const FRENCH_INVOICE_CSS =
     "\n  .iq-invoice { font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif; color: #1c2b33; max-width: 8.5in; margin: 0 auto; }\n  .iq-invoice * { box-sizing: border-box; }\n  .iq-page { width: 8.5in; min-height: 11in; padding: 0.35in 0.55in 0.3in; position: relative; background: #fff; }\n  /* Header band (dark teal) */\n  .iq-band { background: #00404c; color: #fff; display: flex; justify-content: space-between;\n             align-items: flex-start; padding: 12px 24px; }\n  .iq-band .iq-brand { font-size: 20px; font-weight: 700; letter-spacing: 5px; }\n  .iq-band .iq-brand small { display: block; font-size: 10px; font-weight: 400; letter-spacing: 0.5px; margin-top: 6px; }\n  .iq-band .iq-co { font-size: 10px; line-height: 1.6; margin-top: 6px; }\n  .iq-band .iq-invtitle { text-align: right; }\n  .iq-band .iq-invtitle h1 { font-size: 26px; font-weight: 700; margin: 0 0 8px; letter-spacing: 1px; }\n  .iq-band .iq-invtitle p { font-size: 11px; margin: 0; line-height: 1.6; }\n  /* Slim continued band (later pages) */\n  .iq-band-slim { background: #00404c; color: #fff; display: flex; justify-content: space-between;\n                  align-items: center; padding: 12px 24px; }\n  .iq-band-slim .iq-brand { font-size: 15px; font-weight: 700; letter-spacing: 4px; }\n  .iq-band-slim p { font-size: 12px; margin: 0; }\n  /* Addresses */\n  .iq-addr { display: flex; gap: 20px; margin-top: 12px; }\n  .iq-addr > div { flex: 1; border: 1px solid #d9e0de; padding: 10px 16px; }\n  .iq-lbl { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; color: #00404c; margin-bottom: 5px; }\n  .iq-addr p { font-size: 11.5px; line-height: 1.55; margin: 0; }\n  .iq-addr p b { font-weight: 700; }\n  /* Order meta strip */\n  .iq-meta { display: flex; margin-top: 12px; border: 1px solid #d9e0de; }\n  .iq-meta div { flex: 1; padding: 6px 8px; font-size: 11px; }\n  .iq-meta span { display: block; font-size: 8.5px; font-weight: 600; letter-spacing: 0.2px; color: #5b6b72; margin-bottom: 4px; }\n  /* Sample-data badge */\n  .iq-badge { font-size: 10px; font-weight: 700; color: #8a6d00; margin: 10px 0 6px; letter-spacing: 0.3px; }\n  /* Line items table */\n  .iq-items { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 11px; }\n  .iq-items th { background: #00404c; color: #fff; font-size: 10.5px; font-weight: 700;\n                 padding: 6px 6px; text-align: left; vertical-align: middle; }\n  .iq-items td { padding: 2px 4px; border-bottom: 1px solid #e6ebea; border-left: 1px solid #eef1f0;\n                 vertical-align: top; font-size: 10.5px; line-height: 1.25; overflow-wrap: break-word; }\n  .iq-items td:first-child { border-left: none; }\n  .iq-items .c { text-align: center; } .iq-items .r { text-align: right; }\n  .iq-cont { text-align: center; font-size: 12.5px; font-weight: 700; color: #00404c; padding-top: 10px; }\n  /* Bottom two-column section */\n  .iq-bottom { display: flex; gap: 22px; margin-top: 16px; }\n  .iq-left { flex: 1.15; font-size: 12px; }\n  .iq-gst { font-size: 12.5px; font-weight: 700; color: #00404c; margin-bottom: 8px; }\n  .iq-left p { margin: 0 0 5px; line-height: 1.5; }\n  .iq-pm { border-top: 1px solid #d9e0de; margin-top: 16px; padding-top: 12px; }\n  .iq-pm h3 { font-size: 11px; font-weight: 700; color: #00404c; letter-spacing: 0.5px; margin: 0 0 8px; }\n  .iq-pm h4 { font-size: 11px; font-weight: 700; margin: 8px 0 4px; }\n  .iq-pm-sub { border-top: 1px dashed #d9e0de; margin-top: 10px; padding-top: 10px; }\n  .iq-right { flex: 1; }\n  .iq-taxbox { background: #f2f5f4; padding: 12px 16px 16px; margin-bottom: 14px; }\n  .iq-taxbox h3 { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; color: #00404c; margin: 0 0 8px; }\n  .iq-trow { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; }\n  .iq-due { background: #2ea05f; color: #fff; display: flex;\n            justify-content: space-between; align-items: center;\n            padding: 12px 16px; margin-top: 10px; font-size: 15px; font-weight: 700; }\n  .iq-foot { text-align: center; font-size: 11px; color: #5b6b72;\n             border-top: 1px solid #d9e0de; padding-top: 10px; margin-top: 16px; }\n  @media print {\n    @page { size: letter; margin: 0; }\n    .iq-page { page-break-after: always; }\n    .iq-page:last-child { page-break-after: auto; }\n  }\n.iq-fr-logo{display:block;width:160px;max-width:100%;height:auto;max-height:64px;object-fit:contain;background:#fff;padding:6px;}.iq-band-slim .iq-fr-logo{width:120px;max-height:44px;}";
   function buildFrenchInvoiceHtml(data, options) {
+    const credit = isCreditDoc(data);
     const company = resolveCompany(data);
     const logo = company.logo_url
       ? '<img class="iq-fr-logo" src="' +
@@ -605,8 +669,13 @@
           Tél. : (780) 454-4321 &nbsp;&bull;&nbsp; Téléc. : (780) 452-5405</div>
       </div>
       <div class="iq-invtitle">
-        <h1>FACTURE</h1>
-        <p>Numéro de facture : ${escapeHtml(invoice.number)}<br>
+        <h1>${credit ? "NOTE DE CRÉDIT" : "FACTURE"}</h1>
+        <p>${credit ? "Numéro de note de crédit" : "Numéro de facture"} : ${escapeHtml(invoice.number)}<br>
+          ${
+            credit && data.related_invoice_number
+              ? "Facture associée : " + escapeHtml(data.related_invoice_number) + "<br>"
+              : ""
+          }
           Date : ${escapeHtml(
             invoice.date,
           )} &nbsp;&bull;&nbsp; Page ${escapeHtml(index + 1)} de ${escapeHtml(
@@ -657,7 +726,7 @@
         : `
     <div class="iq-band-slim">
       <div class="iq-brand">${logo}</div>
-      <p>Facture ${escapeHtml(
+      <p>${credit ? "Note de crédit" : "Facture"} ${escapeHtml(
         invoice.number,
       )} &mdash; Suite &nbsp;&bull;&nbsp; ${escapeHtml(
             invoice.date,
@@ -744,10 +813,10 @@
     <div class="iq-trow"><span>Montant total</span><span>${amount(
       invoice.total_amount,
     )}</span></div>
-    <div class="iq-trow"><span>Moins paiement</span><span>${amount(
+    <div class="iq-trow"><span>${credit ? "Crédit appliqué" : "Moins paiement"}</span><span>${amount(
       invoice.less_payment,
     )}</span></div>
-    <div class="iq-due"><span>Montant dû</span><span>${amount(
+    <div class="iq-due"><span>${credit ? "Crédit restant" : "Montant dû"}</span><span>${amount(
       invoice.amount_due,
     )}</span></div>
   </div>
@@ -837,7 +906,7 @@
 
   function updateStats(meta) {
     meta = meta || {};
-    if (statsEl) {
+    if (statsEl && !isCreditTab()) {
       statsEl.hidden = false;
       statsEl.removeAttribute("hidden");
       statsEl.style.display = "";
@@ -968,34 +1037,388 @@
         totalPages +
         " - " +
         meta.total +
-        (isFrench ? " factures" : " invoices")
+        (isCreditTab()
+          ? t(" credit notes", " notes de crédit")
+          : t(" invoices", " factures"))
       : "";
     prevBtn.disabled = page <= 1;
     nextBtn.disabled = page >= totalPages;
   }
 
+  // ---------- Credit notes (CR01 §4.4) ----------
+
+  /** Display-only status; amounts are never changed. */
+  function creditStatus(doc) {
+    const total = Number(doc && doc.total_amount);
+    const due = Number(doc && doc.amount_due);
+    const hasDue =
+      doc && doc.amount_due != null && String(doc.amount_due).trim() !== "";
+    if (!hasDue || !Number.isFinite(due)) {
+      return { label: t("Unknown", "Inconnu"), cls: "processing" };
+    }
+    if (due === 0) return { label: t("Applied", "Appliquée"), cls: "paid" };
+    if (Number.isFinite(total) && due === total)
+      return { label: t("Open", "Ouverte"), cls: "pending" };
+    return {
+      label: t("Partially applied", "Partiellement appliquée"),
+      cls: "processing",
+    };
+  }
+
+  function creditColumns() {
+    return [
+      t("Status", "Statut"),
+      t("Credit note", "Note de crédit"),
+      t("Related invoice", "Facture associée"),
+      t("Order", "Commande"),
+      t("PO Number", "Bon de commande"),
+      t("Date", "Date"),
+      t("Total", "Total"),
+      t("Remaining credit", "Crédit restant"),
+      t("Actions", "Actions"),
+    ];
+  }
+
+  function colspan() {
+    return isCreditTab() ? 9 : 8;
+  }
+
+  function renderCreditRows(docs) {
+    const cols = creditColumns();
+    if (!docs.length) {
+      tbody.innerHTML =
+        '<tr><td colspan="9"><div class="rd-invoice-empty"><p>' +
+        t(
+          "No credit notes match your filters.",
+          "Aucune note de crédit ne correspond à vos filtres.",
+        ) +
+        "</p></div></td></tr>";
+      return;
+    }
+    const cell = function (i, html, cls) {
+      return (
+        "<td" +
+        (cls ? ' class="' + cls + '"' : "") +
+        ' data-label="' +
+        escapeHtml(cols[i]) +
+        '">' +
+        html +
+        "</td>"
+      );
+    };
+    tbody.innerHTML = docs
+      .map(function (doc) {
+        const st = creditStatus(doc);
+        const canDownload = doc.downloadable !== false;
+        return (
+          "<tr>" +
+          cell(
+            0,
+            '<span class="rd-invoice-badge ' +
+              st.cls +
+              '">' +
+              escapeHtml(st.label) +
+              "</span>",
+          ) +
+          cell(
+            1,
+            '<div class="rd-invoice-number">' +
+              escapeHtml(doc.invoice_number) +
+              "</div>",
+          ) +
+          cell(2, escapeHtml(doc.related_invoice_number || "")) +
+          cell(
+            3,
+            '<div class="rd-invoice-order">' +
+              escapeHtml(doc.order_no || "") +
+              "</div>",
+          ) +
+          cell(4, escapeHtml(doc.po_number || "")) +
+          cell(5, formatDate(doc.invoice_date)) +
+          cell(6, money(doc.total_amount, doc.currency), "rd-invoice-total") +
+          cell(7, money(doc.amount_due, doc.currency), "rd-invoice-total") +
+          cell(
+            8,
+            '<div class="rd-invoice-actions">' +
+              '<button type="button" class="rd-invoice-action" title="' +
+              escapeHtml(t("View credit note", "Voir la note de crédit")) +
+              '" data-invoice-id="' +
+              escapeHtml(doc.id) +
+              '">' +
+              t("View", "Voir") +
+              "</button>" +
+              (canDownload
+                ? '<button type="button" class="rd-invoice-action send" title="' +
+                  escapeHtml(t("Download PDF", "Télécharger le PDF")) +
+                  '" data-invoice-pdf="' +
+                  escapeHtml(doc.id) +
+                  '">PDF</button>'
+                : '<button type="button" class="rd-invoice-action send" title="' +
+                  escapeHtml(t("Not downloadable", "Non téléchargeable")) +
+                  '" disabled style="opacity:.45;cursor:not-allowed;">PDF</button>') +
+              "</div>",
+          ) +
+          "</tr>"
+        );
+      })
+      .join("");
+    bindRowActions();
+  }
+
+  function bindRowActions() {
+    tbody.querySelectorAll("[data-invoice-id]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        openInvoice(btn.getAttribute("data-invoice-id"));
+      });
+    });
+    tbody.querySelectorAll("[data-invoice-pdf]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        downloadInvoicePdf(btn.getAttribute("data-invoice-pdf"));
+      });
+    });
+  }
+
+  function statTile(label, icon, valueHtml, sub) {
+    return (
+      '<div class="rd-invoice-stat">' +
+      '<div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">' +
+      escapeHtml(label) +
+      '</div><div class="rd-invoice-stat-icon" aria-hidden="true">' +
+      icon +
+      "</div></div>" +
+      '<div class="rd-invoice-stat-value">' +
+      valueHtml +
+      "</div>" +
+      '<div class="rd-invoice-stat-sub">' +
+      escapeHtml(sub) +
+      "</div></div>"
+    );
+  }
+
+  function updateCreditStats(summary) {
+    if (!creditStatsEl) return;
+    const totals = (summary && summary.totals_by_currency) || [];
+    const perCurrency = function (key) {
+      if (!summary) return "?";
+      if (!totals.length) return money("0.00", "CAD");
+      return totals
+        .map(function (row) {
+          return money(row[key] == null ? "0" : row[key], row.currency);
+        })
+        .join("<br>");
+    };
+    const openCount = totals.reduce(function (sum, row) {
+      return sum + (Number(row.open_count) || 0);
+    }, 0);
+    creditStatsEl.innerHTML =
+      statTile(
+        t("Total credit notes", "Total des notes de crédit"),
+        "#",
+        summary ? escapeHtml(String(summary.total_invoices)) : "?",
+        t("All credit notes", "Toutes les notes de crédit"),
+      ) +
+      statTile(
+        t("Total credit value", "Valeur totale des crédits"),
+        "$",
+        perCurrency("total_value"),
+        t("Total credited amount", "Montant total crédité"),
+      ) +
+      statTile(
+        t("Remaining credit", "Crédit restant"),
+        "$",
+        perCurrency("remaining"),
+        isFrench
+          ? openCount +
+              (openCount === 1
+                ? " note de crédit ouverte"
+                : " notes de crédit ouvertes")
+          : openCount + (openCount === 1 ? " open credit note" : " open credit notes"),
+      );
+  }
+
+  function showCreditEmptyState(isEmpty) {
+    if (creditMessageEl) {
+      creditMessageEl.hidden = !isEmpty;
+      creditMessageEl.className = "rd-invoice-empty";
+      creditMessageEl.textContent = isEmpty
+        ? t("You have no credit notes.", "Vous n’avez aucune note de crédit.")
+        : "";
+    }
+    if (toolbarEl) toolbarEl.hidden = isEmpty;
+    if (tableCardEl) tableCardEl.hidden = isEmpty;
+  }
+
+  // ---------- Tabs ----------
+
+  function renderTabs() {
+    if (!tabsEl) return;
+    const tabs = [
+      [TAB_INVOICES, t("Invoices", "Factures")],
+      [TAB_CREDIT, t("Credit Notes", "Notes de crédit")],
+    ];
+    tabsEl.innerHTML = tabs
+      .map(function (tab) {
+        const count = tabCounts[tab[0]];
+        return (
+          '<button type="button" class="rd-invoice-filter" data-billing-tab="' +
+          tab[0] +
+          '" aria-pressed="' +
+          (activeTab === tab[0] ? "true" : "false") +
+          '" style="font-weight:700;">' +
+          escapeHtml(tab[1]) +
+          " (" +
+          (count == null ? "…" : escapeHtml(String(count))) +
+          ")</button>"
+        );
+      })
+      .join("");
+  }
+
+  function applyTabChrome() {
+    const credit = isCreditTab();
+    if (sectionEl) sectionEl.classList.toggle("is-credit", credit);
+    if (statsEl) statsEl.hidden = credit;
+    if (creditStatsEl) creditStatsEl.hidden = !credit;
+    if (theadRow) {
+      theadRow.innerHTML = credit
+        ? creditColumns()
+            .map(function (label) {
+              return "<th>" + escapeHtml(label) + "</th>";
+            })
+            .join("")
+        : invoiceTheadHtml;
+    }
+    if (searchInput) {
+      searchInput.placeholder = credit
+        ? t(
+            "Search credit note, invoice, order, PO...",
+            "Rechercher une note de crédit, facture, commande, BC...",
+          )
+        : invoiceSearchPlaceholder;
+    }
+    if (balanceSelect) {
+      balanceSelect.innerHTML = credit
+        ? '<option value="">' +
+          t("All", "Toutes") +
+          '</option><option value="due">' +
+          t("Open", "Ouvertes") +
+          '</option><option value="paid">' +
+          t("Applied", "Appliquées") +
+          "</option>"
+        : invoiceBalanceOptions;
+      balanceSelect.setAttribute(
+        "aria-label",
+        credit ? t("Status filter", "Filtrer par statut") : t("Balance filter", "Filtrer par solde"),
+      );
+    }
+    if (!credit) showCreditEmptyState(false);
+    renderTabs();
+  }
+
+  function setFilters(f) {
+    if (searchInput) searchInput.value = f.q;
+    if (dateFromInput) dateFromInput.value = f.dateFrom;
+    if (dateToInput) dateToInput.value = f.dateTo;
+    if (balanceSelect) balanceSelect.value = f.balance;
+  }
+
+  function syncTabUrl() {
+    try {
+      const url = new URL(window.location.href);
+      if (activeTab === TAB_CREDIT) url.searchParams.set("tab", TAB_CREDIT);
+      else url.searchParams.delete("tab");
+      url.hash = "rd-invoices";
+      window.history.replaceState(window.history.state, "", url.toString());
+    } catch (e) {}
+  }
+
+  function switchTab(tab) {
+    if (tab === activeTab) return;
+    savedFilters[activeTab] = getFilters();
+    activeTab = tab;
+    applyTabChrome();
+    setFilters(savedFilters[tab]);
+    syncTabUrl();
+    loadPage(1);
+  }
+
+  if (tabsEl) {
+    tabsEl.addEventListener("click", function (event) {
+      const btn = event.target.closest
+        ? event.target.closest("[data-billing-tab]")
+        : null;
+      if (btn) switchTab(btn.getAttribute("data-billing-tab"));
+    });
+  }
+
+  /** Background fetch of the other tab's count (and outstanding tiles for invoices). */
+  async function refreshCount(tab) {
+    try {
+      const result = await fetchJson(
+        buildListUrl(1, { tab: tab, noFilters: true, pageSize: 1 }),
+      );
+      const summary = result.meta && result.meta.summary;
+      if (summary) tabCounts[tab] = summary.total_invoices;
+      if (tab === TAB_INVOICES) updateStats(result.meta || {});
+      renderTabs();
+    } catch (err) {
+      console.error("Billing count load failed", err);
+    }
+  }
+
   async function loadPage(nextPage) {
     page = nextPage;
-    if (statsEl) {
+    const seq = ++loadSeq;
+    const tab = activeTab;
+    const credit = tab === TAB_CREDIT;
+    if (!credit && statsEl) {
       statsEl.hidden = false;
       statsEl.removeAttribute("hidden");
     }
     tbody.innerHTML =
-      '<tr><td colspan="8"><div class="rd-invoice-loading">' +
-      (isFrench ? "Chargement des factures..." : "Loading invoices...") +
+      '<tr><td colspan="' +
+      colspan() +
+      '"><div class="rd-invoice-loading">' +
+      (credit
+        ? t("Loading credit notes...", "Chargement des notes de crédit...")
+        : t("Loading invoices...", "Chargement des factures...")) +
       "</div></td></tr>";
     try {
       const result = await fetchJson(buildListUrl(page));
+      if (seq !== loadSeq) return; // a newer tab/page request superseded this one
       const rows = Array.isArray(result.data) ? result.data : [];
-      renderRows(rows);
       const meta = result.meta || {
         page: 1,
         totalPages: 1,
         total: rows.length,
       };
+      if (meta.summary) tabCounts[tab] = meta.summary.total_invoices;
+      renderTabs();
+      if (credit) {
+        showCreditEmptyState(!!meta.summary && meta.summary.total_invoices === 0);
+        renderCreditRows(rows);
+        updatePager(meta);
+        updateCreditStats(meta.summary);
+        return;
+      }
+      renderRows(rows);
       updatePager(meta);
       updateStats(meta);
     } catch (err) {
+      if (seq !== loadSeq) return;
+      if (credit) {
+        console.error("Credit note list load failed", err);
+        tbody.innerHTML =
+          '<tr><td colspan="9"><div class="rd-invoice-error">' +
+          t(
+            "Unable to load credit notes. Please try again.",
+            "Impossible de charger les notes de crédit. Veuillez réessayer.",
+          ) +
+          "</div></td></tr>";
+        if (pager) pager.hidden = true;
+        updateCreditStats(null);
+        return;
+      }
       console.error("Invoice list load failed", err);
       renderEmpty();
       updateStats({ total: 0, outstanding_balance: null });
@@ -1146,7 +1569,9 @@
 
     printDocument(
       pdfHtml,
-      "Invoice " + invoice.invoice_number,
+      (isCreditDoc(invoice)
+        ? t("Credit Note ", "Note de crédit ")
+        : t("Invoice ", "Facture ")) + invoice.invoice_number,
       function (doc, done) {
         var passes = 0;
         (function fit() {
@@ -1225,24 +1650,209 @@
     }, 30);
   }
 
+  /** Flip the sign of a supplied decimal string without float arithmetic. */
+  function negateAmount(value) {
+    const s = String(value == null ? "" : value).trim();
+    if (!s) return s;
+    if (s.charAt(0) === "-") return s.slice(1);
+    return Number(s) === 0 ? s : "-" + s;
+  }
+
+  const STATEMENT_ROWS_PER_PAGE = 20;
+  const STATEMENT_CSS =
+    ".iq-items .iq-sec td{font-size:12.5px;font-weight:700;color:#074a53;letter-spacing:.5px;padding-top:14px;border-bottom:2px solid #074a53;}" +
+    ".iq-items .iq-none td{font-style:italic;color:#5b6b72;}" +
+    ".iq-items .iq-sub td{font-weight:700;border-bottom:none;}" +
+    ".iq-sum{min-width:3.6in;}" +
+    ".iq-sum h3{font-size:11px;font-weight:700;letter-spacing:1px;color:#074a53;margin:10px 0 4px;}" +
+    ".iq-due.iq-credit{background:#074a53;}";
+
+  /**
+   * CR01 §4.5: unpaid invoices (positive), unapplied credit notes (negative),
+   * per-currency summary. All amounts are printed exactly as supplied; the only
+   * derived figures are the server-side section totals and balance.
+   */
   function buildStatementHtml(statement) {
-    const invoices = statement.invoices.filter(function (inv) {
+    const invoices = (statement.invoices || []).filter(function (inv) {
       return Number(inv.amount_due) > 0;
     });
-    const company = resolveCompany({ company: statement.company });
-    const totals = new Map();
-    invoices.forEach(function (inv) {
-      const currency = inv.currency || "CAD";
-      totals.set(
-        currency,
-        (totals.get(currency) || 0) + Math.round(Number(inv.amount_due) * 100),
-      );
+    const credits = (statement.credit_notes || []).filter(function (cn) {
+      return Number(cn.amount_due) > 0;
     });
+    const totals = Array.isArray(statement.totals) ? statement.totals : [];
+    const company = resolveCompany({ company: statement.company });
+    const firstDoc = invoices[0] || credits[0] || {};
+
+    const invoiceHead = [
+      t("Invoice", "Facture"),
+      "Date",
+      t("Order", "Commande"),
+      t("PO Number", "N° de bon de commande"),
+      t("Currency", "Devise"),
+      t("Invoice total", "Total de la facture"),
+      t("Amount due", "Montant dû"),
+    ];
+    const creditHead = [
+      t("Credit note", "Note de crédit"),
+      "Date",
+      t("Related invoice", "Facture associée"),
+      t("Order", "Commande"),
+      t("Currency", "Devise"),
+      t("Credit total", "Total du crédit"),
+      t("Remaining credit", "Crédit restant"),
+    ];
+
+    // Flat list of table rows, paginated below.
+    const items = [{ kind: "section", key: "inv" }];
+    if (!invoices.length) items.push({ kind: "none" });
+    invoices.forEach(function (doc) {
+      items.push({ kind: "inv", doc: doc });
+    });
+    if (credits.length) {
+      items.push({ kind: "section", key: "cn" });
+      credits.forEach(function (doc) {
+        items.push({ kind: "cn", doc: doc });
+      });
+    }
+
     const pages = [];
-    for (let i = 0; i < invoices.length; i += 20)
-      pages.push(invoices.slice(i, i + 20));
+    let cursor = 0;
+    while (cursor < items.length) {
+      const chunk = items.slice(cursor, cursor + STATEMENT_ROWS_PER_PAGE);
+      let consumed = chunk.length;
+      // Never leave a section heading orphaned at the bottom of a page.
+      if (chunk.length > 1 && chunk[chunk.length - 1].kind === "section") {
+        chunk.pop();
+        consumed -= 1;
+      }
+      // Repeat the section heading when a section continues onto a new page.
+      if (chunk[0].kind === "inv" || chunk[0].kind === "cn") {
+        chunk.unshift({ kind: "section", key: chunk[0].kind, cont: true });
+      }
+      pages.push(chunk);
+      cursor += consumed;
+    }
+
+    function sectionRows(item) {
+      const head = item.key === "inv" ? invoiceHead : creditHead;
+      const title =
+        item.key === "inv"
+          ? t("UNPAID INVOICES", "FACTURES IMPAYÉES")
+          : t("UNAPPLIED CREDIT NOTES", "NOTES DE CRÉDIT NON APPLIQUÉES");
+      return (
+        '<tr class="iq-sec"><td colspan="7">' +
+        title +
+        (item.cont ? t(" (continued)", " (suite)") : "") +
+        "</td></tr><tr>" +
+        head
+          .map(function (label, idx) {
+            return (
+              "<th" + (idx >= 5 ? ' class="r"' : "") + ">" + escapeHtml(label) + "</th>"
+            );
+          })
+          .join("") +
+        "</tr>"
+      );
+    }
+
+    function docRow(item) {
+      const d = item.doc;
+      const cur = d.currency || "CAD";
+      if (item.kind === "inv") {
+        return (
+          "<tr><td>" +
+          escapeHtml(d.invoice_number) +
+          "</td><td>" +
+          formatDate(d.invoice_date) +
+          "</td><td>" +
+          escapeHtml(d.order_no || "") +
+          "</td><td>" +
+          escapeHtml(d.po_number || "") +
+          "</td><td>" +
+          escapeHtml(cur) +
+          '</td><td class="r">' +
+          money(d.total_amount, cur) +
+          '</td><td class="r">' +
+          money(d.amount_due, cur) +
+          "</td></tr>"
+        );
+      }
+      return (
+        "<tr><td>" +
+        escapeHtml(d.invoice_number) +
+        "</td><td>" +
+        formatDate(d.invoice_date) +
+        "</td><td>" +
+        escapeHtml(d.related_invoice_number || "") +
+        "</td><td>" +
+        escapeHtml(d.order_no || "") +
+        "</td><td>" +
+        escapeHtml(cur) +
+        '</td><td class="r">' +
+        money(negateAmount(d.total_amount), cur) +
+        '</td><td class="r">' +
+        money(negateAmount(d.amount_due), cur) +
+        "</td></tr>"
+      );
+    }
+
+    function renderItem(item) {
+      if (item.kind === "section") return sectionRows(item);
+      if (item.kind === "none")
+        return (
+          '<tr class="iq-none"><td colspan="7">' +
+          t("No unpaid invoices", "Aucune facture impayée") +
+          "</td></tr>"
+        );
+      return docRow(item);
+    }
+
+    function summaryHtml() {
+      return (
+        '<div class="iq-bottom"><div class="iq-left"></div><div class="iq-right iq-sum">' +
+        totals
+          .map(function (row) {
+            const cur = row.currency || "CAD";
+            const negative = Number(row.balance) < 0;
+            return (
+              "<h3>" +
+              t("SUMMARY", "SOMMAIRE") +
+              " (" +
+              escapeHtml(cur) +
+              ")</h3>" +
+              '<div class="iq-trow"><span>' +
+              t("Total unpaid invoices", "Total des factures impayées") +
+              "</span><span>" +
+              money(row.unpaid_total, cur) +
+              "</span></div>" +
+              '<div class="iq-trow"><span>' +
+              t(
+                "Less unapplied credit notes",
+                "Moins les notes de crédit non appliquées",
+              ) +
+              "</span><span>" +
+              money(row.credit_total, cur) +
+              "</span></div>" +
+              '<div class="iq-due' +
+              (negative ? " iq-credit" : "") +
+              '"><span>' +
+              (negative
+                ? t("Credit balance", "Solde créditeur")
+                : t("Balance due", "Solde dû")) +
+              "</span><span>" +
+              money(row.balance, cur) +
+              "</span></div>"
+            );
+          })
+          .join("") +
+        "</div></div>"
+      );
+    }
+
     return (
-      '<div class="iq-invoice">' +
+      "<style>" +
+      STATEMENT_CSS +
+      '</style><div class="iq-invoice">' +
       pages
         .map(function (rows, index) {
           const last = index === pages.length - 1;
@@ -1265,86 +1875,39 @@
             companyAddressHtml(company) +
             "</div></div>" +
             '<div class="iq-invtitle"><div class="t">' +
-            (isFrench ? "RELEVÉ DE COMPTE" : "STATEMENT OF ACCOUNT") +
+            t("STATEMENT OF ACCOUNT", "RELEVÉ DE COMPTE") +
             "</div><h1>" +
-            (isFrench ? "Factures impayées" : "Unpaid invoices") +
+            t("Statement", "Relevé") +
             "</h1>" +
             "<div>" +
-            (isFrench ? "En date du " : "As of ") +
+            t("As of ", "En date du ") +
             formatDate(statement.generated_at) +
             "</div><div>Page " +
             (index + 1) +
-            (isFrench ? " sur " : " of ") +
+            t(" of ", " sur ") +
             pages.length +
             "</div></div></div>" +
             '<div class="iq-addr"><div><div class="iq-lbl">' +
-            (isFrench ? "CLIENT" : "CUSTOMER") +
+            t("CUSTOMER", "CLIENT") +
             "</div><p>" +
-            addressLines(invoices[0].sold_to) +
+            addressLines(firstDoc.sold_to) +
             "</p><p>" +
-            (isFrench ? "N° de client : " : "Customer no.: ") +
-            escapeHtml(invoices[0].customer_no || cfg.customerId || "") +
+            t("Customer no.: ", "N° de client : ") +
+            escapeHtml(firstDoc.customer_no || cfg.customerId || "") +
             "</p></div></div>" +
-            '<div class="iq-itemsbar"><h3>' +
-            (isFrench ? "FACTURES IMPAYÉES" : "UNPAID INVOICES") +
-            "</h3></div>" +
-            '<table class="iq-items"><thead><tr><th>' +
-            (isFrench ? "Facture" : "Invoice") +
-            "</th><th>Date</th><th>" +
-            (isFrench ? "Commande" : "Order") +
-            "</th><th>" +
-            (isFrench ? "N° de bon de commande" : "PO Number") +
-            "</th><th>" +
-            (isFrench ? "Devise" : "Currency") +
-            '</th><th class="r">' +
-            (isFrench ? "Total de la facture" : "Invoice total") +
-            '</th><th class="r">' +
-            (isFrench ? "Montant dû" : "Amount due") +
-            "</th></tr></thead><tbody>" +
-            rows
-              .map(function (inv) {
-                return (
-                  "<tr><td>" +
-                  escapeHtml(inv.invoice_number) +
-                  "</td><td>" +
-                  formatDate(inv.invoice_date) +
-                  "</td><td>" +
-                  escapeHtml(inv.order_no || "") +
-                  "</td><td>" +
-                  escapeHtml(inv.po_number || "") +
-                  "</td><td>" +
-                  escapeHtml(inv.currency || "CAD") +
-                  '</td><td class="r">' +
-                  money(inv.total_amount, inv.currency) +
-                  '</td><td class="r">' +
-                  money(inv.amount_due, inv.currency) +
-                  "</td></tr>"
-                );
-              })
-              .join("") +
+            '<table class="iq-items" style="margin-top:8px;"><tbody>' +
+            rows.map(renderItem).join("") +
             "</tbody></table>" +
             (last
-              ? '<div class="iq-bottom"><div class="iq-right">' +
-                Array.from(totals, function (entry) {
-                  return (
-                    '<div class="iq-due"><span>' +
-                    (isFrench ? "Total impayé (" : "Total unpaid (") +
-                    escapeHtml(entry[0]) +
-                    ")</span><span>" +
-                    money((entry[1] / 100).toFixed(2), entry[0]) +
-                    "</span></div>"
-                  );
-                }).join("") +
-                "</div></div>"
+              ? summaryHtml()
               : '<div class="iq-cont">' +
-                (isFrench
-                  ? "Suite à la page suivante..."
-                  : "Continued on next page...") +
+                t("Continued on next page...", "Suite à la page suivante...") +
                 "</div>") +
             '<div class="iq-foot"><span>' +
-            (isFrench
-              ? "Toutes les factures impayées à la date du relevé. Les paiements partiels sont pris en compte dans le montant dû."
-              : "All unpaid invoices as of statement date. Part payments are reflected in Amount due.") +
+            t(
+              "All unpaid invoices and unapplied credit notes as of the statement date. Partial payments and partial credit applications are reflected in the amounts shown.",
+              "Toutes les factures impayées et les notes de crédit non appliquées à la date du relevé. Les paiements partiels et les applications partielles de crédit sont pris en compte dans les montants indiqués.",
+            ) +
             "</span><span>Page " +
             (index + 1) +
             "</span></div></section>"
@@ -1368,15 +1931,19 @@
         const result = await fetchJson(cfg.proxyBase + "/statement");
         if (!result.data || !Array.isArray(result.data.invoices))
           throw new Error("Invalid statement response");
+        const hasOpenAmount = function (doc) {
+          return Number(doc.amount_due) > 0;
+        };
+        // §4.5: still produce the statement when there is unapplied credit but no unpaid invoices.
         if (
-          !result.data.invoices.some(function (inv) {
-            return Number(inv.amount_due) > 0;
-          })
+          !result.data.invoices.some(hasOpenAmount) &&
+          !(result.data.credit_notes || []).some(hasOpenAmount)
         ) {
           if (statementStatus)
-            statementStatus.textContent = isFrench
-              ? "Aucune facture impayée pour votre compte."
-              : "No unpaid invoices for your account.";
+            statementStatus.textContent = t(
+              "No unpaid invoices or unapplied credit notes for your account.",
+              "Aucune facture impayée ni note de crédit non appliquée pour votre compte.",
+            );
           return;
         }
         printDocument(
@@ -1522,10 +2089,13 @@
   }
 
   // Show stats shell immediately so UI is not blank before fetch
-  if (statsEl) {
+  if (statsEl && !isCreditTab()) {
     statsEl.hidden = false;
     statsEl.removeAttribute("hidden");
   }
 
+  applyTabChrome();
   loadPage(1);
+  // Both tab labels show counts from the start (§4.2).
+  refreshCount(isCreditTab() ? TAB_INVOICES : TAB_CREDIT);
 })();
