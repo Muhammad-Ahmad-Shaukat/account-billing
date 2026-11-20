@@ -1,8 +1,8 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "fca944bc8886be44f6e1a61cbd25aed6"
+client_id = "fbf26aeff1092b347070e2357c111858"
 name = "account-billing"
-application_url = "https://account-billing.onrender.com"
+application_url = "https://alfred-order-technological-potentially.trycloudflare.com"
 embedded = true
 
 [access_scopes]
@@ -14,12 +14,12 @@ api_version = "2026-10"
 
 [auth]
 redirect_urls = [
-  "https://account-billing.onrender.com/api/auth",
-  "https://account-billing.onrender.com/api/auth/callback"
+  "https://alfred-order-technological-potentially.trycloudflare.com/api/auth",
+  "https://alfred-order-technological-potentially.trycloudflare.com/api/auth/callback"
 ]
 
 [app_proxy]
-url = "https://account-billing.onrender.com/api/proxy"
+url = "https://alfred-order-technological-potentially.trycloudflare.com/api/proxy"
 subpath = "account-billing"
 prefix = "apps"
 
