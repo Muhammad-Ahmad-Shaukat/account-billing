@@ -48,6 +48,21 @@
     return isFrench ? fr : en;
   }
 
+  function svgIcon(paths) {
+    return (
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      paths +
+      "</svg>"
+    );
+  }
+
+  const ICONS = {
+    invoice: svgIcon('<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h4"/>'),
+    credit: svgIcon('<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 9h6M9 13h4"/>'),
+    cash: svgIcon('<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/>'),
+    wallet: svgIcon('<path d="M4 7a2 2 0 0 1 2-2h12v4"/><path d="M4 7v11a2 2 0 0 0 2 2h14V9H6a2 2 0 0 1-2-2z"/><path d="M16 14.5h.01"/>'),
+  };
+
   function initialTab() {
     try {
       return new URLSearchParams(window.location.search).get("tab") ===
@@ -982,32 +997,51 @@
           : '<button type="button" class="rd-invoice-action send" title="Not downloadable" disabled style="opacity:.45;cursor:not-allowed;">PDF</button>';
 
         const pay = paymentStatus(inv);
+        const lbl = function (en, fr) {
+          return ' data-label="' + escapeHtml(t(en, fr)) + '"';
+        };
         return (
           "<tr>" +
-          '<td><div class="rd-invoice-number">' +
+          "<td" +
+          lbl("Invoice", "Facture") +
+          '><div class="rd-invoice-number">' +
           escapeHtml(inv.invoice_number) +
           "</div></td>" +
-          "<td>" +
+          "<td" +
+          lbl("Invoice Date", "Date de facture") +
+          ">" +
           formatDate(inv.invoice_date) +
           "</td>" +
-          '<td><div class="rd-invoice-order">' +
+          "<td" +
+          lbl("Order", "Commande") +
+          '><div class="rd-invoice-order">' +
           escapeHtml(inv.order_no || "") +
           "</div></td>" +
-          "<td>" +
+          "<td" +
+          lbl("PO Number", "Bon de commande") +
+          ">" +
           escapeHtml(inv.po_number || "") +
           "</td>" +
-          '<td class="rd-invoice-total">' +
+          '<td class="rd-invoice-total"' +
+          lbl("Total", "Total") +
+          ">" +
           money(inv.total_amount, inv.currency) +
           "</td>" +
-          '<td class="rd-invoice-total">' +
+          '<td class="rd-invoice-total"' +
+          lbl("Amount Due", "Montant dû") +
+          ">" +
           money(inv.amount_due, inv.currency) +
           "</td>" +
-          '<td><span class="rd-invoice-badge ' +
+          "<td" +
+          lbl("Payment Status", "État du paiement") +
+          '><span class="rd-invoice-badge ' +
           pay.cls +
           '">' +
           escapeHtml(pay.label) +
           "</span></td>" +
-          '<td><div class="rd-invoice-actions">' +
+          "<td" +
+          lbl("Actions", "Actions") +
+          '><div class="rd-invoice-actions">' +
           '<button type="button" class="rd-invoice-action" title="View Invoice" data-invoice-id="' +
           escapeHtml(inv.id) +
           '">' +
@@ -1185,9 +1219,11 @@
     });
   }
 
-  function statTile(label, icon, valueHtml, sub) {
+  function statTile(label, icon, valueHtml, sub, variant) {
     return (
-      '<div class="rd-invoice-stat">' +
+      '<div class="rd-invoice-stat' +
+      (variant ? " " + variant : "") +
+      '">' +
       '<div class="rd-invoice-stat-top"><div class="rd-invoice-stat-label">' +
       escapeHtml(label) +
       '</div><div class="rd-invoice-stat-icon" aria-hidden="true">' +
@@ -1220,19 +1256,19 @@
     creditStatsEl.innerHTML =
       statTile(
         t("Total credit notes", "Total des notes de crédit"),
-        "#",
+        ICONS.credit,
         summary ? escapeHtml(String(summary.total_invoices)) : "?",
         t("All credit notes", "Toutes les notes de crédit"),
       ) +
       statTile(
         t("Total credit value", "Valeur totale des crédits"),
-        "$",
+        ICONS.cash,
         perCurrency("total_value"),
         t("Total credited amount", "Montant total crédité"),
       ) +
       statTile(
         t("Remaining credit", "Crédit restant"),
-        "$",
+        ICONS.wallet,
         perCurrency("remaining"),
         isFrench
           ? openCount +
@@ -1241,6 +1277,7 @@
                 : " notes de crédit ouvertes")
           : openCount +
               (openCount === 1 ? " open credit note" : " open credit notes"),
+        "is-primary",
       );
   }
 
@@ -1264,22 +1301,40 @@
       [TAB_INVOICES, t("Invoices", "Factures")],
       [TAB_CREDIT, t("Credit Notes", "Notes de crédit")],
     ];
+    const focused =
+      document.activeElement &&
+      document.activeElement.getAttribute &&
+      document.activeElement.getAttribute("data-billing-tab");
     tabsEl.innerHTML = tabs
       .map(function (tab) {
         const count = tabCounts[tab[0]];
+        const selected = activeTab === tab[0];
+        // Visible text stays "Label (N)"-equivalent for screen readers via aria-label.
         return (
-          '<button type="button" class="rd-invoice-filter" data-billing-tab="' +
+          '<button type="button" role="tab" class="rd-billing-tab" id="rdBillingTab-' +
           tab[0] +
-          '" aria-pressed="' +
-          (activeTab === tab[0] ? "true" : "false") +
-          '" style="font-weight:700;">' +
+          '" data-billing-tab="' +
+          tab[0] +
+          '" aria-selected="' +
+          (selected ? "true" : "false") +
+          '" tabindex="' +
+          (selected ? "0" : "-1") +
+          '" aria-label="' +
+          escapeHtml(tab[1] + " (" + (count == null ? "…" : count) + ")") +
+          '">' +
+          (tab[0] === TAB_CREDIT ? ICONS.credit : ICONS.invoice) +
+          "<span>" +
           escapeHtml(tab[1]) +
-          " (" +
+          '</span><span class="rd-billing-tab-count" aria-hidden="true">' +
           (count == null ? "…" : escapeHtml(String(count))) +
-          ")</button>"
+          "</span></button>"
         );
       })
       .join("");
+    if (focused) {
+      const again = tabsEl.querySelector('[data-billing-tab="' + focused + '"]');
+      if (again) again.focus();
+    }
   }
 
   function applyTabChrome() {
@@ -1358,6 +1413,22 @@
         ? event.target.closest("[data-billing-tab]")
         : null;
       if (btn) switchTab(btn.getAttribute("data-billing-tab"));
+    });
+    // Arrow / Home / End keys move between tabs (WAI-ARIA tabs pattern).
+    tabsEl.addEventListener("keydown", function (event) {
+      const order = [TAB_INVOICES, TAB_CREDIT];
+      const idx = order.indexOf(activeTab);
+      let next = null;
+      if (event.key === "ArrowRight") next = order[(idx + 1) % order.length];
+      else if (event.key === "ArrowLeft")
+        next = order[(idx - 1 + order.length) % order.length];
+      else if (event.key === "Home") next = order[0];
+      else if (event.key === "End") next = order[order.length - 1];
+      if (!next) return;
+      event.preventDefault();
+      switchTab(next);
+      const btn = tabsEl.querySelector('[data-billing-tab="' + next + '"]');
+      if (btn) btn.focus();
     });
   }
 
