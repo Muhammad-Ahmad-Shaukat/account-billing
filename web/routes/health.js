@@ -24,7 +24,7 @@ router.get("/health/db", async (_req, res) => {
   const started = Date.now();
   try {
     const result = await pool.query(
-      "SELECT 1 AS ok, NOW() AS db_time, current_database() AS database"
+      "SELECT 1 AS ok, NOW() AS db_time, current_database() AS database",
     );
     const row = result.rows[0] || {};
     return res.status(200).json({

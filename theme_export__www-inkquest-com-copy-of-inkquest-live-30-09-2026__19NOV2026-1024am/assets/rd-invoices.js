@@ -36,8 +36,10 @@
   const creditStatsEl = document.getElementById("rdCreditStats");
   const creditMessageEl = document.getElementById("rdCreditMessage");
   const toolbarEl = sectionEl && sectionEl.querySelector(".rd-invoice-toolbar");
-  const tableCardEl = sectionEl && sectionEl.querySelector(".rd-invoice-table-card");
-  const theadRow = sectionEl && sectionEl.querySelector("table.rd-invoice-table thead tr");
+  const tableCardEl =
+    sectionEl && sectionEl.querySelector(".rd-invoice-table-card");
+  const theadRow =
+    sectionEl && sectionEl.querySelector("table.rd-invoice-table thead tr");
   const invoiceTheadHtml = theadRow ? theadRow.innerHTML : "";
   const invoiceSearchPlaceholder = searchInput ? searchInput.placeholder : "";
   const invoiceBalanceOptions = balanceSelect ? balanceSelect.innerHTML : "";
@@ -48,7 +50,8 @@
 
   function initialTab() {
     try {
-      return new URLSearchParams(window.location.search).get("tab") === TAB_CREDIT
+      return new URLSearchParams(window.location.search).get("tab") ===
+        TAB_CREDIT
         ? TAB_CREDIT
         : TAB_INVOICES;
     } catch (e) {
@@ -670,10 +673,14 @@
       </div>
       <div class="iq-invtitle">
         <h1>${credit ? "NOTE DE CRÉDIT" : "FACTURE"}</h1>
-        <p>${credit ? "Numéro de note de crédit" : "Numéro de facture"} : ${escapeHtml(invoice.number)}<br>
+        <p>${
+          credit ? "Numéro de note de crédit" : "Numéro de facture"
+        } : ${escapeHtml(invoice.number)}<br>
           ${
             credit && data.related_invoice_number
-              ? "Facture associée : " + escapeHtml(data.related_invoice_number) + "<br>"
+              ? "Facture associée : " +
+                escapeHtml(data.related_invoice_number) +
+                "<br>"
               : ""
           }
           Date : ${escapeHtml(
@@ -727,8 +734,8 @@
     <div class="iq-band-slim">
       <div class="iq-brand">${logo}</div>
       <p>${credit ? "Note de crédit" : "Facture"} ${escapeHtml(
-        invoice.number,
-      )} &mdash; Suite &nbsp;&bull;&nbsp; ${escapeHtml(
+            invoice.number,
+          )} &mdash; Suite &nbsp;&bull;&nbsp; ${escapeHtml(
             invoice.date,
           )} &nbsp;&bull;&nbsp; Page ${escapeHtml(index + 1)} de ${escapeHtml(
             pages.length,
@@ -813,12 +820,12 @@
     <div class="iq-trow"><span>Montant total</span><span>${amount(
       invoice.total_amount,
     )}</span></div>
-    <div class="iq-trow"><span>${credit ? "Crédit appliqué" : "Moins paiement"}</span><span>${amount(
-      invoice.less_payment,
-    )}</span></div>
-    <div class="iq-due"><span>${credit ? "Crédit restant" : "Montant dû"}</span><span>${amount(
-      invoice.amount_due,
-    )}</span></div>
+    <div class="iq-trow"><span>${
+      credit ? "Crédit appliqué" : "Moins paiement"
+    }</span><span>${amount(invoice.less_payment)}</span></div>
+    <div class="iq-due"><span>${
+      credit ? "Crédit restant" : "Montant dû"
+    }</span><span>${amount(invoice.amount_due)}</span></div>
   </div>
 </div>
 
@@ -1232,7 +1239,8 @@
               (openCount === 1
                 ? " note de crédit ouverte"
                 : " notes de crédit ouvertes")
-          : openCount + (openCount === 1 ? " open credit note" : " open credit notes"),
+          : openCount +
+              (openCount === 1 ? " open credit note" : " open credit notes"),
       );
   }
 
@@ -1308,7 +1316,9 @@
         : invoiceBalanceOptions;
       balanceSelect.setAttribute(
         "aria-label",
-        credit ? t("Status filter", "Filtrer par statut") : t("Balance filter", "Filtrer par solde"),
+        credit
+          ? t("Status filter", "Filtrer par statut")
+          : t("Balance filter", "Filtrer par solde"),
       );
     }
     if (!credit) showCreditEmptyState(false);
@@ -1395,7 +1405,9 @@
       if (meta.summary) tabCounts[tab] = meta.summary.total_invoices;
       renderTabs();
       if (credit) {
-        showCreditEmptyState(!!meta.summary && meta.summary.total_invoices === 0);
+        showCreditEmptyState(
+          !!meta.summary && meta.summary.total_invoices === 0,
+        );
         renderCreditRows(rows);
         updatePager(meta);
         updateCreditStats(meta.summary);
@@ -1747,7 +1759,11 @@
         head
           .map(function (label, idx) {
             return (
-              "<th" + (idx >= 5 ? ' class="r"' : "") + ">" + escapeHtml(label) + "</th>"
+              "<th" +
+              (idx >= 5 ? ' class="r"' : "") +
+              ">" +
+              escapeHtml(label) +
+              "</th>"
             );
           })
           .join("") +

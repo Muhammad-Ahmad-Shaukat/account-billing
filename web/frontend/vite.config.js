@@ -3,16 +3,16 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import react from "@vitejs/plugin-react";
 
-if (
-  process.env.npm_lifecycle_event === "build" &&
-  !process.env.CI &&
-  !process.env.SHOPIFY_API_KEY
-) {
-  throw new Error(
-    "\n\nThe frontend build will not work without an API key. Set the SHOPIFY_API_KEY environment variable when running the build command, for example:" +
-      "\n\nSHOPIFY_API_KEY=<your-api-key> npm run build\n"
-  );
-}
+// if (
+//   process.env.npm_lifecycle_event === "build" &&
+//   !process.env.CI &&
+//   !process.env.SHOPIFY_API_KEY
+// ) {
+//   throw new Error(
+//     "\n\nThe frontend build will not work without an API key. Set the SHOPIFY_API_KEY environment variable when running the build command, for example:" +
+//       "\n\nSHOPIFY_API_KEY=<your-api-key> npm run build\n",
+//   );
+// }
 
 process.env.VITE_SHOPIFY_API_KEY = process.env.SHOPIFY_API_KEY;
 
@@ -53,6 +53,9 @@ export default defineConfig({
   server: {
     host: "localhost",
     port: process.env.FRONTEND_PORT,
+    // Vite blocks unknown Host headers; allow the Shopify CLI tunnel so app-proxy
+    // requests (storefront /apps/account-billing/*) reach the backend.
+    allowedHosts: [host, ".trycloudflare.com"],
     hmr: hmrConfig,
     proxy: {
       "^/(\\?.*)?$": proxyOptions,

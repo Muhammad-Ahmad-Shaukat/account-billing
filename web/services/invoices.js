@@ -130,7 +130,7 @@ async function replaceInvoiceChildren(client, invoiceId, lines, taxLines) {
           : String(line.unit_price),
         nullableText(line.uom),
         nullableText(line.extended_price),
-      ]
+      ],
     );
   }
 
@@ -141,7 +141,7 @@ async function replaceInvoiceChildren(client, invoiceId, lines, taxLines) {
       INSERT INTO invoice_tax_lines (invoice_id, line_index, code, amount)
       VALUES ($1,$2,$3,$4)
       `,
-      [invoiceId, i, nullableText(tax.code), nullableText(tax.amount)]
+      [invoiceId, i, nullableText(tax.code), nullableText(tax.amount)],
     );
   }
 }
@@ -150,20 +150,31 @@ export function parseDocumentType(value) {
   // Absent (undefined / null / "") means invoice so existing ERP pushes keep working (SOW 5.1).
   if (value === undefined || value === null || value === "") return "invoice";
   if (value === "invoice" || value === "credit_note") return value;
-  throw Object.assign(new Error("document_type must be invoice or credit_note"), { status: 400 });
+  throw Object.assign(
+    new Error("document_type must be invoice or credit_note"),
+    { status: 400 },
+  );
 }
 
 function validateCreditAmounts(payload) {
   const fields = [
     ...REQUIRED_TOTALS.map((key) => [key, payload[key]]),
     ...(Array.isArray(payload.lines) ? payload.lines : []).flatMap((line) => [
-      ["unit_price", line?.unit_price], ["extended_price", line?.extended_price],
+      ["unit_price", line?.unit_price],
+      ["extended_price", line?.extended_price],
     ]),
-    ...(Array.isArray(payload.tax_lines) ? payload.tax_lines : []).map((line) => ["tax amount", line?.amount]),
+    ...(Array.isArray(payload.tax_lines) ? payload.tax_lines : []).map(
+      (line) => ["tax amount", line?.amount],
+    ),
   ];
   for (const [field, value] of fields) {
     if (moneyPresent(value) && !/^\d+(?:\.\d{1,2})?$/.test(String(value))) {
-      throw Object.assign(new Error(`Credit note ${field} must be a non-negative decimal with up to two decimal places`), { status: 400 });
+      throw Object.assign(
+        new Error(
+          `Credit note ${field} must be a non-negative decimal with up to two decimal places`,
+        ),
+        { status: 400 },
+      );
     }
   }
 }
@@ -173,7 +184,8 @@ export async function upsertInvoiceRevision(shop, payload) {
   if (documentType === "credit_note") {
     validateCreditAmounts(payload);
     for (const field of REQUIRED_TOTALS) {
-      if (!moneyPresent(payload[field])) payload = { ...payload, [field]: null };
+      if (!moneyPresent(payload[field]))
+        payload = { ...payload, [field]: null };
     }
   }
   const customerId = normalizeShopifyId(payload.shopify_customer_id);
@@ -206,9 +218,10 @@ export async function upsertInvoiceRevision(shop, payload) {
   try {
     await client.query("BEGIN");
 
-    await client.query("SELECT pg_advisory_xact_lock(hashtextextended($1, 0))", [
-      JSON.stringify([shop, documentType, invoiceNumber, revision]),
-    ]);
+    await client.query(
+      "SELECT pg_advisory_xact_lock(hashtextextended($1, 0))",
+      [JSON.stringify([shop, documentType, invoiceNumber, revision])],
+    );
     const existing = await client.query(
       `
       SELECT *
@@ -216,14 +229,19 @@ export async function upsertInvoiceRevision(shop, payload) {
       WHERE shop = $1 AND invoice_number = $2 AND revision = $3 AND document_type = $4
       LIMIT 1
       `,
-      [shop, invoiceNumber, revision, documentType]
+      [shop, invoiceNumber, revision, documentType],
     );
 
     // Legacy pushes (no document_type) keep today's update-in-place behaviour;
     // typed pushes reject a duplicate revision with 409 (SOW 5.3).
-    const typedPush = payload.document_type !== undefined && payload.document_type !== null && payload.document_type !== "";
+    const typedPush =
+      payload.document_type !== undefined &&
+      payload.document_type !== null &&
+      payload.document_type !== "";
     if (existing.rowCount && typedPush) {
-      throw Object.assign(new Error("Document revision already exists"), { status: 409 });
+      throw Object.assign(new Error("Document revision already exists"), {
+        status: 409,
+      });
     }
     if (existing.rowCount) {
       const row = existing.rows[0];
@@ -236,7 +254,7 @@ export async function upsertInvoiceRevision(shop, payload) {
         WHERE invoice_id = $1
         ORDER BY line_index ASC
         `,
-        [invoiceId]
+        [invoiceId],
       );
       const existingTaxes = await client.query(
         `
@@ -245,7 +263,7 @@ export async function upsertInvoiceRevision(shop, payload) {
         WHERE invoice_id = $1
         ORDER BY line_index ASC
         `,
-        [invoiceId]
+        [invoiceId],
       );
       const existingSnapshot = buildComparableSnapshot({
         shopify_customer_id: row.shopify_customer_id,
@@ -272,7 +290,9 @@ export async function upsertInvoiceRevision(shop, payload) {
         tax_lines: existingTaxes.rows,
       });
 
-      if (stableStringify(incomingSnapshot) === stableStringify(existingSnapshot)) {
+      if (
+        stableStringify(incomingSnapshot) === stableStringify(existingSnapshot)
+      ) {
         await client.query("COMMIT");
         return {
           success: true,
@@ -340,7 +360,7 @@ export async function upsertInvoiceRevision(shop, payload) {
           nullableText(payload.amount_due),
           downloadable,
           JSON.stringify(payload),
-        ]
+        ],
       );
 
       await replaceInvoiceChildren(client, invoiceId, lines, taxLines);
@@ -401,8 +421,10 @@ export async function upsertInvoiceRevision(shop, payload) {
         downloadable,
         JSON.stringify(payload),
         documentType,
-        documentType === "credit_note" ? nullableText(payload.related_invoice_number) : null,
-      ]
+        documentType === "credit_note"
+          ? nullableText(payload.related_invoice_number)
+          : null,
+      ],
     );
 
     const invoiceId = inserted.rows[0].id;
@@ -437,7 +459,7 @@ async function loadLines(invoiceId) {
     WHERE invoice_id = $1
     ORDER BY line_index ASC
     `,
-    [invoiceId]
+    [invoiceId],
   );
   const taxes = await query(
     `
@@ -446,15 +468,17 @@ async function loadLines(invoiceId) {
     WHERE invoice_id = $1
     ORDER BY line_index ASC
     `,
-    [invoiceId]
+    [invoiceId],
   );
 
   return {
     lines: lines.rows.map((row) => ({
       item_number: row.item_number,
       description: row.description,
-      qty_ordered: row.qty_ordered == null ? null : coerceNumberish(row.qty_ordered),
-      qty_shipped: row.qty_shipped == null ? null : coerceNumberish(row.qty_shipped),
+      qty_ordered:
+        row.qty_ordered == null ? null : coerceNumberish(row.qty_ordered),
+      qty_shipped:
+        row.qty_shipped == null ? null : coerceNumberish(row.qty_shipped),
       qty_backorder:
         row.qty_backorder == null ? null : coerceNumberish(row.qty_backorder),
       unit_price: row.unit_price,
@@ -499,10 +523,12 @@ function mapInvoiceRow(row, extras = {}) {
     less_payment: row.less_payment,
     amount_due: row.amount_due,
     downloadable: row.downloadable,
-    ...(row.document_type === "credit_note" ? {
-      document_type: row.document_type,
-      related_invoice_number: row.related_invoice_number,
-    } : {}),
+    ...(row.document_type === "credit_note"
+      ? {
+          document_type: row.document_type,
+          related_invoice_number: row.related_invoice_number,
+        }
+      : {}),
     ...extras,
   };
 }
@@ -530,13 +556,19 @@ export async function listLatestInvoices(shop, customerId, options = {}) {
       ORDER BY invoice_number, revision DESC
     ) latest
     GROUP BY currency`,
-    [shop, customerId, documentType]
+    [shop, customerId, documentType],
   );
   const summary = {
-    total_invoices: 0, paid: 0, pending: 0, unknown: 0,
+    total_invoices: 0,
+    paid: 0,
+    pending: 0,
+    unknown: 0,
     totals_by_currency: summaryResult.rows.map((row) => ({
-      currency: row.currency || "CAD", total_value: row.total_value,
-      ...(credit ? { remaining: row.remaining, open_count: row.open_count } : {}),
+      currency: row.currency || "CAD",
+      total_value: row.total_value,
+      ...(credit
+        ? { remaining: row.remaining, open_count: row.open_count }
+        : {}),
     })),
   };
   for (const row of summaryResult.rows) {
@@ -547,7 +579,7 @@ export async function listLatestInvoices(shop, customerId, options = {}) {
   const page = Math.max(1, parseInt(options.page, 10) || 1);
   const pageSize = Math.min(
     100,
-    Math.max(1, parseInt(options.page_size, 10) || 20)
+    Math.max(1, parseInt(options.page_size, 10) || 20),
   );
   const q = String(options.q || "").trim();
   const dateFrom = String(options.date_from || "").trim();
@@ -563,7 +595,9 @@ export async function listLatestInvoices(shop, customerId, options = {}) {
       `(i.invoice_number ILIKE $${params.length}
         OR i.order_no ILIKE $${params.length}
         OR i.po_number ILIKE $${params.length}
-        OR ${credit ? "i.related_invoice_number" : "i.shopify_order_id"} ILIKE $${params.length})`
+        OR ${
+          credit ? "i.related_invoice_number" : "i.shopify_order_id"
+        } ILIKE $${params.length})`,
     );
   }
   if (dateFrom) {
@@ -578,7 +612,11 @@ export async function listLatestInvoices(shop, customerId, options = {}) {
     if (credit) filters.push(`NULLIF(BTRIM(i.total_amount), '') IS NOT NULL`);
     filters.push(`COALESCE(NULLIF(BTRIM(i.amount_due),''),'0')::numeric > 0`);
   } else if (balance === "paid") {
-    filters.push(credit ? `NULLIF(BTRIM(i.amount_due),'')::numeric = 0` : `COALESCE(NULLIF(BTRIM(i.amount_due),''),'0')::numeric = 0`);
+    filters.push(
+      credit
+        ? `NULLIF(BTRIM(i.amount_due),'')::numeric = 0`
+        : `COALESCE(NULLIF(BTRIM(i.amount_due),''),'0')::numeric = 0`,
+    );
   }
 
   const whereExtra = filters.length ? `AND ${filters.join(" AND ")}` : "";
@@ -594,7 +632,7 @@ export async function listLatestInvoices(shop, customerId, options = {}) {
     ) i
     WHERE TRUE ${whereExtra}
     `,
-    params
+    params,
   );
   const total = countResult.rows[0]?.total || 0;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -614,7 +652,7 @@ export async function listLatestInvoices(shop, customerId, options = {}) {
     ORDER BY i.invoice_date DESC NULLS LAST, i.invoice_number DESC
     LIMIT $${params.length - 1} OFFSET $${params.length}
     `,
-    params
+    params,
   );
 
   return {
@@ -648,13 +686,16 @@ export async function getUnpaidStatement(shop, customerId) {
     FROM eligible
     WINDOW currency_group AS (PARTITION BY COALESCE(NULLIF(currency, ''), 'CAD'))
     ORDER BY invoice_date ASC NULLS LAST, invoice_number ASC`,
-    [shop, customerId]
+    [shop, customerId],
   );
-  const invoices = [], credit_notes = [];
+  const invoices = [],
+    credit_notes = [];
   const totals = new Map();
   for (const row of result.rows) {
     const document = mapInvoiceRow(row);
-    (row.document_type === "credit_note" ? credit_notes : invoices).push(document);
+    (row.document_type === "credit_note" ? credit_notes : invoices).push(
+      document,
+    );
     totals.set(document.currency, {
       currency: document.currency,
       unpaid_total: row.unpaid_total,
@@ -673,7 +714,7 @@ export async function getInvoiceForCustomer(shop, customerId, invoiceId) {
     WHERE shop = $1 AND shopify_customer_id = $2 AND id = $3
     LIMIT 1
     `,
-    [shop, customerId, invoiceId]
+    [shop, customerId, invoiceId],
   );
   if (!result.rowCount) return null;
 
@@ -685,12 +726,19 @@ export async function getInvoiceForCustomer(shop, customerId, invoiceId) {
 /**
  * Check whether any revision of an invoice exists for a customer.
  */
-export async function invoiceExists(shop, customerId, invoiceNumber, requestedType) {
+export async function invoiceExists(
+  shop,
+  customerId,
+  invoiceNumber,
+  requestedType,
+) {
   const documentType = parseDocumentType(requestedType);
   const cid = normalizeShopifyId(customerId);
   const invNo = String(invoiceNumber || "").trim();
   if (!cid || !invNo) {
-    const err = new Error("shopify_customer_id and invoice_number are required");
+    const err = new Error(
+      "shopify_customer_id and invoice_number are required",
+    );
     err.status = 400;
     throw err;
   }
@@ -705,11 +753,16 @@ export async function invoiceExists(shop, customerId, invoiceNumber, requestedTy
     ORDER BY revision DESC
     LIMIT 1
     `,
-    [shop, cid, invNo, documentType]
+    [shop, cid, invNo, documentType],
   );
 
   if (!result.rowCount) {
-    return { exists: false, shopify_customer_id: cid, invoice_number: invNo, document_type: documentType };
+    return {
+      exists: false,
+      shopify_customer_id: cid,
+      invoice_number: invNo,
+      document_type: documentType,
+    };
   }
 
   const row = result.rows[0];
